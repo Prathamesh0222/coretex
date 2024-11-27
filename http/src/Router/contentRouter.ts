@@ -1,70 +1,154 @@
 import { Response, Router } from "express";
 import { authMiddleware, CustomRequest } from "../middleware";
-import { Content } from "../db";
+import { Content, Link } from "../db";
 import { contentSchema } from "../schema/validations";
+import { random } from "../utils";
 
 const contentRouter = Router();
 
-contentRouter.post("/content", authMiddleware, async (req: CustomRequest, res: Response): Promise<any> => {
-
+contentRouter.post(
+  "/content",
+  authMiddleware,
+  async (req: CustomRequest, res: Response) => {
     try {
-        const parsedResult = await contentSchema.safeParse(req.body);
-        if (!parsedResult.success) {
-            return res.status(422).json({
-                message: "Invalid Inputs",
-                errors: parsedResult.error.errors
-            })
-        }
+      const parsedResult = await contentSchema.safeParse(req.body);
+      if (!parsedResult.success) {
+        res.status(422).json({
+          message: "Invalid Inputs",
+          errors: parsedResult.error.errors,
+        });
+        return;
+      }
 
-        const { title, link, type } = parsedResult.data;
-        const userId = req.userId;
+      const { title, link, type } = parsedResult.data;
+      const userId = req.userId;
 
-        if (!userId) {
-            return res.status(400).json({ message: "User ID is required" });
-        }
+      if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return;
+      }
 
-        await Content.create({
-            title,
-            link,
-            type,
-            tags: [],
-            userId
-        })
+      await Content.create({
+        title,
+        link,
+        type,
+        tags: [],
+        userId,
+      });
 
-        return res.status(201).json({
-            message: "Content Created",
-        })
+      res.status(201).json({
+        message: "Content Created",
+      });
     } catch (error) {
-        console.error("Error in creating content", error);
-        return res.status(500).json({
-            message: "Internal Server Error"
-        })
+      console.error("Error in creating content", error);
+      res.status(500).json({
+        message: "Internal Server Error",
+      });
     }
-})
+  }
+);
 
-contentRouter.get("/content", authMiddleware, async (req: CustomRequest, res: Response): Promise<any> => {
+contentRouter.get(
+  "/content",
+  authMiddleware,
+  async (req: CustomRequest, res: Response): Promise<any> => {
     try {
-        const userId = req.userId;
-        const content = await Content.findOne({
-            userId
-        }).populate("userId", "username");
+      const userId = req.userId;
+      const content = await Content.find({
+        userId,
+      }).populate("userId", "username");
 
+      res.json({
+        content,
+      });
+    } catch (error) {
+      console.error("Error while fetching the content", error);
+      return res.status(500).json({
+        message: "Internal Server Error",
+      });
+    }
+  }
+);
+
+contentRouter.delete(
+  "/content",
+  authMiddleware,
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const contentId = req.body.contentId;
+
+      if (!contentId) {
+        res.status(400).json({
+          message: "Content ID is required",
+        });
+        return;
+      }
+
+      const result = await Content.deleteOne({
+        _id: contentId,
+        userId: req.userId,
+      });
+
+      if (result.deletedCount === 0) {
+        res.status(404).json({
+          message: "No content found to delete",
+        });
+        return;
+      }
+
+      res.status(200).json({
+        message: "Content deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error while deleting the content", error);
+      res.status(500).json({
+        message: "Error while deleting the content",
+      });
+    }
+  }
+);
+
+contentRouter.post(
+  "/share",
+  authMiddleware,
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const share = req.body.share;
+      if (share) {
+        const existingLink = await Link.findOne({
+          userId: req.userId,
+        });
+
+        if (existingLink) {
+          res.json({
+            hash: existingLink.hash,
+          });
+          return;
+        }
+
+        const hash = random(10);
+        await Link.create({
+          userId: req.userId,
+          hash,
+        });
         res.json({
-            content,
-        })
+          hash,
+        });
+      } else {
+        await Link.deleteOne({
+          userId: req.userId,
+        });
+        res.json({
+          message: "Deleted sharable link",
+        });
+      }
     } catch (error) {
-        console.error("Error while fetching the content", error);
-        return res.status(500).json({
-            message: "Internal Server Error",
-        })
+      console.error("Error while creating sharable link", error);
+      res.status(500).json({
+        message: "Error while creating sharable link",
+      });
     }
-
-})
-
-contentRouter.delete("/content", authMiddleware, async (req, res) => {
-
-})
-
-
+  }
+);
 
 export default contentRouter;
