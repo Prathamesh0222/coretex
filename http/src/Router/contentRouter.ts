@@ -1,6 +1,6 @@
 import { Response, Router } from "express";
 import { authMiddleware, CustomRequest } from "../middleware";
-import { Content, Link } from "../db";
+import { Content, Link, User } from "../db";
 import { contentSchema } from "../schema/validations";
 import { random } from "../utils";
 
@@ -109,7 +109,7 @@ contentRouter.delete(
 );
 
 contentRouter.post(
-  "/share",
+  "/brain/share",
   authMiddleware,
   async (req: CustomRequest, res: Response) => {
     try {
@@ -150,5 +150,39 @@ contentRouter.post(
     }
   }
 );
+
+contentRouter.get("/brain/:sharelink", async (req, res) => {
+  const hash = req.params.sharelink;
+
+  const link = await Link.findOne({
+    hash,
+  });
+
+  if (!link) {
+    res.status(411).json({
+      message: "Sorry incorrect inputs",
+    });
+  }
+
+  const content = await Content.find({
+    userId: link?.userId,
+  });
+
+  const user = await User.findOne({
+    _id: link?.userId,
+  });
+
+  if (!user) {
+    res.status(411).json({
+      message: "user not found, error should ideally not happen",
+    });
+    return;
+  }
+
+  res.json({
+    username: user.username,
+    content: content,
+  });
+});
 
 export default contentRouter;
