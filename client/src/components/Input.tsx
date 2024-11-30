@@ -1,17 +1,24 @@
+import { ChangeEventHandler, forwardRef } from "react";
+
 interface InputProps {
-  onChange?: () => void;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
   placeholder: string;
+  type: "text" | "password";
 }
 
-export const Input = ({ onChange, placeholder }: InputProps) => {
-  return (
-    <div className="flex justify-center items-center my-2">
-      <input
-        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus: ring-1
-         focus:ring-blue-200"
-        onChange={onChange}
-        placeholder={placeholder}
-      />
-    </div>
-  );
-};
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ onChange, placeholder, type, ...props }, ref) => {
+    return (
+      <div className="flex justify-center items-center my-2">
+        <input
+          className="w-full px-2.5 py-2 rounded-lg border border-gray-300"
+          onChange={onChange}
+          placeholder={placeholder}
+          type={type}
+          ref={ref}
+          {...props}
+        />
+      </div>
+    );
+  }
+);
