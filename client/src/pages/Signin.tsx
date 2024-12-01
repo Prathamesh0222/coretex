@@ -3,11 +3,11 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { BACKEND_URL } from "../config";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { EyeIcon } from "../icons/EyeIcon";
+import { EyeSlashIcon } from "../icons/EyeSlashIcon";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useState } from "react";
-import { EyeSlashIcon } from "../icons/EyeSlashIcon";
-import { EyeIcon } from "../icons/EyeIcon";
 
 type FormValues = {
   username: string;
@@ -15,7 +15,7 @@ type FormValues = {
 };
 
 const signupEnpoint = async (formData: FormValues) => {
-  const response = await fetch(`${BACKEND_URL}/signup`, {
+  const response = await fetch(`${BACKEND_URL}/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -27,28 +27,36 @@ const signupEnpoint = async (formData: FormValues) => {
     throw new Error("Error whiles creating user");
   }
 
-  return response.json();
+  const data = await response.json();
+
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+  } else {
+    throw new Error("Token not found in response");
+  }
+  return data;
 };
-export const Signup = () => {
+
+export const Signin = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: signupEnpoint,
     onSuccess: (data) => {
       console.log("User created!", data);
-      toast.success("User created successfully!");
-      navigate("/signin");
+      navigate("/dashboard");
+      toast.success("User logged in successfully!");
     },
     onError: (error: any) => {
       console.error("Error while creating user", error);
-      toast.error("Error while creating user");
+      toast.error("Error while signing in");
     },
   });
 
@@ -61,9 +69,9 @@ export const Signup = () => {
       <div className="w-full max-w-sm p-6 rounded-lg bg-white shadow-md border border-gray-200">
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex justify-center text-2xl font-bold mb-2">
-            Register
+            Login
           </label>
-          <h2 className="text-center mb-2">Enter the details to sign up</h2>
+          <h2 className="text-center mb-2">Enter the details to sign in</h2>
           <label className="font-semibold text-sm">Username</label>
           <Input
             type="text"
@@ -86,7 +94,7 @@ export const Signup = () => {
               })}
               placeholder="Password"
             />
-            <div className="absolute right-2 top-2 translate-y-8">
+            <div className="absolute right-2 top-2 translate-y-8 transform">
               <button
                 type="button"
                 onClick={() => {
@@ -112,9 +120,9 @@ export const Signup = () => {
             />
           </div>
           <h2 className="text-center mt-3">
-            Already have an account?{" "}
+            Don't have an Account?{" "}
             <a href="/signin" className="font-bold underline">
-              Signin
+              Signup
             </a>
           </h2>
         </form>
