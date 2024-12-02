@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
-const contentTypes = ["images", "video", "audio", "article"];
+const contentTypes = ["youtube", "twitter"];
 
 const contentSchema = new mongoose.Schema({
   link: { type: String, required: true },
