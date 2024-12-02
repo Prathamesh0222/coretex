@@ -5,6 +5,7 @@ import { Input } from "./Input";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface CreateContentModalProps {
   open: boolean;
@@ -19,24 +20,43 @@ enum ContentType {
 const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
   ({ open, onClose }, ref: ForwardedRef<HTMLDivElement>) => {
     const [type, setType] = useState(ContentType.Youtube);
+    const navigate = useNavigate();
     const titleRef = useRef<HTMLInputElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
     if (!open) return null;
 
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+      navigate("/signin");
+    }
+
     const addContent = async () => {
       const title = titleRef.current?.value;
       const link = linkRef.current?.value;
+
+      if (!title || !link) {
+        toast.error("Title and link are required");
+        return;
+      }
+
       try {
-        const response = await axios.post(`${BACKEND_URL}/content`, {
-          title,
-          link,
-          type,
-          headers: {
-            Authorization: localStorage.getItem("token"),
+        const response = await axios.post(
+          `${BACKEND_URL}/content`,
+          {
+            title,
+            link,
+            type,
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${storedToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         console.log(response.data);
         toast.success("Content added successfully");
+        onClose();
       } catch (error) {
         console.error("Error while adding content", error);
         toast.error("Error while adding content");
