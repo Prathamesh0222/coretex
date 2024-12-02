@@ -5,10 +5,12 @@ import CreateContentModal from "../components/CreateContentModal";
 import { PlusIcon } from "../icons/PlusIcon";
 import { ShareIcon } from "../icons/ShareIcon";
 import Sidebar from "../components/Sidebar";
+import { useContent } from "../hooks/useContent";
 
 function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const content = useContent();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -33,7 +35,7 @@ function Dashboard() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 md:ml-72 p-4 bg-gray-200 h-screen">
+      <div className="flex-1 md:ml-72 p-4 bg-gray-200 min-h-screen">
         <CreateContentModal
           open={isOpen}
           onClose={() => {
@@ -54,17 +56,10 @@ function Dashboard() {
             startIcon={<ShareIcon />}
           ></Button>
         </div>
-        <div className="flex gap-4 mt-4">
-          <Card
-            title="SAS"
-            type="twitter"
-            link="https://x.com/code_bykuti/status/1861428971013054891"
-          />
-          <Card
-            title="Tbone is Live"
-            type="youtube"
-            link="https://www.youtube.com/watch?v=QzB-C5RHbKk"
-          />
+        <div className="flex flex-wrap gap-4 mt-4">
+          {content.map(({ link, type, title }) => (
+            <Card title={title} type={type} link={link} />
+          ))}
         </div>
       </div>
     </div>
