@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ShareIcon } from "../icons/ShareIcon";
 
 interface CardProps {
@@ -7,19 +8,32 @@ interface CardProps {
 }
 
 const Card = ({ title, link, type }: CardProps) => {
+  useEffect(() => {
+    if (type === "twitter") {
+      const script = document.createElement("script");
+      script.src = "https://platform.twitter.com/widgets.js";
+      script.async = true;
+      document.body.appendChild(script);
+
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+  }, [type]);
+
   return (
     <div>
-      <div className="p-4 bg-white rounded-md max-w-72 border shadow-md">
+      <div className="p-4 bg-dark-400 rounded-lg max-w-72 shadow-xl">
         <div className="flex justify-between">
           <div className="flex items-center gap-2 text-gray-500">
-            <ShareIcon />
-            <span className="text-black text-md">{title}</span>
+            <ShareIcon size={20} />
+            <span className="text-white text-md">{title}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-500">
             <a href={link} target="_blank">
-              <ShareIcon />
+              <ShareIcon size={20} />
             </a>
-            <ShareIcon />
+            <ShareIcon size={20} />
           </div>
         </div>
         {type === "youtube" && (
@@ -33,10 +47,8 @@ const Card = ({ title, link, type }: CardProps) => {
           ></iframe>
         )}
         {type === "twitter" && (
-          <blockquote className="twitter-tweet">
+          <blockquote className="twitter-tweet w-full h-full">
             <p lang="en" dir="ltr">
-              <br />
-              <br />
               <a href={link}></a>
             </p>
             <a href={link.replace("x.com", "twitter.com")}></a>
