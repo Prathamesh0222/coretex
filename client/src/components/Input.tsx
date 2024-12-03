@@ -11,7 +11,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex justify-center items-center my-2">
         <input
-          className="w-full px-2.5 py-2 rounded-lg border border-gray-300"
+          className="w-full px-2.5 py-2 rounded-lg  bg-dark-300"
           onChange={onChange}
           placeholder={placeholder}
           type={type}
