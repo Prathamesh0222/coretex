@@ -121,7 +121,7 @@ export const Signin = () => {
           </div>
           <h2 className="text-center mt-3">
             Don't have an Account?{" "}
-            <a href="/signin" className="font-bold underline">
+            <a href="/signup" className="font-bold underline">
               Signup
             </a>
           </h2>
