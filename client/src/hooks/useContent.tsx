@@ -18,13 +18,16 @@ export const useContent = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-
         setContent(response.data.content);
       } catch (err) {
         console.error("Error fetching content", err);
       }
     };
     fetchContent();
+
+    const intervalId = setInterval(fetchContent, 3000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return content;
