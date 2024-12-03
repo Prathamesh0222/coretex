@@ -15,8 +15,8 @@ export const SidebarItem = ({
 }: SidebarItemProps) => {
   return (
     <div
-      className={`flex items-center gap-2 mt-2 hover:bg-purple-200 cursor-pointer p-2 rounded-lg ${
-        Active ? "bg-blue-500 text-white" : "text-gray-700"
+      className={`flex items-center gap-2 mt-2 cursor-pointer p-2 rounded-lg ${
+        Active ? "bg-dark-300 text-white" : "text-gray-700 hover:bg-purple-200"
       }`}
       onClick={onClick}
     >
