@@ -4,32 +4,41 @@ import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutubeIcon";
 import { SidebarItem } from "./SidebarItem";
 
-const Sidebar = () => {
-  const [selectedItem, setSelectedItem] = useState("Youtube");
+const Sidebar = ({
+  onFilterChange,
+}: {
+  onFilterChange: (filter: string) => void;
+}) => {
+  const [selectedItem, setSelectedItem] = useState("Twitter");
+
+  const handleItemClick = (filter: string) => {
+    setSelectedItem(filter);
+    onFilterChange(filter);
+  };
+
   return (
-    <div className="h-screen bg-white border-r hidden md:block md:w-72 fixed left-0 top-0">
-      <div className="flex justify-center">
-        <h1 className="flex items-center gap-2 text-3xl font-bold mt-8">
-          {" "}
-          <BrainlyIcon /> Brainly
-        </h1>
-      </div>
-      <div className="p-8">
+    <div className="h-screen bg-dark-400 backdrop-blur-sm border-r border-dark-300 hidden md:block md:w-72 fixed left-0 top-0">
+      <h1 className="flex items-center gap-2 text-2xl text-white font-bold mt-8 mx-6">
+        <BrainlyIcon /> Brainly
+      </h1>
+      <div className="p-6">
         <SidebarItem
-          Active={selectedItem === "Youtube"}
-          onClick={() => {
-            setSelectedItem("Youtube");
-          }}
-          text="Youtube"
+          Active={selectedItem === "All"}
+          onClick={() => handleItemClick("All")}
+          text="All"
           icon={<YoutubeIcon />}
         />
         <SidebarItem
           Active={selectedItem === "Twitter"}
-          onClick={() => {
-            setSelectedItem("Twitter");
-          }}
+          onClick={() => handleItemClick("Twitter")}
           text="Twitter"
           icon={<TwitterIcon />}
+        />
+        <SidebarItem
+          Active={selectedItem === "Youtube"}
+          onClick={() => handleItemClick("Youtube")}
+          text="Youtube"
+          icon={<YoutubeIcon />}
         />
       </div>
     </div>
