@@ -15,9 +15,16 @@ enum ContentType {
 
 function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
+  const [contents, setContents] = useState<
+    { _id: string; type: ContentType; link: string; title: string }[]
+  >([]);
   const modalRef = useRef<HTMLDivElement>(null);
-  const content: { type: ContentType; link: string; title: string }[] =
-    useContent();
+  const content: {
+    _id: string;
+    type: ContentType;
+    link: string;
+    title: string;
+  }[] = useContent();
   const [filter, setFilter] = useState<string>(ContentType.Twitter);
 
   useEffect(() => {
@@ -39,6 +46,10 @@ function Dashboard() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
+
+  const handleDelete = (contentId: string) => {
+    setContents(contents.filter((item) => item._id !== contentId));
+  };
 
   const filteredContent =
     filter === "All"
@@ -74,8 +85,15 @@ function Dashboard() {
             ></Button>
           </div>
           <div className="flex flex-wrap gap-4 mt-4">
-            {filteredContent.map(({ link, type, title }) => (
-              <Card key={title} title={title} type={type} link={link} />
+            {filteredContent.map(({ link, type, title, _id }) => (
+              <Card
+                key={_id}
+                _id={_id}
+                title={title}
+                type={type}
+                link={link}
+                onDelete={handleDelete}
+              />
             ))}
           </div>
         </div>

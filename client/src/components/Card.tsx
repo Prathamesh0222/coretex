@@ -1,13 +1,21 @@
 import { useEffect } from "react";
 import { ShareIcon } from "../icons/ShareIcon";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BACKEND_URL } from "../config";
+import { Button } from "./Button";
 
 interface CardProps {
+  _id: string;
   title: string;
   link: string;
   type: "twitter" | "youtube";
+  tags: [];
+  onDelete: (contentId: string) => void;
 }
 
-const Card = ({ title, link, type }: CardProps) => {
+const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
+  const navigate = useNavigate();
   useEffect(() => {
     if (type === "twitter") {
       const script = document.createElement("script");
@@ -21,6 +29,28 @@ const Card = ({ title, link, type }: CardProps) => {
     }
   }, [type]);
 
+  const handleDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/signin");
+        return;
+      }
+
+      await axios.delete(`${BACKEND_URL}/content`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          contentId: _id,
+        },
+      });
+      onDelete(_id);
+    } catch (error) {
+      console.error("Error while deleting content", error);
+    }
+  };
+
   return (
     <div>
       <div className="p-4 bg-dark-400 rounded-lg max-w-72 shadow-xl">
@@ -33,6 +63,11 @@ const Card = ({ title, link, type }: CardProps) => {
             <a href={link} target="_blank">
               <ShareIcon size={20} />
             </a>
+            <Button
+              onClick={handleDelete}
+              variant="primary"
+              startIcon={<ShareIcon />}
+            />
             <ShareIcon size={20} />
           </div>
         </div>
@@ -54,6 +89,7 @@ const Card = ({ title, link, type }: CardProps) => {
             <a href={link.replace("x.com", "twitter.com")}></a>
           </blockquote>
         )}
+        {tags && <div>hi there</div>}
       </div>
     </div>
   );
