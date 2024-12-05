@@ -1,8 +1,9 @@
 import { Response, Router } from "express";
 import { authMiddleware, CustomRequest } from "../middleware";
-import { Content, Link, User } from "../db";
+import { Content, Link, Tag, User } from "../db";
 import { contentSchema } from "../schema/validations";
 import { random } from "../utils";
+import mongoose from "mongoose";
 
 const contentRouter = Router();
 
@@ -20,7 +21,8 @@ contentRouter.post(
         return;
       }
 
-      const { title, link, type } = parsedResult.data;
+      const { title, link, type, tags } = parsedResult.data;
+
       const userId = req.userId;
 
       if (!userId) {
@@ -28,11 +30,31 @@ contentRouter.post(
         return;
       }
 
+      const processedTags: mongoose.Types.ObjectId[] = [];
+      if (tags) {
+        for (const tagTitle of tags) {
+          const normalizedTag = tagTitle.trim().toLowerCase();
+          let tag = await Tag.findOne({
+            title: normalizedTag,
+          });
+
+          if (!tag) {
+            await Tag.create({
+              title: normalizedTag,
+            });
+          }
+
+          if (tag) {
+            processedTags.push(tag._id);
+          }
+        }
+      }
+
       await Content.create({
         title,
         link,
         type,
-        tags: [],
+        tags: processedTags,
         userId,
       });
 
@@ -56,7 +78,9 @@ contentRouter.get(
       const userId = req.userId;
       const content = await Content.find({
         userId,
-      }).populate("userId", "username");
+      })
+        .populate("userId", "username")
+        .populate("tags", "title");
 
       res.json({
         content,
