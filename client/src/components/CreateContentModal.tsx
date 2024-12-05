@@ -26,6 +26,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
     const titleRef = useRef<HTMLInputElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
     const documentRef = useRef<HTMLTextAreaElement>(null);
+    const tagsRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
       if (open && titleRef.current) {
         titleRef.current.focus();
@@ -42,6 +43,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
     const addContent = async () => {
       const title = titleRef.current?.value;
       const link = linkRef.current?.value;
+      const tags = tagsRef.current?.value;
 
       if (!title || !link) {
         toast.error("Title and link are required");
@@ -55,6 +57,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
             title,
             link,
             type,
+            tags,
           },
           {
             headers: {
@@ -97,6 +100,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
                   type === ContentType.Youtube ? "Youtube URL" : "Twitter URL"
                 }
               />
+              <Input ref={tagsRef} type="text" placeholder="tags" />
             </>
           )}
           {type === ContentType.Document && (
