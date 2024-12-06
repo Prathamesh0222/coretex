@@ -27,6 +27,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
     const linkRef = useRef<HTMLInputElement>(null);
     const documentRef = useRef<HTMLTextAreaElement>(null);
     const tagsRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
       if (open && titleRef.current) {
         titleRef.current.focus();
@@ -43,7 +44,11 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
     const addContent = async () => {
       const title = titleRef.current?.value;
       const link = linkRef.current?.value;
-      const tags = tagsRef.current?.value;
+      const tagsString = tagsRef.current?.value;
+
+      const tags = tagsString
+        ? tagsString.split(",").map((tag) => tag.trim())
+        : [];
 
       if (!title || !link) {
         toast.error("Title and link are required");
