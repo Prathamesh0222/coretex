@@ -10,7 +10,7 @@ interface CardProps {
   title: string;
   link: string;
   type: "twitter" | "youtube";
-  tags: [];
+  tags: Array<{ _id: string; title: string }>;
   onDelete: (contentId: string) => void;
 }
 
@@ -89,7 +89,18 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
             <a href={link.replace("x.com", "twitter.com")}></a>
           </blockquote>
         )}
-        {tags && <div>hi there</div>}
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {tags.map((tag) => (
+              <span
+                key={tag._id}
+                className="bg-dark-300 px-2 py-1 rounded text-sm text-white"
+              >
+                {tag.title}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
