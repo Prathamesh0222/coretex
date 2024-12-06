@@ -24,6 +24,7 @@ function Dashboard() {
     type: ContentType;
     link: string;
     title: string;
+    tags: Array<{ _id: string; title: string }>;
   }[] = useContent();
   const [filter, setFilter] = useState<string>(ContentType.Twitter);
 
@@ -85,13 +86,14 @@ function Dashboard() {
             ></Button>
           </div>
           <div className="flex flex-wrap gap-4 mt-4">
-            {filteredContent.map(({ link, type, title, _id }) => (
+            {filteredContent.map(({ link, type, title, _id, tags }) => (
               <Card
                 key={_id}
                 _id={_id}
                 title={title}
                 type={type}
                 link={link}
+                tags={tags}
                 onDelete={handleDelete}
               />
             ))}
