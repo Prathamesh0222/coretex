@@ -1,19 +1,26 @@
 import { ReactElement } from "react";
 
 interface ButtonProps {
-  variant: "primary" | "secondary";
+  variant: "primary" | "secondary" | "danger";
   text?: string;
   startIcon?: ReactElement;
   onClick?: () => void;
   fullWidth?: boolean;
+  fontColor?: "black" | "purple";
   fontWeight?: "sm" | "md" | "lg";
   disabled?: boolean;
   rounded?: boolean;
 }
 
 const variantClasses = {
-  primary: "bg-purple-600 text-white",
-  secondary: "bg-purple-200 text-purple-600",
+  primary: "bg-purple-600",
+  secondary: "bg-white",
+  danger: "bg-red-600 text-white",
+};
+
+const fontColors = {
+  black: "text-black",
+  purple: "text-purple-600",
 };
 
 const disabledClasses = "opacity-50 cursor-not-allowed";
@@ -35,6 +42,7 @@ export const Button = ({
   fontWeight,
   disabled = false,
   rounded,
+  fontColor,
 }: ButtonProps) => {
   const isCircular = rounded && !text;
   return (
@@ -48,6 +56,7 @@ export const Button = ({
         ${disabled ? disabledClasses : ""}
         ${rounded ? "rounded-full" : "rounded-md"}
         ${isCircular ? "w-12 h-12" : "px-4 py-2"}
+        ${fontColor ? fontColors[fontColor] : ""}
       `}
     >
       {startIcon}
