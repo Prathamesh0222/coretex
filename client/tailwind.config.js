@@ -6,6 +6,11 @@ export default {
   ],
   theme: {
     extend: {
+      extend: {
+        fontFamily: {
+          poppins: ["Poppins", "san-serif"],
+        }
+      },
       colors: {
         gray: {
           100: "#fefffe",
