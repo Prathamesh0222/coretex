@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ShareIcon } from "../icons/ShareIcon";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +6,7 @@ import { BACKEND_URL } from "../config";
 import { TrashIcon } from "../icons/TrashIcon";
 import { YoutubeIcon2 } from "../icons/YoutubeIcon2";
 import { TwitterIcon2 } from "../icons/TwitterIcon2";
+import { DeleteModal } from "./DeleteModal";
 
 interface CardProps {
   _id: string;
@@ -17,7 +18,17 @@ interface CardProps {
 }
 
 const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleDeleteClick = () => {
+    setIsOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     if (type === "twitter") {
       const script = document.createElement("script");
@@ -47,6 +58,7 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
           contentId: _id,
         },
       });
+      setIsOpen(false);
       onDelete(_id);
     } catch (error) {
       console.error("Error while deleting content", error);
@@ -66,7 +78,7 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
             <a href={link} target="_blank">
               <ShareIcon size={18} />
             </a>
-            <div onClick={handleDelete}>
+            <div className="cursor-pointer" onClick={handleDeleteClick}>
               <TrashIcon size={18} />
             </div>
           </div>
@@ -104,6 +116,11 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
           </div>
         )}
       </div>
+      <DeleteModal
+        isOpen={isOpen}
+        onClose={handleDeleteClose}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };
