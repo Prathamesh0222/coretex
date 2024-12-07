@@ -46,7 +46,7 @@ export const Signup = () => {
       toast.success("User created successfully!");
       navigate("/signin");
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Error while creating user", error);
       toast.error("Error while creating user");
     },
@@ -57,8 +57,8 @@ export const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-200">
-      <div className="w-full max-w-sm p-6 rounded-lg bg-white shadow-md border border-gray-200">
+    <div className="flex items-center justify-center h-screen bg-dark-500">
+      <div className="w-full max-w-sm p-6 rounded-lg bg-dark-400 text-white shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex justify-center text-2xl font-bold mb-2">
             Register
@@ -111,7 +111,7 @@ export const Signup = () => {
               disabled={mutation.isPending}
             />
           </div>
-          <h2 className="text-center mt-3">
+          <h2 className="text-center mt-3 mb-2">
             Already have an account?{" "}
             <a href="/signin" className="font-bold underline">
               Signin

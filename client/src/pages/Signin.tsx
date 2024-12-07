@@ -54,7 +54,7 @@ export const Signin = () => {
       navigate("/dashboard");
       toast.success("User logged in successfully!");
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Error while creating user", error);
       toast.error("Error while signing in");
     },
@@ -65,7 +65,7 @@ export const Signin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-200">
+    <div className="flex items-center justify-center h-screen bg-dark-500">
       <div className="w-full max-w-sm p-6 rounded-lg bg-white shadow-md border border-gray-200">
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex justify-center text-2xl font-bold mb-2">
