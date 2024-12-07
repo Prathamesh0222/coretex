@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { BrainlyIcon } from "../icons/BrainlyIcon";
 import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutubeIcon";
 import { SidebarItem } from "./SidebarItem";
+import { FilterIcon } from "../icons/FilterIcon";
 
 const Sidebar = ({
   onFilterChange,
@@ -19,7 +19,7 @@ const Sidebar = ({
   return (
     <div className="h-screen bg-dark-400 backdrop-blur-sm border-r border-dark-300 hidden md:block md:w-72 fixed left-0 top-0">
       <h1 className="flex items-center gap-2 text-2xl text-white font-bold mt-8 mx-6">
-        <BrainlyIcon /> Brainly
+        <FilterIcon /> Filter
       </h1>
       <div className="p-6">
         <SidebarItem
