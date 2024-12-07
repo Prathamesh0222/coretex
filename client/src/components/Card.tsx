@@ -3,7 +3,9 @@ import { ShareIcon } from "../icons/ShareIcon";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
-import { Button } from "./Button";
+import { TrashIcon } from "../icons/TrashIcon";
+import { YoutubeIcon2 } from "../icons/YoutubeIcon2";
+import { TwitterIcon2 } from "../icons/TwitterIcon2";
 
 interface CardProps {
   _id: string;
@@ -56,23 +58,23 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
       <div className="p-4 bg-dark-400 rounded-lg max-w-72 shadow-xl">
         <div className="flex justify-between">
           <div className="flex items-center gap-2 text-gray-500">
-            <ShareIcon size={20} />
-            <span className="text-white text-md">{title}</span>
+            {type === "youtube" && <YoutubeIcon2 size={23} />}
+            {type === "twitter" && <TwitterIcon2 size={20} />}
+            <span className="text-gray-300 text-sm font-bold">{title}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-500">
             <a href={link} target="_blank">
-              <ShareIcon size={20} />
+              <ShareIcon size={18} />
             </a>
-            <Button
-              onClick={handleDelete}
-              variant="primary"
-              startIcon={<ShareIcon />}
-            />
-            <ShareIcon size={20} />
+            <div onClick={handleDelete}>
+              <TrashIcon size={18} />
+            </div>
           </div>
         </div>
         {type === "youtube" && (
           <iframe
+            width={"100%"}
+            height={"200"}
             className="w-full mt-2"
             src={link.replace("watch", "embed").replace("?v=", "/")}
             title="YouTube video player"
