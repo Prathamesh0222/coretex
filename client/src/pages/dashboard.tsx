@@ -86,17 +86,23 @@ function Dashboard() {
             ></Button>
           </div>
           <div className="flex flex-wrap gap-4 mt-4">
-            {filteredContent.map(({ link, type, title, _id, tags }) => (
-              <Card
-                key={_id}
-                _id={_id}
-                title={title}
-                type={type}
-                link={link}
-                tags={tags}
-                onDelete={handleDelete}
-              />
-            ))}
+            {filteredContent.length > 0 ? (
+              filteredContent.map(({ link, type, title, _id, tags }) => (
+                <Card
+                  key={_id}
+                  _id={_id}
+                  title={title}
+                  type={type}
+                  link={link}
+                  tags={tags}
+                  onDelete={handleDelete}
+                />
+              ))
+            ) : (
+              <div className="w-full text-center text-gray-500">
+                Press the + button to add content
+              </div>
+            )}
           </div>
         </div>
       </div>
