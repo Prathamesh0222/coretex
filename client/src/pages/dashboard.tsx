@@ -11,21 +11,20 @@ import { Navbar } from "../components/Navbar";
 enum ContentType {
   Youtube = "youtube",
   Twitter = "twitter",
+  Notes = "notes",
 }
 
 function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
-  const [contents, setContents] = useState<
-    { _id: string; type: ContentType; link: string; title: string }[]
-  >([]);
   const modalRef = useRef<HTMLDivElement>(null);
-  const content: {
-    _id: string;
-    type: ContentType;
-    link: string;
-    title: string;
-    tags: Array<{ _id: string; title: string }>;
-  }[] = useContent();
+  // const content: {
+  //   _id: string;
+  //   type: ContentType;
+  //   link: string;
+  //   title: string;
+  //   tags: Array<{ _id: string; title: string }>;
+  // }[] = useContent();
+  const { content, notes, setNotes, setContent } = useContent();
   const [filter, setFilter] = useState<string>(ContentType.Twitter);
 
   useEffect(() => {
@@ -48,15 +47,22 @@ function Dashboard() {
     };
   }, [isOpen]);
 
-  const handleDelete = (contentId: string) => {
-    setContents(contents.filter((item) => item._id !== contentId));
+  const handleDelete = (id: string, type: ContentType) => {
+    if (type === ContentType.Notes) {
+      setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
+    } else {
+      setContent((prevContent) =>
+        prevContent.filter((item) => item._id !== id)
+      );
+    }
   };
 
   const filteredContent =
     filter === "All"
       ? content
       : content.filter(
-          ({ type }) => type.toLowerCase() === filter.toLowerCase()
+          ({ type }: { type: string }) =>
+            type.toLowerCase() === filter.toLowerCase()
         );
 
   return (
@@ -92,7 +98,7 @@ function Dashboard() {
                   key={_id}
                   _id={_id}
                   title={title}
-                  type={type}
+                  type={type as ContentType}
                   link={link}
                   tags={tags}
                   onDelete={handleDelete}
@@ -101,6 +107,22 @@ function Dashboard() {
             ) : (
               <div className="w-full text-center text-gray-500">
                 Press the + button to add content
+              </div>
+            )}
+            {notes.length > 0 ? (
+              notes.map(({ description, _id }) => (
+                <Card
+                  key={_id}
+                  _id={_id}
+                  type={ContentType.Notes}
+                  notes={description}
+                  tags={[]}
+                  onDelete={handleDelete}
+                />
+              ))
+            ) : (
+              <div className="w-full text-center text-gray-500">
+                No Notes Found
               </div>
             )}
           </div>
