@@ -8,16 +8,23 @@ import { YoutubeIcon2 } from "../icons/YoutubeIcon2";
 import { TwitterIcon2 } from "../icons/TwitterIcon2";
 import { DeleteModal } from "./DeleteModal";
 
-interface CardProps {
-  _id: string;
-  title: string;
-  link: string;
-  type: "twitter" | "youtube";
-  tags: Array<{ _id: string; title: string }>;
-  onDelete: (contentId: string) => void;
+enum ContentType {
+  Youtube = "youtube",
+  Twitter = "twitter",
+  Notes = "notes",
 }
 
-const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
+interface CardProps {
+  _id: string;
+  title?: string;
+  link?: string;
+  type: ContentType;
+  tags?: Array<{ _id: string; title: string }>;
+  notes?: string;
+  onDelete: (contentId: string, type: ContentType) => void;
+}
+
+const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -30,7 +37,7 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
   };
 
   useEffect(() => {
-    if (type === "twitter") {
+    if (type === ContentType.Twitter) {
       const script = document.createElement("script");
       script.src = "https://platform.twitter.com/widgets.js";
       script.async = true;
@@ -59,7 +66,7 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
         },
       });
       setIsOpen(false);
-      onDelete(_id);
+      onDelete(_id, type);
     } catch (error) {
       console.error("Error while deleting content", error);
     }
@@ -70,8 +77,8 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
       <div className="p-4 bg-dark-400 rounded-lg max-w-72 shadow-xl">
         <div className="flex justify-between">
           <div className="flex items-center gap-2 text-gray-500">
-            {type === "youtube" && <YoutubeIcon2 size={23} />}
-            {type === "twitter" && <TwitterIcon2 size={20} />}
+            {type === ContentType.Youtube && <YoutubeIcon2 size={23} />}
+            {type === ContentType.Twitter && <TwitterIcon2 size={20} />}
             <span className="text-gray-300 text-sm font-bold">{title}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-500">
@@ -83,25 +90,28 @@ const Card = ({ title, link, type, _id, onDelete, tags }: CardProps) => {
             </div>
           </div>
         </div>
-        {type === "youtube" && (
+        {type === ContentType.Youtube && (
           <iframe
             width={"100%"}
             height={"200"}
             className="w-full mt-2"
-            src={link.replace("watch", "embed").replace("?v=", "/")}
+            src={link?.replace("watch", "embed").replace("?v=", "/")}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
           ></iframe>
         )}
-        {type === "twitter" && (
+        {type === ContentType.Twitter && (
           <blockquote className="twitter-tweet w-full h-full">
             <p lang="en" dir="ltr">
               <a href={link}></a>
             </p>
-            <a href={link.replace("x.com", "twitter.com")}></a>
+            <a href={link?.replace("x.com", "twitter.com")}></a>
           </blockquote>
+        )}
+        {type === ContentType.Notes && (
+          <div className="mt-2 text-gray-300 text-sm">{notes}</div>
         )}
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
