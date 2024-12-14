@@ -2,8 +2,22 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
 
+interface Content {
+  _id: string;
+  type: string;
+  link: string;
+  title: string;
+  tags: Array<{ _id: string; title: string }>;
+}
+
+interface Note {
+  _id: string;
+  description: string;
+}
+
 export const useContent = () => {
-  const [content, setContent] = useState([]);
+  const [content, setContent] = useState<Content[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -19,6 +33,7 @@ export const useContent = () => {
           },
         });
         setContent(response.data.content);
+        setNotes(response.data.notes);
       } catch (err) {
         console.error("Error fetching content", err);
       }
@@ -30,5 +45,5 @@ export const useContent = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  return content;
+  return { content, notes, setNotes, setContent };
 };
