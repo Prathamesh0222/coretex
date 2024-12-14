@@ -16,17 +16,18 @@ interface CreateContentModalProps {
 enum ContentType {
   Youtube = "youtube",
   Twitter = "twitter",
-  Document = "document",
+  Notes = "notes",
 }
 
 const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
   ({ open, onClose }, ref: ForwardedRef<HTMLDivElement>) => {
     const [type, setType] = useState(ContentType.Youtube);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const titleRef = useRef<HTMLInputElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
-    const documentRef = useRef<HTMLTextAreaElement>(null);
     const tagsRef = useRef<HTMLInputElement>(null);
+    const notesRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
       if (open && titleRef.current) {
@@ -39,47 +40,59 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
       navigate("/signin");
+      return;
     }
 
     const addContent = async () => {
+      setIsLoading(true);
       const title = titleRef.current?.value;
       const link = linkRef.current?.value;
       const tagsString = tagsRef.current?.value;
-
       const tags = tagsString
         ? tagsString.split(",").map((tag) => tag.trim())
         : [];
 
-      if (!title || !link) {
-        toast.error("Title and link are required");
-        return;
-      }
-
       try {
-        const response = await axios.post(
-          `${BACKEND_URL}/content`,
-          {
-            title,
-            link,
-            type,
-            tags,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${storedToken}`,
-              "Content-Type": "application/json",
-            },
+        if (type === ContentType.Youtube || type === ContentType.Twitter) {
+          if (!title || !link) {
+            toast.error("Title and link are required");
+            return;
           }
-        );
-        console.log(response.data);
-        toast.success("Content added successfully");
+
+          await axios.post(
+            `${BACKEND_URL}/content`,
+            { title, link, type, tags },
+            { headers: { Authorization: `Bearer ${storedToken}` } }
+          );
+          toast.success("Content added successfully");
+        }
+
+        if (type === ContentType.Notes) {
+          const description = notesRef.current?.value.trim();
+          if (!description) {
+            toast.error("Notes are required");
+            return;
+          }
+
+          await axios.post(
+            `${BACKEND_URL}/content/notes`,
+            { description },
+            { headers: { Authorization: `Bearer ${storedToken}` } }
+          );
+          toast.success("Notes added successfully");
+        }
+
+        titleRef.current!.value = "";
+        linkRef.current!.value = "";
+        tagsRef.current!.value = "";
+        notesRef.current!.value = "";
         onClose();
       } catch (error) {
-        console.error("Error while adding content", error);
-        toast.error("Error while adding content");
+        toast.error("Error while adding content or notes");
+      } finally {
+        setIsLoading(false);
       }
     };
-
     return (
       <div className="w-screen h-screen fixed top-0 left-0 flex justify-center items-center">
         <div className="absolute w-full h-full  backdrop-blur-sm"></div>
@@ -92,12 +105,11 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
               <CrossIcon />
             </div>
           </div>
-          {type !== ContentType.Document && (
+          {type !== ContentType.Notes && (
             <>
               <Label text="Title" />
               <Input ref={titleRef} type="text" placeholder="Title" />
               <Label text="Link" />
-
               <Input
                 ref={linkRef}
                 type="text"
@@ -105,14 +117,15 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
                   type === ContentType.Youtube ? "Youtube URL" : "Twitter URL"
                 }
               />
+              <Label text="Tags" />
               <Input ref={tagsRef} type="text" placeholder="tags" />
             </>
           )}
-          {type === ContentType.Document && (
+          {type === ContentType.Notes && (
             <>
               <Label text="Document" />
               <textarea
-                ref={documentRef}
+                ref={notesRef}
                 placeholder="Enter your document content"
                 className="w-full h-56 px-2.5 py-2 rounded-lg border border-gray-300 bg-dark-300 text-white"
               />
@@ -137,10 +150,10 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
               }}
             />
             <Button
-              text="Document"
-              variant={type === ContentType.Document ? "primary" : "secondary"}
+              text="Notes"
+              variant={type === ContentType.Notes ? "primary" : "secondary"}
               onClick={() => {
-                setType(ContentType.Document);
+                setType(ContentType.Notes);
               }}
             />
           </div>
@@ -148,7 +161,8 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
             onClick={addContent}
             variant="primary"
             fullWidth={true}
-            text="Submit"
+            text={isLoading ? "Submitting..." : "Submit"}
+            disabled={isLoading}
           />
         </div>
       </div>
