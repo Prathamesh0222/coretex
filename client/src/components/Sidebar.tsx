@@ -9,7 +9,7 @@ const Sidebar = ({
 }: {
   onFilterChange: (filter: string) => void;
 }) => {
-  const [selectedItem, setSelectedItem] = useState("Twitter");
+  const [selectedItem, setSelectedItem] = useState("All");
 
   const handleItemClick = (filter: string) => {
     setSelectedItem(filter);
