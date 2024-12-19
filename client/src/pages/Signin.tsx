@@ -3,7 +3,7 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { BACKEND_URL } from "../config";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EyeIcon } from "../icons/EyeIcon";
 import { EyeSlashIcon } from "../icons/EyeSlashIcon";
 import { useNavigate } from "react-router-dom";
@@ -47,10 +47,16 @@ export const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
   const mutation = useMutation({
     mutationFn: signupEnpoint,
-    onSuccess: (data) => {
-      console.log("User created!", data);
+    onSuccess: () => {
       navigate("/dashboard");
       toast.success("User logged in successfully!");
     },
@@ -66,7 +72,7 @@ export const Signin = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-dark-500">
-      <div className="w-full max-w-sm p-6 rounded-lg bg-white shadow-md border border-gray-200">
+      <div className="w-full max-w-sm p-6 rounded-lg bg-dark-400 shadow-md border border-gray-200">
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex justify-center text-2xl font-bold mb-2">
             Login

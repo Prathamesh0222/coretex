@@ -5,7 +5,7 @@ import { BACKEND_URL } from "../config";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EyeSlashIcon } from "../icons/EyeSlashIcon";
 import { EyeIcon } from "../icons/EyeIcon";
 
@@ -37,6 +37,13 @@ export const Signup = () => {
   } = useForm<FormValues>();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const mutation = useMutation({
@@ -58,7 +65,7 @@ export const Signup = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-dark-500">
-      <div className="w-full max-w-sm p-6 rounded-lg bg-dark-400 text-white shadow-md">
+      <div className="w-full max-w-sm p-6 rounded-lg bg-dark-400 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex justify-center text-2xl font-bold mb-2">
             Register

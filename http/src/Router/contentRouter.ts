@@ -1,6 +1,6 @@
 import { Response, Router } from "express";
 import { authMiddleware, CustomRequest } from "../middleware";
-import { Content, Link, Tag, User } from "../db";
+import { Content, Link, Notes, Tag, User } from "../db";
 import { contentSchema } from "../schema/validations";
 import { random } from "../utils";
 import mongoose from "mongoose";
@@ -31,23 +31,34 @@ contentRouter.post(
       }
 
       const processedTags: mongoose.Types.ObjectId[] = [];
-      if (tags) {
-        for (const tagTitle of tags) {
-          const normalizedTag = tagTitle.trim().toLowerCase();
-          let tag = await Tag.findOne({
-            title: normalizedTag,
-          });
-
-          if (!tag) {
-            await Tag.create({
+      try {
+        if (tags) {
+          for (const tagTitle of tags) {
+            const normalizedTag = tagTitle.trim().toLowerCase();
+            let tag = await Tag.findOne({
               title: normalizedTag,
             });
-          }
+            if (!tag) {
+              try {
+                tag = await Tag.create({
+                  title: normalizedTag,
+                });
+              } catch (error) {
+                console.error("Error while creating tag", error);
+              }
+            }
 
-          if (tag) {
-            processedTags.push(tag._id);
+            if (tag) {
+              processedTags.push(tag._id);
+            }
           }
         }
+      } catch (error) {
+        console.error("Error while processing tags", error);
+        res.status(500).json({
+          message: "Error while processing tags",
+        });
+        return;
       }
 
       await Content.create({
@@ -82,8 +93,13 @@ contentRouter.get(
         .populate("userId", "username")
         .populate("tags", "title");
 
+      const notes = await Notes.find({
+        userId,
+      }).select("description");
+
       res.json({
         content,
+        notes,
       });
     } catch (error) {
       console.error("Error while fetching the content", error);
@@ -170,6 +186,39 @@ contentRouter.post(
       console.error("Error while creating sharable link", error);
       res.status(500).json({
         message: "Error while creating sharable link",
+      });
+    }
+  }
+);
+
+contentRouter.post(
+  "/content/notes",
+  authMiddleware,
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const description = req.body.description;
+
+      if (!description) {
+        res.status(400).json({
+          message: "Description is required",
+        });
+        return;
+      }
+
+      const userId = req.userId;
+
+      await Notes.create({
+        description,
+        userId,
+      });
+
+      res.json({
+        message: "Notes added successfully",
+      });
+    } catch (error) {
+      console.error("Error while adding notes", error);
+      res.status(500).json({
+        message: "Error while adding notes",
       });
     }
   }
