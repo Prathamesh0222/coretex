@@ -5,6 +5,7 @@ import { Signin } from "./pages/Signin";
 import Dashboard from "./pages/dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Landing from "./pages/Landing";
 
 function App() {
   const queryClient = new QueryClient();
@@ -13,6 +14,7 @@ function App() {
       <ToastContainer />
       <BrowserRouter>
         <Routes>
+          <Route element={<Landing />} path="/" />
           <Route element={<Signup />} path="/signup" />
           <Route element={<Signin />} path="/signin" />
           <Route element={<Dashboard />} path="/dashboard" />
