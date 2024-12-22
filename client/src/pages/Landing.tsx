@@ -1,10 +1,12 @@
 import { Footer } from "../components/Footer";
 import { LandingNavbar } from "../components/LandingNavbar";
+import { Spotlight } from "../components/Spotlight";
 
 const Landing = () => {
   return (
-    <div className="flex flex-col bg-dark-500 min-h-screen text-white">
+    <div className="flex flex-col bg-black min-h-screen text-white ">
       <LandingNavbar />
+      <Spotlight className="left-80 top-20" fill="#0066ff" />
       <div className="flex-grow text-center">
         <h1 className="text-7xl font-bold mt-24">
           Welcome to <span className="text-blue-700">Brainly</span>
