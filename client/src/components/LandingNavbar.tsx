@@ -10,7 +10,7 @@ export const LandingNavbar = () => {
       </div>
       <div className="flex gap-2">
         <Button variant="primary" text="Login" />
-        <Button variant="secondary" text="Join Now" fontColor="black" />
+        <Button variant="border" text="Join Now" />
       </div>
     </div>
   );
