@@ -5,7 +5,7 @@ export const Footer = () => {
   return (
     <div className="container mx-auto flex justify-between p-4 items-center border-gray-500">
       <p className="text-gray-400 mb-4 md:mb-0">
-        © 2024 Your Company. All rights reserved.
+        © 2024 Brainly. All rights reserved.
       </p>
       <div className="flex gap-2">
         <GithubIcon />
