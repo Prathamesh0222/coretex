@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 
 interface ButtonProps {
-  variant: "primary" | "secondary" | "danger";
+  variant: "primary" | "secondary" | "danger" | "border";
   text?: string;
   startIcon?: ReactElement;
   onClick?: () => void;
@@ -16,6 +16,7 @@ const variantClasses = {
   primary: "bg-purple-600",
   secondary: "bg-white",
   danger: "bg-red-600 text-white",
+  border: "border border-blue-500 border-opacity-20 bg-black",
 };
 
 const fontColors = {
