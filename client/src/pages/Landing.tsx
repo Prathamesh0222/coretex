@@ -1,19 +1,58 @@
+import { Brain, Lock, PenTool, Share2, Twitter, Youtube } from "lucide-react";
 import { Button } from "../components/Button";
 import { Footer } from "../components/Footer";
 import { LandingCard } from "../components/LandingCard";
 import { LandingNavbar } from "../components/LandingNavbar";
 import { Spotlight } from "../components/Spotlight";
-import { CloudIcon } from "../icons/CloudIcon";
-import { NotesIcon } from "../icons/NotesIcon";
-import { TagIcon } from "../icons/TagIcon";
 
+const features = [
+  {
+    name: "Store and Organize Content",
+    description:
+      "Save content from YouTube, Twitter, and more directly into your personal second brain.",
+    icon: <Brain />,
+  },
+  {
+    name: "Easy to Use Embeds",
+    description:
+      "Experience content directly within your second brain—YouTube and Twitter content appears exactly like it does on their platforms.",
+    icon: <Youtube />,
+  },
+  {
+    name: "Note-Taking Made Simple",
+    description:
+      "Take notes alongside your links. Organize thoughts and media in one place.",
+    icon: <PenTool />,
+  },
+  {
+    name: "Control Your Content",
+    description:
+      "You own your notes—share read-only access with others, while you keep full editing rights.",
+    icon: <Lock />,
+  },
+  {
+    name: "Secure Sharing",
+    description:
+      "Share your brains content with others via a unique link, allowing others to read but not edit your work.",
+    icon: <Share2 />,
+  },
+  {
+    name: "Social Integration",
+    description:
+      "Seamlessly integrate with your favorite social platforms for quick and easy content saving.",
+    icon: <Twitter />,
+  },
+];
 const Landing = () => {
   return (
-    <div className="flex flex-col bg-black min-h-screen text-white">
+    <div className="flex flex-col min-w-full min-h-screen bg-black text-white">
       <LandingNavbar />
-      <div className="h-[35rem] w-full dark:bg-black bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.5] relative flex items-center justify-center">
-        <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
-        <Spotlight className="left-80 top-20" fill="#0066ff" />
+      <div className="h-[50rem] dark:bg-black w-full bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.5] relative flex items-center justify-center">
+        <div className="absolute pointer-events-none w-full inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+        <Spotlight
+          className="left-0 top-0 sm:left-20 sm:top-10 md:left-40 md:top-20 lg:left-60 lg:top-30"
+          fill="#0066ff"
+        />
         <div className="flex-grow text-center">
           <span className="rounded-xl border border-blue-500 border-opacity-25 p-2 bg-dark-300 text-sm font-sans text-white">
             <span className="text-blue-500">#1 </span>
@@ -34,30 +73,22 @@ const Landing = () => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto">
+      <div className="container mx-auto mt-12">
         <div className="mx-8">
           <h3 className="text-lg text-blue-500">Features</h3>
           <h1 className="text-4xl font-bold">Why Choose Brainly?</h1>
         </div>
-        <div className="flex justify-center">
-          <LandingCard
-            icon={<NotesIcon />}
-            title="Easy Note-Taking"
-            text="Create, edit, and organize text notes with a rich text editor."
-          />
-          <LandingCard
-            icon={<TagIcon />}
-            title="Tagging & Filtering"
-            text="Add custom tags to notes and links, and filter content by tags for quick navigation."
-          />
-          <LandingCard
-            icon={<CloudIcon />}
-            title="Revision History"
-            text="Track changes to notes and revisit old versions if needed."
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+          {features.map((feature) => (
+            <LandingCard
+              title={feature.name}
+              text={feature.description}
+              icon={feature.icon}
+            />
+          ))}
         </div>
       </div>
-      <div>
+      <div className="my-12">
         <Footer />
       </div>
     </div>
