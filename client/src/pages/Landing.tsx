@@ -1,4 +1,14 @@
-import { Brain, Lock, PenTool, Share2, Twitter, Youtube } from "lucide-react";
+import {
+  Brain,
+  FolderOpen,
+  Lock,
+  PenTool,
+  Save,
+  Share,
+  Share2,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 import { Button } from "../components/Button";
 import { Footer } from "../components/Footer";
 import { LandingCard } from "../components/LandingCard";
@@ -43,6 +53,30 @@ const features = [
     icon: <Twitter />,
   },
 ];
+
+const steps = [
+  {
+    name: "Save Content",
+    description: "Save content from YouTube, Twitter, or take notes.",
+    icon: <Save />,
+  },
+  {
+    name: "Organize",
+    description: "Organize everything in your personal Second Brain.",
+    icon: <FolderOpen />,
+  },
+  {
+    name: "Share",
+    description: "Share with friends or colleagues via a sharable link.",
+    icon: <Share />,
+  },
+  {
+    name: "Control",
+    description: "Keep control: only you can edit your content.",
+    icon: <Lock />,
+  },
+];
+
 const Landing = () => {
   return (
     <div className="flex flex-col min-w-full min-h-screen bg-black text-white">
@@ -75,7 +109,7 @@ const Landing = () => {
       </div>
       <div className="container mx-auto mt-12">
         <div className="mx-8">
-          <h3 className="text-lg text-blue-500">Features</h3>
+          <h3 className="text-lg text-blue-500">FEATURES</h3>
           <h1 className="text-4xl font-bold">Why Choose Brainly?</h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
@@ -85,6 +119,27 @@ const Landing = () => {
               text={feature.description}
               icon={feature.icon}
             />
+          ))}
+        </div>
+        <div className="mx-8 mt-28">
+          <h3 className="text-lg text-blue-500">HOW IT WORKS </h3>
+          <h1 className="text-4xl font-bold">Simple steps to get started</h1>
+        </div>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 mt-16 mb-12">
+          {steps.map((step, index) => (
+            <div key={step.name} className="relative">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto mb-5">
+                {step.icon}
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-medium">
+                  {index + 1}. {step.name}
+                </h3>
+                <p className="mt-2 text-base text-gray-500">
+                  {step.description}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
       </div>
