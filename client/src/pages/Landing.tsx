@@ -14,6 +14,8 @@ import { Footer } from "../components/Footer";
 import { LandingCard } from "../components/LandingCard";
 import { LandingNavbar } from "../components/LandingNavbar";
 import { Spotlight } from "../components/Spotlight";
+import { motion } from "framer-motion";
+import { useRef } from "react";
 
 const features = [
   {
@@ -78,6 +80,14 @@ const steps = [
 ];
 
 const Landing = () => {
+  const featuresRef = useRef<HTMLDivElement>(null);
+
+  const scrollToFeatures = () => {
+    if (featuresRef.current) {
+      featuresRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="flex flex-col min-w-full min-h-screen bg-black text-white">
       <LandingNavbar />
@@ -87,27 +97,45 @@ const Landing = () => {
           className="left-0 top-0 sm:left-20 sm:top-10 md:left-40 md:top-20 lg:left-60 lg:top-30"
           fill="#0066ff"
         />
-        <div className="flex-grow text-center">
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.8,
+            delay: 0.5,
+            type: "spring",
+          }}
+          className="flex-grow text-center px-4 sm:px-6 md:px-8 lg:px-10"
+        >
           <span className="rounded-xl border border-blue-500 border-opacity-25 p-2 bg-dark-300 text-sm font-sans text-white">
-            <span className="text-blue-500">#1 </span>
-            Note taking platform
+            <span className="text-blue-500"># </span>
+            ContentSimplified
           </span>
-          <h1 className="text-6xl font-semibold mt-4">
-            Welcome to <span className="text-blue-700">Brainly</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mt-4">
+            Welcome to <span className="text-blue-600">Brainly</span>
           </h1>
-          <p className="text-lg text-gray-400 mt-2">
+          <p className="text-base sm:text-lg md:text-xl text-gray-400 mt-2">
             Your second brain for all your content—save YouTube, Twitter, and{" "}
             <br />
             notes all in one place. Share with others, keep control of your
             thoughts.
           </p>
-          <div className="flex justify-center mt-6 gap-4">
+          <div className="flex justify-center mt-6 gap-4 flex-wrap">
             <Button text="Get Started" variant="primary" />
-            <Button text="Features" variant="border" />
+            <Button
+              onClick={scrollToFeatures}
+              text="Features"
+              variant="border"
+            />
           </div>
-        </div>
+        </motion.div>
       </div>
-      <div className="container mx-auto mt-12">
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{}}
+        ref={featuresRef}
+        className="container mx-auto mt-12"
+      >
         <div className="mx-8">
           <h3 className="text-lg text-blue-500">FEATURES</h3>
           <h1 className="text-4xl font-bold">Why Choose Brainly?</h1>
@@ -128,7 +156,7 @@ const Landing = () => {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 mt-16 mb-12">
           {steps.map((step, index) => (
             <div key={step.name} className="relative">
-              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto mb-5">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto mb-5 hover:scale-110">
                 {step.icon}
               </div>
               <div className="text-center">
@@ -142,7 +170,7 @@ const Landing = () => {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
       <div className="my-12">
         <Footer />
       </div>
