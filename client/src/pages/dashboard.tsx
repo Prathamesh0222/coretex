@@ -109,7 +109,8 @@ function Dashboard() {
                 Press the + button to add content
               </div>
             )}
-            {notes.length > 0 ? (
+            {filter === "All" &&
+              notes.length > 0 &&
               notes.map(({ description, _id }) => (
                 <Card
                   key={_id}
@@ -119,8 +120,8 @@ function Dashboard() {
                   tags={[]}
                   onDelete={handleDelete}
                 />
-              ))
-            ) : (
+              ))}
+            {filter === ContentType.Notes && notes.length === 0 && (
               <div className="w-full text-center text-gray-500">
                 No Notes Found
               </div>
