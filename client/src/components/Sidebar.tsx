@@ -40,6 +40,12 @@ const Sidebar = ({
           text="Youtube"
           icon={<YoutubeIcon />}
         />
+        <SidebarItem
+          Active={selectedItem === "Notes"}
+          onClick={() => handleItemClick("Notes")}
+          text="Notes"
+          icon={<YoutubeIcon />}
+        />
       </div>
     </div>
   );
