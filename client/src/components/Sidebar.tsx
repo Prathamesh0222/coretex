@@ -3,15 +3,24 @@ import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutubeIcon";
 import { SidebarItem } from "./SidebarItem";
 import { FilterIcon } from "../icons/FilterIcon";
+import { ClipIcon } from "../icons/ClipIcon";
+import { HomeIcon } from "../icons/HomeIcon";
+
+enum ContentType {
+  All = "all",
+  Youtube = "youtube",
+  Twitter = "twitter",
+  Notes = "notes",
+}
 
 const Sidebar = ({
   onFilterChange,
 }: {
   onFilterChange: (filter: string) => void;
 }) => {
-  const [selectedItem, setSelectedItem] = useState("All");
+  const [selectedItem, setSelectedItem] = useState(ContentType.Notes);
 
-  const handleItemClick = (filter: string) => {
+  const handleItemClick = (filter: ContentType) => {
     setSelectedItem(filter);
     onFilterChange(filter);
   };
@@ -23,28 +32,28 @@ const Sidebar = ({
       </h1>
       <div className="p-6">
         <SidebarItem
-          Active={selectedItem === "All"}
-          onClick={() => handleItemClick("All")}
-          text="All"
-          icon={<YoutubeIcon />}
+          Active={selectedItem === ContentType.All}
+          onClick={() => handleItemClick(ContentType.All)}
+          text="Home"
+          icon={<HomeIcon />}
         />
         <SidebarItem
-          Active={selectedItem === "Twitter"}
-          onClick={() => handleItemClick("Twitter")}
+          Active={selectedItem === ContentType.Twitter}
+          onClick={() => handleItemClick(ContentType.Twitter)}
           text="Twitter"
           icon={<TwitterIcon />}
         />
         <SidebarItem
-          Active={selectedItem === "Youtube"}
-          onClick={() => handleItemClick("Youtube")}
+          Active={selectedItem === ContentType.Youtube}
+          onClick={() => handleItemClick(ContentType.Youtube)}
           text="Youtube"
           icon={<YoutubeIcon />}
         />
         <SidebarItem
-          Active={selectedItem === "Notes"}
-          onClick={() => handleItemClick("Notes")}
+          Active={selectedItem === ContentType.Notes}
+          onClick={() => handleItemClick(ContentType.Notes)}
           text="Notes"
-          icon={<YoutubeIcon />}
+          icon={<ClipIcon />}
         />
       </div>
     </div>
