@@ -9,6 +9,7 @@ import { useContent } from "../hooks/useContent";
 import { Navbar } from "../components/Navbar";
 
 enum ContentType {
+  All = "all",
   Youtube = "youtube",
   Twitter = "twitter",
   Notes = "notes",
@@ -25,7 +26,7 @@ function Dashboard() {
   //   tags: Array<{ _id: string; title: string }>;
   // }[] = useContent();
   const { content, notes, setNotes, setContent } = useContent();
-  const [filter, setFilter] = useState<string>(ContentType.Twitter);
+  const [filter, setFilter] = useState<string>(ContentType.All);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -58,7 +59,7 @@ function Dashboard() {
   };
 
   const filteredContent =
-    filter === "All"
+    filter === ContentType.All
       ? content
       : content.filter(
           ({ type }: { type: string }) =>
@@ -68,7 +69,7 @@ function Dashboard() {
   return (
     <div className="flex">
       <Sidebar onFilterChange={setFilter} />
-      <div className="flex-1 md:ml-72  bg-dark-500 min-h-screen">
+      <div className="flex-1 md:ml-72 bg-dark-500 min-h-screen">
         <Navbar />
         <div className="p-4">
           <CreateContentModal
@@ -109,7 +110,7 @@ function Dashboard() {
                 Press the + button to add content
               </div>
             )}
-            {filter === "All" &&
+            {filter === ContentType.All &&
               notes.length > 0 &&
               notes.map(({ description, _id }) => (
                 <Card
@@ -121,11 +122,22 @@ function Dashboard() {
                   onDelete={handleDelete}
                 />
               ))}
-            {filter === ContentType.Notes && notes.length === 0 && (
-              <div className="w-full text-center text-gray-500">
-                No Notes Found
-              </div>
-            )}
+            {filter === ContentType.Notes && notes.length > 0
+              ? notes.map(({ description, _id }) => (
+                  <Card
+                    key={_id}
+                    _id={_id}
+                    type={ContentType.Notes}
+                    notes={description}
+                    tags={[]}
+                    onDelete={handleDelete}
+                  />
+                ))
+              : filter === ContentType.Notes && (
+                  <div className="w-full text-center text-gray-500">
+                    No Notes Found
+                  </div>
+                )}
           </div>
         </div>
       </div>
