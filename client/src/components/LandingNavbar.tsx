@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { BrainlyIcon } from "../icons/BrainlyIcon";
 import { Button } from "./Button";
 import { motion } from "framer-motion";
 
 export const LandingNavbar = () => {
+  const navigate = useNavigate();
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -20,8 +22,20 @@ export const LandingNavbar = () => {
         <h1 className="text-2xl font-bold">Brainly</h1>
       </div>
       <div className="flex gap-2">
-        <Button variant="primary" text="Login" />
-        <Button variant="border" text="Join Now" />
+        <Button
+          onClick={() => {
+            navigate("/signin");
+          }}
+          variant="primary"
+          text="Login"
+        />
+        <Button
+          onClick={() => {
+            navigate("/signup");
+          }}
+          variant="border"
+          text="Join Now"
+        />
       </div>
     </motion.div>
   );
