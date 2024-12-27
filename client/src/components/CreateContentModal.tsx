@@ -46,9 +46,9 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
 
     const addContent = async () => {
       setIsLoading(true);
-      const title = titleRef.current?.value;
-      const link = linkRef.current?.value;
-      const tagsString = tagsRef.current?.value;
+      const title = titleRef.current?.value || "";
+      const link = linkRef.current?.value || "";
+      const tagsString = tagsRef.current?.value || "";
       const tags = tagsString
         ? tagsString.split(",").map((tag) => tag.trim())
         : [];
@@ -69,7 +69,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
         }
 
         if (type === ContentType.Notes) {
-          const description = notesRef.current?.value.trim();
+          const description = notesRef.current?.value.trim() || "";
           if (!description) {
             toast.error("Notes are required");
             return;
@@ -83,12 +83,13 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
           toast.success("Notes added successfully");
         }
 
-        titleRef.current!.value = "";
-        linkRef.current!.value = "";
-        tagsRef.current!.value = "";
-        notesRef.current!.value = "";
+        if (titleRef.current) titleRef.current.value = "";
+        if (linkRef.current) linkRef.current.value = "";
+        if (tagsRef.current) tagsRef.current.value = "";
+        if (notesRef.current) notesRef.current.value = "";
         onClose();
       } catch (error) {
+        console.error("Error while adding content or notes", error);
         toast.error("Error while adding content or notes");
       } finally {
         setIsLoading(false);
