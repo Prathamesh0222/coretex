@@ -9,6 +9,7 @@ import { TwitterIcon2 } from "../icons/TwitterIcon2";
 import { DeleteModal } from "./DeleteModal";
 
 enum ContentType {
+  All = "all",
   Youtube = "youtube",
   Twitter = "twitter",
   Notes = "notes",
@@ -74,7 +75,7 @@ const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
 
   return (
     <div>
-      <div className="p-4 bg-dark-400 rounded-lg max-w-72 shadow-xl">
+      <div className="p-4 bg-dark-400 rounded-lg shadow-xl">
         <div className="flex justify-between">
           <div className="flex items-center gap-2 text-gray-500">
             {type === ContentType.Youtube && <YoutubeIcon2 size={23} />}
