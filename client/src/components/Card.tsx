@@ -104,8 +104,8 @@ const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
           ></iframe>
         )}
         {type === ContentType.Twitter && (
-          <div className="w-full items-center ">
-            <blockquote className="twitter-tweet w-full" data-theme="dark">
+          <div>
+            <blockquote className="twitter-tweet" data-theme="dark">
               <p lang="en" dir="ltr">
                 <a href={link}></a>
               </p>

@@ -144,6 +144,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
               onClick={() => {
                 setType(ContentType.Youtube);
               }}
+              fullWidth={true}
             />
             <Button
               text="Twitter"
@@ -151,6 +152,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
               onClick={() => {
                 setType(ContentType.Twitter);
               }}
+              fullWidth={true}
             />
             <Button
               text="Notes"
@@ -158,6 +160,8 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
               onClick={() => {
                 setType(ContentType.Notes);
               }}
+              fontColor="black"
+              fullWidth={true}
             />
           </div>
           <Button
