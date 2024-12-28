@@ -104,12 +104,14 @@ const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
           ></iframe>
         )}
         {type === ContentType.Twitter && (
-          <blockquote className="twitter-tweet w-full" data-theme="dark">
-            <p lang="en" dir="ltr">
-              <a href={link}></a>
-            </p>
-            <a href={link?.replace("x.com", "twitter.com")}></a>
-          </blockquote>
+          <div className="w-full items-center ">
+            <blockquote className="twitter-tweet w-full" data-theme="dark">
+              <p lang="en" dir="ltr">
+                <a href={link}></a>
+              </p>
+              <a href={link?.replace("x.com", "twitter.com")}></a>
+            </blockquote>
+          </div>
         )}
         {type === ContentType.Notes && (
           <div className="mt-2 text-gray-300 text-sm">{notes}</div>

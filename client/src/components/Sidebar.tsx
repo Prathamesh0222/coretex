@@ -26,7 +26,7 @@ const Sidebar = ({
   };
 
   return (
-    <div className="h-screen bg-dark-400 backdrop-blur-sm border-r border-dark-300 hidden lg:block lg:w-64 fixed left-0 top-0">
+    <div className="h-screen bg-dark-400 backdrop-blur-sm border-r border-dark-300 hidden xl:block xl:w-64 fixed left-0 top-0">
       <h1 className="flex items-center gap-2 text-2xl text-white font-bold mt-8 mx-6">
         <FilterIcon /> Filter
       </h1>

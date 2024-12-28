@@ -69,7 +69,7 @@ function Dashboard() {
   return (
     <div className="flex">
       <Sidebar onFilterChange={setFilter} />
-      <div className="flex-1 md:ml-72 bg-dark-500 min-h-screen">
+      <div className="xl:ml-64 bg-dark-500 min-h-screen w-full">
         <Navbar />
         <div className="p-4">
           <CreateContentModal
@@ -92,7 +92,7 @@ function Dashboard() {
               startIcon={<ShareIcon />}
             ></Button>
           </div>
-          <div className="flex flex-wrap gap-4 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 w-full">
             {filteredContent.length > 0 ? (
               filteredContent.map(({ link, type, title, _id, tags }) => (
                 <Card
