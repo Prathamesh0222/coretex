@@ -79,7 +79,7 @@ function Dashboard() {
             }}
             ref={modalRef}
           />
-          <div className="fixed bottom-6 right-6 flex flex-col gap-4">
+          <div className="fixed bottom-24 right-6 xl:bottom-6 xl:right-6 flex flex-col gap-4">
             <Button
               variant="primary"
               onClick={() => [setIsOpen(true)]}
@@ -90,6 +90,7 @@ function Dashboard() {
               variant="secondary"
               rounded={true}
               startIcon={<ShareIcon />}
+              fontColor="black"
             ></Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 w-full">
