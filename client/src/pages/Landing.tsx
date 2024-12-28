@@ -132,7 +132,12 @@ const Landing = () => {
       </div>
       <motion.div
         initial={{ opacity: 0, y: -50 }}
-        animate={{}}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.8,
+          delay: 0.8,
+          type: "spring",
+        }}
         ref={featuresRef}
         className="container mx-auto mt-12"
       >
