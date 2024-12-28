@@ -82,7 +82,7 @@ const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
             {type === ContentType.Twitter && <TwitterIcon2 size={20} />}
             <span className="text-gray-300 text-sm font-bold">{title}</span>
           </div>
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-2 text-gray-500 ">
             <a href={link} target="_blank">
               <ShareIcon size={18} />
             </a>
@@ -104,7 +104,7 @@ const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
           ></iframe>
         )}
         {type === ContentType.Twitter && (
-          <blockquote className="twitter-tweet w-full h-full">
+          <blockquote className="twitter-tweet w-full" data-theme="dark">
             <p lang="en" dir="ltr">
               <a href={link}></a>
             </p>
