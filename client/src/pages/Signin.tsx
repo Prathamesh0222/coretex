@@ -71,8 +71,8 @@ export const Signin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-dark-500">
-      <div className="w-full max-w-sm p-6 rounded-lg bg-dark-400 shadow-md border border-gray-200">
+    <div className="flex items-center justify-center h-screen bg-dark-500 text-white">
+      <div className="w-full max-w-sm p-6 rounded-lg bg-dark-400 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex justify-center text-2xl font-bold mb-2">
             Login
