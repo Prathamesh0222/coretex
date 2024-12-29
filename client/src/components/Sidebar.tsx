@@ -18,7 +18,7 @@ const Sidebar = ({
 }: {
   onFilterChange: (filter: string) => void;
 }) => {
-  const [selectedItem, setSelectedItem] = useState(ContentType.Notes);
+  const [selectedItem, setSelectedItem] = useState(ContentType.All);
 
   const handleItemClick = (filter: ContentType) => {
     setSelectedItem(filter);
