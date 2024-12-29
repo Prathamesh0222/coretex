@@ -58,12 +58,18 @@ const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
         return;
       }
 
-      await axios.delete(`${BACKEND_URL}/content`, {
+      const endpoint =
+        type === ContentType.Notes
+          ? `${BACKEND_URL}/content/notes`
+          : `${BACKEND_URL}/content`;
+
+      await axios.delete(endpoint, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         data: {
-          contentId: _id,
+          contentId: type === ContentType.Notes ? undefined : _id,
+          noteId: type === ContentType.Notes ? _id : undefined,
         },
       });
       setIsOpen(false);

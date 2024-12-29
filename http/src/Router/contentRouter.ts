@@ -224,6 +224,38 @@ contentRouter.post(
   }
 );
 
+contentRouter.delete(
+  "/content/notes",
+  authMiddleware,
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const noteId = req.body.noteId;
+      const userId = req.userId;
+
+      if (!noteId) {
+        res.status(400).json({
+          message: "Note ID is required",
+        });
+        return;
+      }
+
+      const result = await Notes.deleteOne({
+        _id: noteId,
+        userId,
+      });
+
+      res.status(200).json({
+        message: "Note deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error while deleting the note", error);
+      res.status(500).json({
+        message: "Error while deleting the note",
+      });
+    }
+  }
+);
+
 contentRouter.get("/brain/:sharelink", async (req, res) => {
   const hash = req.params.sharelink;
 
