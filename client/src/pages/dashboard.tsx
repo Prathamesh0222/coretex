@@ -93,8 +93,8 @@ function Dashboard() {
               fontColor="black"
             ></Button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 w-full">
-            {filteredContent.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 w-full mt-20 mb-20">
+            {filteredContent.length > 0 &&
               filteredContent.map(({ link, type, title, _id, tags }) => (
                 <Card
                   key={_id}
@@ -105,12 +105,15 @@ function Dashboard() {
                   tags={tags}
                   onDelete={handleDelete}
                 />
-              ))
-            ) : (
-              <div className="w-full text-center text-gray-500">
-                Press the + button to add content
-              </div>
-            )}
+              ))}
+            {(filter === ContentType.Youtube ||
+              filter === ContentType.Twitter) &&
+              filteredContent.length === 0 && (
+                <div className="w-full text-center text-gray-500">
+                  Press the + button to add content
+                </div>
+              )}
+
             {filter === ContentType.All &&
               notes.length > 0 &&
               notes.map(({ description, _id }) => (
