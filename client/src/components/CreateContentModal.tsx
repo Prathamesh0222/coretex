@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Label } from "./Label";
-import { RichTextEditor } from "./RichTextEditor";
+import RichTextEditor from "./RichTextEditor";
 
 interface CreateContentModalProps {
   open: boolean;
@@ -126,12 +126,15 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
           {type === ContentType.Notes && (
             <>
               <Label text="Document" />
-              <textarea
-                ref={notesRef}
-                placeholder="Enter your document content"
-                className="w-full h-56 px-2.5 py-2 rounded-lg border border-gray-300 bg-dark-300 text-white"
+
+              <RichTextEditor
+                editorContent={notesRef.current?.value || ""}
+                onChange={(content) => {
+                  if (notesRef.current) {
+                    notesRef.current.value = content;
+                  }
+                }}
               />
-              <RichTextEditor />
             </>
           )}
           <h2 className="text-center font-semibold mb-2 text-white">

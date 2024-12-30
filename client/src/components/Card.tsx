@@ -120,7 +120,12 @@ const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
           </div>
         )}
         {type === ContentType.Notes && (
-          <div className="mt-2 text-gray-300 text-sm">{notes}</div>
+          <div
+            className="mt-2 text-gray-300 text-sm"
+            dangerouslySetInnerHTML={{ __html: notes || "" }}
+          >
+            {notes}
+          </div>
         )}
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
