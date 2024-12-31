@@ -13,6 +13,7 @@
   height: 25rem;
   color: white;
   padding: 1.5rem;
+  overflow-y: auto;
 }
 
 h1 {
