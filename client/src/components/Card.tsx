@@ -123,7 +123,7 @@ const Card = ({ title, link, type, _id, onDelete, tags, notes }: CardProps) => {
           <div
             className="mt-2 text-gray-300 text-sm p-2 flex flex-col gap-2"
             dangerouslySetInnerHTML={{
-              __html: notes?.slice(0, 450) + "..." || "",
+              __html: notes || "",
             }}
           />
         )}
