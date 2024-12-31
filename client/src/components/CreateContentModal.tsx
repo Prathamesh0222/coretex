@@ -28,7 +28,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
     const titleRef = useRef<HTMLInputElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
     const tagsRef = useRef<HTMLInputElement>(null);
-    const notesRef = useRef<HTMLTextAreaElement>(null);
+    const [editorContent, setEditorContent] = useState("");
 
     useEffect(() => {
       if (open && titleRef.current) {
@@ -69,7 +69,7 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
         }
 
         if (type === ContentType.Notes) {
-          const description = notesRef.current?.value.trim() || "";
+          const description = editorContent.trim() || "";
           if (!description) {
             toast.error("Notes are required");
             return;
@@ -81,12 +81,12 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
             { headers: { Authorization: `Bearer ${storedToken}` } }
           );
           toast.success("Notes added successfully");
+          setEditorContent("");
         }
 
         if (titleRef.current) titleRef.current.value = "";
         if (linkRef.current) linkRef.current.value = "";
         if (tagsRef.current) tagsRef.current.value = "";
-        if (notesRef.current) notesRef.current.value = "";
         onClose();
       } catch (error) {
         console.error("Error while adding content or notes", error);
@@ -124,18 +124,13 @@ const CreateContentModal = forwardRef<HTMLDivElement, CreateContentModalProps>(
             </>
           )}
           {type === ContentType.Notes && (
-            <>
+            <div className="w-[30vw]">
               <Label text="Document" />
-
               <RichTextEditor
-                editorContent={notesRef.current?.value || ""}
-                onChange={(content) => {
-                  if (notesRef.current) {
-                    notesRef.current.value = content;
-                  }
-                }}
+                editorContent={editorContent}
+                onChange={(content) => setEditorContent(content)}
               />
-            </>
+            </div>
           )}
           <h2 className="text-center font-semibold mb-2 text-white">
             Select the type

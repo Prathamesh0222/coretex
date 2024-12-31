@@ -36,7 +36,7 @@ const RichTextEditor = ({ editorContent, onChange }: RichTextEditorProps) => {
   }
 
   return (
-    <div className="flex flex-col justify-stretch min-h-[200px] border rounded border-b-0">
+    <div className="flex flex-col justify-stretch min-h-[200px]  ">
       <div className="flex items-center gap-2 mb-2 p-2">
         <button
           type="button"
