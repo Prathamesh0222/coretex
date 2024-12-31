@@ -8,7 +8,7 @@ config();
 const app = express();
 app.use(express.json());
 const corsOptions = {
-  origin: ["https://second-brain-alpha.vercel.app"],
+  origin: "*",
 };
 
 app.use(cors(corsOptions));
