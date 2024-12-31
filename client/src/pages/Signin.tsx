@@ -125,7 +125,7 @@ export const Signin = () => {
               disabled={mutation.isPending}
             />
           </div>
-          <h2 className="text-center mt-3">
+          <h2 className="text-center mt-3 mb-2 text-sm">
             Don't have an Account?{" "}
             <a href="/signup" className="font-bold underline">
               Signup
