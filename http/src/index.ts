@@ -8,13 +8,16 @@ config();
 const app = express();
 app.use(express.json());
 
-const corsOptions = {
-  origin: ["https://second-brain-alpha.vercel.app"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+app.use(cors());
 
-app.use(cors(corsOptions));
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 app.use("/api/v1", userRouter);
 app.use("/api/v1", contentRouter);
