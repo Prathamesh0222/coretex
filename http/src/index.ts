@@ -7,7 +7,15 @@ import cors from "cors";
 config();
 const app = express();
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'https://second-brain-alpha.vercel.app', 
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+};
+
+
+app.use(cors(corsOptions));
 
 app.use("/api/v1", userRouter);
 app.use("/api/v1", contentRouter);
