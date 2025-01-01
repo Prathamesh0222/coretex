@@ -1,7 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
-import { BACKEND_URL } from "../config";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -13,6 +12,8 @@ type FormValues = {
   username: string;
   password: string;
 };
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const signupEnpoint = async (formData: FormValues) => {
   const response = await fetch(`${BACKEND_URL}/signup`, {
