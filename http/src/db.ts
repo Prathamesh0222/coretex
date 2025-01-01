@@ -1,8 +1,14 @@
+import { config } from "dotenv";
 import mongoose from "mongoose";
+config();
 
-mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost:27017/mediaserver"
-);
+const mongoUri = process.env.MONGODB_URI;
+
+if (!mongoUri) {
+  throw new Error("MONGODB_URI is not defined in the environment variables");
+}
+
+mongoose.connect(mongoUri);
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
