@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: ["https://second-brain-lake.vercel.app"],
+  origin: ["https://second-brain-lake.vercel.app", "http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };

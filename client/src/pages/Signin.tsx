@@ -15,7 +15,7 @@ type FormValues = {
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const signupEnpoint = async (formData: FormValues) => {
+const signinEnpoint = async (formData: FormValues) => {
   const response = await fetch(`${BACKEND_URL}/signin`, {
     method: "POST",
     headers: {
@@ -56,7 +56,7 @@ export const Signin = () => {
   }, [navigate]);
 
   const mutation = useMutation({
-    mutationFn: signupEnpoint,
+    mutationFn: signinEnpoint,
     onSuccess: () => {
       navigate("/dashboard");
       toast.success("User logged in successfully!");
@@ -122,7 +122,7 @@ export const Signin = () => {
               fontWeight="md"
               fullWidth={true}
               variant="primary"
-              text={mutation.isPending ? "Signing up..." : "Submit"}
+              text={mutation.isPending ? "Signing in..." : "Submit"}
               disabled={mutation.isPending}
             />
           </div>

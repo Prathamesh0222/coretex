@@ -16,6 +16,7 @@ import { LandingNavbar } from "../components/LandingNavbar";
 import { Spotlight } from "../components/Spotlight";
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const features = [
   {
@@ -81,6 +82,7 @@ const steps = [
 
 const Landing = () => {
   const featuresRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const scrollToFeatures = () => {
     if (featuresRef.current) {
@@ -98,14 +100,14 @@ const Landing = () => {
           fill="#0066ff"
         />
         <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{
             duration: 0.8,
             delay: 0.5,
             type: "spring",
           }}
-          className="flex-grow text-center px-4 sm:px-6 md:px-8 lg:px-10"
+          className="flex-grow text-center px-4 sm:px-6 md:px-8 lg:px-10 mb-12"
         >
           <span className="rounded-xl border border-blue-500 border-opacity-25 p-2 bg-dark-300 text-sm font-sans text-white">
             <span className="text-blue-500"># </span>
@@ -121,7 +123,13 @@ const Landing = () => {
             thoughts.
           </p>
           <div className="flex justify-center mt-6 gap-4 flex-wrap">
-            <Button text="Get Started" variant="primary" />
+            <Button
+              onClick={() => {
+                navigate("/signin");
+              }}
+              text="Get Started"
+              variant="primary"
+            />
             <Button
               onClick={scrollToFeatures}
               text="Features"
@@ -131,8 +139,8 @@ const Landing = () => {
         </motion.div>
       </div>
       <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         transition={{
           duration: 0.8,
           delay: 0.8,
@@ -154,11 +162,29 @@ const Landing = () => {
             />
           ))}
         </div>
-        <div className="mx-8 mt-28">
+        <motion.div
+          initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{
+            duration: 0.8,
+            delay: 0.9,
+            type: "spring",
+          }}
+          className="mx-8 mt-28"
+        >
           <h3 className="text-lg text-blue-500">HOW IT WORKS </h3>
           <h1 className="text-4xl font-bold">Simple steps to get started</h1>
-        </div>
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 mt-16 mb-12">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{
+            duration: 0.9,
+            delay: 0.9,
+            type: "spring",
+          }}
+          className="grid grid-cols-1 gap-12 lg:grid-cols-4 mt-16 mb-12"
+        >
           {steps.map((step, index) => (
             <div key={step.name} className="relative">
               <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto mb-5 hover:scale-110">
@@ -174,7 +200,7 @@ const Landing = () => {
               </div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
       <div className="my-12">
         <Footer />
