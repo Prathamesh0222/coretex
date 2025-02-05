@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: ["https://second-brain-lake.vercel.app", "http://localhost:5173"],
+  origin: ["https://brainly.pimpalkar.com"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
