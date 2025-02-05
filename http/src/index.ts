@@ -16,12 +16,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.options("*", cors(corsOptions));
-
 app.use("/api/v1", userRouter);
 app.use("/api/v1", contentRouter);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 app.listen(PORT || "", () => {
   console.log(`Server running at ${PORT}`);
