@@ -10,6 +10,9 @@ app.use(express.json());
 
 const corsOptions = {
   origin: "https://brainly.pimpalkar.com",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
