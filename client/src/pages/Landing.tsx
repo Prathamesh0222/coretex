@@ -91,49 +91,56 @@ const Landing = () => {
   };
 
   return (
-    <div className="flex flex-col min-w-full min-h-screen bg-black text-white">
+    <div className="flex flex-col min-h-screen bg-black text-white">
       <LandingNavbar />
-      <div className="h-[50rem] dark:bg-black w-full bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.5] relative flex items-center justify-center">
+      <div className="h-[45rem] dark:bg-black w-full bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.5] relative flex items-center justify-center">
         <div className="absolute pointer-events-none w-full inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
         <Spotlight
-          className="left-0 top-0 sm:left-20 sm:top-10 md:left-40 md:top-20 lg:left-60 lg:top-30"
+          className="hidden md:block left-0 top-0 sm:left-20 sm:top-10 md:left-40 md:top-20 lg:left-60 lg:top-30"
           fill="#0066ff"
         />
         <motion.div
-          initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
             duration: 0.8,
             delay: 0.5,
             type: "spring",
           }}
-          className="flex-grow text-center px-4 sm:px-6 md:px-8 lg:px-10 mb-12"
+          className="flex-grow text-center px-4 md:px-8 lg:px-10 mt-20 mb-2 tracking-tighter"
         >
-          <span className="rounded-xl border border-blue-500 border-opacity-25 p-2 bg-dark-300 text-sm font-sans text-white">
+          <span className="hidden md:inline rounded-xl border border-blue-500 border-opacity-25 p-2 bg-dark-300 text-xs sm:text-sm font-sans text-white">
             <span className="text-blue-500"># </span>
             ContentSimplified
           </span>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mt-4">
-            Welcome to <span className="text-blue-600">Brainly</span>
+          <h1 className="text-5xl md:text-6xl font-semibold mt-4 md:px-2 px-0">
+            Welcome to{" "}
+            <span className="text-blue-600 underline underline-offset-8">
+              Brainly
+            </span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-400 mt-2">
-            Your second brain for all your content—save YouTube, Twitter, and{" "}
-            <br />
+          <p className="text-md md:text-xl text-gray-400 mt-5 px-4 sm:px-0">
+            Your second brain for all your content—save YouTube, Twitter, and
+            <br className="hidden sm:block" />
             notes all in one place. Share with others, keep control of your
             thoughts.
           </p>
-          <div className="flex justify-center mt-6 gap-4 flex-wrap">
+          <div className="flex justify-center mt-6 gap-4 flex-wrap px-4">
             <Button
               onClick={() => {
                 navigate("/signin");
               }}
               text="Get Started"
               variant="primary"
+              fontWeight="md"
+              fullWidth={true}
             />
             <Button
               onClick={scrollToFeatures}
               text="Features"
               variant="border"
+              fontWeight="md"
+              fullWidth={true}
             />
           </div>
         </motion.div>
@@ -147,7 +154,7 @@ const Landing = () => {
           type: "spring",
         }}
         ref={featuresRef}
-        className="container mx-auto mt-12"
+        className="max-w-7xl mx-auto mt-12"
       >
         <div className="mx-8">
           <h3 className="text-lg text-blue-500">FEATURES</h3>
@@ -183,7 +190,7 @@ const Landing = () => {
             delay: 0.9,
             type: "spring",
           }}
-          className="grid grid-cols-1 gap-12 lg:grid-cols-4 mt-16 mb-12"
+          className="max-w-7xl mx-auto grid grid-cols-1 gap-12 lg:grid-cols-4 mt-16 mb-12"
         >
           {steps.map((step, index) => (
             <div key={step.name} className="relative">
@@ -194,7 +201,7 @@ const Landing = () => {
                 <h3 className="text-lg font-medium">
                   {index + 1}. {step.name}
                 </h3>
-                <p className="mt-2 text-base text-gray-500">
+                <p className="mt-2 text-base text-gray-500 mx-12">
                   {step.description}
                 </p>
               </div>

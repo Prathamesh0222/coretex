@@ -3,9 +3,9 @@ import { LinkedinIcon } from "../icons/LinkedinIcon";
 
 export const Footer = () => {
   return (
-    <div className="container mx-auto flex justify-between px-4 items-center border-gray-500">
+    <div className="max-w-7xl mx-auto flex justify-between px-4 items-center border-gray-500">
       <p className="text-gray-400 mb-4 md:mb-0">
-        © 2024 Brainly. All rights reserved.
+        Designed & Developed by Prathamesh
       </p>
       <div className="flex gap-2">
         <GithubIcon />

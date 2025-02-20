@@ -15,7 +15,7 @@ export const LandingNavbar = () => {
         type: "spring",
         stiffness: 100,
       }}
-      className="container mx-auto p-4 flex items-center text-white justify-between"
+      className="fixed left-0 right-0 mx-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg md:right-5 md:left-5 top-4 container p-4 flex items-center text-white justify-between rounded-lg backdrop-blur-md bg-white/5 border border-white/10 z-50"
     >
       <div className="flex gap-2 items-center">
         <BrainlyIcon />
