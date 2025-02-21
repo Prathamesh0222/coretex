@@ -8,8 +8,17 @@ export const Footer = () => {
         Designed & Developed by Prathamesh
       </p>
       <div className="flex gap-2">
-        <GithubIcon />
-        <LinkedinIcon />
+        <GithubIcon
+          onClick={() =>
+            (window.location.href = "https://github.com/Prathamesh0222")
+          }
+        />
+        <LinkedinIcon
+          onClick={() =>
+            (window.location.href =
+              "https://www.linkedin.com/in/prathamesh-pimpalkar-903b0621a/")
+          }
+        />
       </div>
     </div>
   );
