@@ -1,5 +1,6 @@
 import { GithubIcon } from "../icons/GithubIcon";
 import { LinkedinIcon } from "../icons/LinkedinIcon";
+import { GITHUB_URL, LINKEDIN_URL } from "../lib/ConstantVals";
 
 export const Footer = () => {
   return (
@@ -8,17 +9,8 @@ export const Footer = () => {
         Designed & Developed by Prathamesh
       </p>
       <div className="flex gap-2">
-        <GithubIcon
-          onClick={() =>
-            (window.location.href = "https://github.com/Prathamesh0222")
-          }
-        />
-        <LinkedinIcon
-          onClick={() =>
-            (window.location.href =
-              "https://www.linkedin.com/in/prathamesh-pimpalkar-903b0621a/")
-          }
-        />
+        <GithubIcon onClick={() => (window.location.href = GITHUB_URL)} />
+        <LinkedinIcon onClick={() => (window.location.href = LINKEDIN_URL)} />
       </div>
     </div>
   );
