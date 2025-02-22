@@ -52,7 +52,7 @@ export const Button = ({
       className={`
         ${variantClasses[variant]}
         ${defaultStyles}
-        ${fullWidth ? "w-full sm:w-auto" : ""}
+        ${fullWidth ? "md:w-full w-auto" : ""}
         ${fontWeight ? fontWeights[fontWeight] : ""}
         ${disabled ? disabledClasses : ""}
         ${rounded ? "rounded-full" : "rounded-md"}
