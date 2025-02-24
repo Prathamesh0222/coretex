@@ -10,7 +10,7 @@ export const LandingHeroSection = ({
 }) => {
   const navigate = useNavigate();
   return (
-    <div className="h-[45rem] dark:bg-black w-full bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.5] relative flex items-center justify-center">
+    <div className="h-[54rem] md:h-[60rem] dark:bg-black w-full bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.5] relative flex items-center justify-center">
       <div className="absolute pointer-events-none w-full inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
       <Spotlight
         className="hidden md:block left-0 top-0 sm:left-20 sm:top-10 md:left-40 md:top-20 lg:left-60 lg:top-30"
