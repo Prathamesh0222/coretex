@@ -10,6 +10,7 @@ interface ButtonProps {
   fontWeight?: "sm" | "md" | "lg";
   disabled?: boolean;
   rounded?: boolean;
+  className?: string;
 }
 
 const variantClasses = {
@@ -44,6 +45,7 @@ export const Button = ({
   disabled = false,
   rounded,
   fontColor,
+  className,
 }: ButtonProps) => {
   const isCircular = rounded && !text;
   return (
@@ -52,12 +54,13 @@ export const Button = ({
       className={`
         ${variantClasses[variant]}
         ${defaultStyles}
-        ${fullWidth ? "w-full md:w-auto" : ""}
+        ${fullWidth ? "w-full" : ""}
         ${fontWeight ? fontWeights[fontWeight] : ""}
         ${disabled ? disabledClasses : ""}
         ${rounded ? "rounded-full" : "rounded-md"}
         ${isCircular ? "w-12 h-12" : "px-4 py-2"}
         ${fontColor ? fontColors[fontColor] : ""}
+        ${className || ""}
       `}
     >
       {startIcon}

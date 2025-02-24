@@ -50,14 +50,14 @@ export const LandingHeroSection = ({
             text="Get Started"
             variant="primary"
             fontWeight="md"
-            fullWidth={true}
+            className="flex w-full sm:w-auto"
           />
           <Button
             onClick={scrollToFeatures}
             text="Features"
             variant="border"
             fontWeight="md"
-            fullWidth={true}
+            className="flex w-full sm:w-auto"
           />
         </div>
       </motion.div>
