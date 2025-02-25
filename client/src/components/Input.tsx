@@ -11,7 +11,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex justify-center items-center my-2">
         <input
-          className="w-full px-2.5 py-2 rounded-lg text-white bg-dark-300"
+          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
           onChange={onChange}
           placeholder={placeholder}
           type={type}

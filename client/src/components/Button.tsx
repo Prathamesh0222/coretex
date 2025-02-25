@@ -57,7 +57,7 @@ export const Button = ({
         ${fullWidth ? "w-full" : ""}
         ${fontWeight ? fontWeights[fontWeight] : ""}
         ${disabled ? disabledClasses : ""}
-        ${rounded ? "rounded-full" : "rounded-md"}
+        ${rounded ? "rounded-full" : "rounded-lg"}
         ${isCircular ? "w-12 h-12" : "px-4 py-2"}
         ${fontColor ? fontColors[fontColor] : ""}
         ${className || ""}
