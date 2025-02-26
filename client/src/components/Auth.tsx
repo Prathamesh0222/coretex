@@ -31,10 +31,12 @@ const authEndpoint = async (formData: FormValues, isSignup: boolean) => {
 
   const data = await response.json();
 
-  if (!isSignup && data.token) {
-    localStorage.setItem("token", data.token);
-  } else {
-    throw new Error("Token not found in response");
+  if (!isSignup) {
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+    } else {
+      throw new Error("Token not found in response");
+    }
   }
   return data;
 };
@@ -95,10 +97,12 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
             {isSignup ? "Join our community today" : "Sign in to continue"}
           </p>
         </div>
-        
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300 block">Username</label>
+            <label className="text-sm font-medium text-gray-300 block">
+              Username
+            </label>
             <div className="relative">
               <Input
                 type="text"
@@ -106,7 +110,6 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
                   required: "Username field is required",
                 })}
                 placeholder="Enter your username"
-               
               />
             </div>
             {errors.username && (
@@ -115,9 +118,11 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
               </p>
             )}
           </div>
-          
+
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300 block">Password</label>
+            <label className="text-sm font-medium text-gray-300 block">
+              Password
+            </label>
             <div className="relative">
               <Input
                 type={showPassword ? "text" : "password"}
@@ -125,14 +130,13 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
                   required: "Password field is required",
                 })}
                 placeholder="Enter your password"
-                
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors duration-200"
               >
-                {showPassword ? <EyeSlashIcon  /> : <EyeIcon  />}
+                {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
               </button>
             </div>
             {errors.password && (
@@ -141,7 +145,7 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
               </p>
             )}
           </div>
-          
+
           <div className="pt-2">
             <Button
               fullWidth={true}
@@ -152,17 +156,19 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
                     ? "Creating Account..."
                     : "Signing In..."
                   : isSignup
-                    ? "Create Account"
-                    : "Sign In"
+                  ? "Create Account"
+                  : "Sign In"
               }
               disabled={mutation.isPending}
               className="w-full py-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-900"
             />
           </div>
-          
+
           <div className="text-center mt-6">
             <p className="text-gray-400 text-sm">
-              {isSignup ? "Already have an account? " : "Don't have an account? "}
+              {isSignup
+                ? "Already have an account? "
+                : "Don't have an account? "}
               <a
                 href={isSignup ? "/signin" : "/signup"}
                 className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors duration-200"
