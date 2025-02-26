@@ -85,77 +85,92 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-dark-500 text-white">
-      <div className="w-full max-w-sm p-8 rounded-xl bg-dark-400 shadow-lg">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <label className="flex justify-center text-2xl font-bold mb-1">
-            {isSignup ? "Register" : "Login"}
-          </label>
-          <p className="text-center mb-2">
-            Enter the details to {isSignup ? "sign up" : "sign in"}
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100">
+      <div className="w-full max-w-md p-8 mx-4 rounded-2xl bg-gradient-to-b from-gray-800 to-gray-900 shadow-2xl border border-gray-700">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+            {isSignup ? "Create Account" : "Welcome Back"}
+          </h1>
+          <p className="text-gray-400">
+            {isSignup ? "Join our community today" : "Sign in to continue"}
           </p>
-          <label className="font-semibold text-sm">Username</label>
-          <Input
-            type="text"
-            {...register("username", {
-              required: "Username field is required",
-            })}
-            placeholder="Username"
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.username.message}
-            </p>
-          )}
-          <div className="relative">
-            <label className="font-semibold text-sm">Password</label>
-            <Input
-              type={showPassword ? "text" : "password"}
-              {...register("password", {
-                required: "Password field is required",
-              })}
-              placeholder="Password"
-            />
-            <div className="absolute right-2 top-2 translate-y-8 transform">
+        </div>
+        
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300 block">Username</label>
+            <div className="relative">
+              <Input
+                type="text"
+                {...register("username", {
+                  required: "Username field is required",
+                })}
+                placeholder="Enter your username"
+               
+              />
+            </div>
+            {errors.username && (
+              <p className="text-red-400 text-xs mt-1">
+                {errors.username.message}
+              </p>
+            )}
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300 block">Password</label>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                {...register("password", {
+                  required: "Password field is required",
+                })}
+                placeholder="Enter your password"
+                
+              />
               <button
                 type="button"
-                onClick={() => {
-                  setShowPassword(!showPassword);
-                }}
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors duration-200"
               >
-                {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                {showPassword ? <EyeSlashIcon  /> : <EyeIcon  />}
               </button>
             </div>
+            {errors.password && (
+              <p className="text-red-400 text-xs mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.password.message}
-            </p>
-          )}
-          <div className="mt-4">
+          
+          <div className="pt-2">
             <Button
-              fontWeight="md"
               fullWidth={true}
               variant="primary"
               text={
                 mutation.isPending
                   ? isSignup
-                    ? "Signing up..."
-                    : "Signing in..."
-                  : "Submit"
+                    ? "Creating Account..."
+                    : "Signing In..."
+                  : isSignup
+                    ? "Create Account"
+                    : "Sign In"
               }
               disabled={mutation.isPending}
+              className="w-full py-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-900"
             />
           </div>
-          <h2 className="text-center mt-3 mb-2 text-sm">
-            {isSignup ? "Already have an account? " : "Don't have an account? "}
-            <a
-              href={isSignup ? "/signin" : "/signup"}
-              className="font-bold underline"
-            >
-              {isSignup ? "Signin" : "Signup"}
-            </a>
-          </h2>
+          
+          <div className="text-center mt-6">
+            <p className="text-gray-400 text-sm">
+              {isSignup ? "Already have an account? " : "Don't have an account? "}
+              <a
+                href={isSignup ? "/signin" : "/signup"}
+                className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors duration-200"
+              >
+                {isSignup ? "Sign In" : "Create Account"}
+              </a>
+            </p>
+          </div>
         </form>
       </div>
     </div>
