@@ -1,27 +1,36 @@
-# Brainly - Your Second Brain 🧠
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Brainly is a powerful web application designed to help you save, organize, and manage multimedia content and notes in one place. Whether it's a YouTube video you want to watch later, a tweet you want to revisit, or a quick note you need to jot down, Brainly acts as your second brain, keeping everything organized and easily accessible.
+## Getting Started
 
+First, run the development server:
 
-## Features 
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-- **YouTube Integration**: Save YouTube videos by pasting the link. Brainly automatically fetches and displays the video thumbnail for easy reference.
-- **Twitter Integration**: Save tweets by pasting the link. Brainly embeds the tweet so you can view it directly within the app.
-- **Rich Text Notes**: Create and format notes using a rich text editor. Supports bold, italic, headings, bullet points, and more.
-- **User-Friendly Interface**: Clean and intuitive design for seamless content organization.
-- **Dynamic Content Handling**: Automatically fetches and displays embedded content from third-party platforms like YouTube and Twitter.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## How It Works 
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-1. **Save YouTube Videos**:
-   - Copy the YouTube video link.
-   - Paste it into Brainly, and the video thumbnail will be displayed for easy access.
+## Learn More
 
-2. **Save Tweets**:
-   - Copy the Twitter tweet link.
-   - Paste it into Brainly, and the tweet will be embedded for quick viewing.
+To learn more about Next.js, take a look at the following resources:
 
-3. **Create Notes**:
-   - Use the rich text editor to write and format notes.
-   - Save your notes for future reference.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
