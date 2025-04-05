@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
+    "@types/bcryptjs": "^3.0.0",
+    "bcryptjs": "^3.0.2",
     "next": "15.2.4",
     "next-auth": "^4.24.11",
     "prisma": "^6.5.0",
