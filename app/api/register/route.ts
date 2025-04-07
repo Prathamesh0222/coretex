@@ -18,20 +18,20 @@ const postHandler = async (
     },
   });
 
-  if (!existingUser) {
+  if (existingUser) {
     return NextResponse.json({
       message: "User already exists",
       status: 422,
     });
   }
 
-  const hashedPassword = hash(password, 10);
+  const hashedPassword = await hash(password, 10);
 
   await prisma.user.create({
     data: {
       email,
       username,
-      password,
+      password: hashedPassword,
     },
   });
 

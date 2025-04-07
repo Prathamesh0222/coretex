@@ -4,9 +4,19 @@ import { prisma } from "../utils/prisma";
 import { compare } from "bcryptjs";
 import { JWT } from "next-auth/jwt";
 import { Session, User } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
 
 export const authOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
+    GithubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID || "",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -52,12 +62,15 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        token.username = user.username;
       }
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
       session.user.id = token.id;
       session.user.email = token.email;
+      session.user.username = token.username;
+
       return session;
     },
   },
