@@ -26,6 +26,8 @@ import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ThemeToggle } from "./ThemeToggle";
+import { CoretexLogo } from "./CortexLogo";
 
 export const Auth = ({ isSignup }: { isSignup: boolean }) => {
   const { theme, setTheme } = useTheme();
@@ -97,10 +99,6 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
 
   if (!isMounted) return null;
 
-  const handleThemeChange = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
   const handleSumit = (data: SignInInput | SignUpInput) => {
     if (isSignup) {
       signupMutation.mutate(data as SignUpInput);
@@ -113,13 +111,7 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
     <div className="min-h-screen flex items-center justify-center">
       <div className="grid lg:grid-cols-2 md:border p-5 md:p-6 lg:p-8 w-full max-w-6xl rounded-xl">
         <div className="space-y-5 md:mx-12 flex flex-col justify-center">
-          <div className="flex items-center gap-2">
-            <Layers
-              size={45}
-              className="p-2.5 border rounded-xl bg-blue-500 text-white"
-            />
-            <h1 className="text-xl font-semibold">Coretex</h1>
-          </div>
+          <CoretexLogo />
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-semibold">
@@ -129,9 +121,7 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
                 Fill the form to create account
               </p>
             </div>
-            <Button variant={"ghost"} onClick={() => handleThemeChange()}>
-              {theme === "dark" ? <Moon /> : <Sun />}
-            </Button>
+            <ThemeToggle />
           </div>
           <Form {...form}>
             <form

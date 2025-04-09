@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { signOut, useSession } from "next-auth/react";
+import { Sidebar } from "@/components/Sidebar";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -16,17 +16,11 @@ export default function Dashboard() {
   }, [session.status, router]);
 
   return (
-    <div>
-      {session.data?.user.username}
-      {session.data?.user.email}
-      <Button
-        onClick={() => {
-          signOut();
-          router.push("/signin");
-        }}
-      >
-        {session.status === "authenticated" ? "Logout" : "Signin"}
-      </Button>
+    <div className="flex">
+      <Sidebar />
+      <div className="w-full p-3">
+        <div className="border h-full p-2 rounded-xl dark:bg-[#141212] bg-[#f6f7f7]"></div>
+      </div>
     </div>
   );
 }
