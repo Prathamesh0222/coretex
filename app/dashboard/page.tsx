@@ -1,5 +1,6 @@
 "use client";
 
+import { ContentArea } from "@/components/ContentArea";
 import { Sidebar } from "@/components/Sidebar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,9 @@ export default function Dashboard() {
     <div className="flex">
       <Sidebar />
       <div className="w-full p-3">
-        <div className="border h-full p-2 rounded-xl dark:bg-[#141212] bg-[#f6f7f7]"></div>
+        <div className="border h-full p-2 rounded-xl dark:bg-[#141212] bg-[#f6f7f7]">
+          <ContentArea />
+        </div>
       </div>
     </div>
   );
