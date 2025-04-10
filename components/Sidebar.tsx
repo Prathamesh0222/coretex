@@ -47,7 +47,7 @@ const SidebarComponents = [
 ];
 
 export const Sidebar = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [isActive, setIsActive] = useState<number | null>(null);
   const { theme, setTheme } = useTheme();
   const session = useSession();
@@ -144,9 +144,13 @@ export const Sidebar = () => {
             </div>
           ))}
         </div>
-        <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-800">
+        <div
+          className={`flex items-center pt-3 border-t border-gray-200 dark:border-gray-800 ${
+            isSidebarOpen ? "justify-between" : "justify-center"
+          }`}
+        >
           {isSidebarOpen ? (
-            <div className="flex items-center gap-3 ">
+            <div className="flex items-center gap-3">
               <div className="relative">
                 <User className="w-10 h-10 p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300" />
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-[#141212]"></div>
@@ -161,17 +165,10 @@ export const Sidebar = () => {
                 </h2>
               </div>
             </div>
-          ) : (
-            <div className="hidden">
-              <div className="relative">
-                <User className="w-10 h-10 p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300" />
-                <div className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border-2 border-white dark:border-[#141212]"></div>
-              </div>
-            </div>
-          )}
+          ) : null}
           <div className="mt-3">
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger className="cursor-pointer">
                 <Settings className="w-5 h-5 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="p-2 font-semibold">
