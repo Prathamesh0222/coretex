@@ -61,7 +61,7 @@ export const CreateContent = () => {
             <TabsContent value="content">
               <div className="space-y-4">
                 <label className="text-sm font-semibold">Title</label>
-                <Input />
+                <Input placeholder="Give a title for your content" />
                 <label className="text-sm font-semibold flex justify-center">
                   Content Type
                 </label>
@@ -92,23 +92,31 @@ export const CreateContent = () => {
                   onChange={(e) => setTagsInput(e.target.value)}
                   onKeyDown={handleTagInput}
                 />
-                <div className="flex gap-2 mb-12">
-                  {tags.map((tag, index) => (
-                    <Badge
-                      variant={"destructive"}
-                      key={index}
-                      className="rounded-lg"
-                    >
-                      {tag}
-                      <span onClick={() => handleRemoveTagInput(tag)}>
-                        <X className="w-3 h-3 cursor-pointer" />
-                      </span>
-                    </Badge>
-                  ))}
+                <div className="border h-40 border-dashed rounded-xl p-3">
+                  <div className="flex flex-wrap gap-2 mb-12">
+                    {tags.length === 0 ? (
+                      <p className="text-muted-foreground text-sm text-center">
+                        Tags will appear here as you add them.
+                      </p>
+                    ) : (
+                      tags.map((tag, index) => (
+                        <Badge
+                          variant={"destructive"}
+                          key={index}
+                          className="rounded-lg"
+                        >
+                          {tag}
+                          <span onClick={() => handleRemoveTagInput(tag)}>
+                            <X className="w-3 h-3 cursor-pointer" />
+                          </span>
+                        </Badge>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="Notes">Change your Notes here.</TabsContent>
+            <TabsContent value="Notes"></TabsContent>
           </Tabs>
         </div>
       </SheetContent>
