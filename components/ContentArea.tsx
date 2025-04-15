@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Sheet,
@@ -21,6 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { KeyboardEvent, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
+import { SpotifyTab } from "./SpotifyTab";
 
 export const ContentArea = () => {
   const [isPreview, setIsPreview] = useState<string>("");
@@ -52,12 +53,12 @@ export const ContentArea = () => {
           <p className="text-muted-foreground">Your Content</p>
         </span>
         <Sheet>
-          <SheetTrigger>
+          <SheetTrigger asChild>
             <Button>
               <Plus /> Add Content
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className="overflow-y-auto">
             <SheetHeader>
               <SheetTitle>Create Content</SheetTitle>
               <SheetDescription>
@@ -74,30 +75,98 @@ export const ContentArea = () => {
                   <div className="space-y-4">
                     <label className="text-sm font-semibold">Title</label>
                     <Input />
-                    <label className="text-sm font-semibold">
+                    <label className="text-sm font-semibold flex justify-center">
                       Content Type
                     </label>
-                    <Input />
-                    <label className="text-sm font-semibold">Link</label>
-                    <Input onChange={(e) => setIsPreview(e.target.value)} />
-                    {isPreview && (
-                      <div className="border p-4 rounded-xl">
-                        <iframe
-                          width="320"
-                          height="250"
-                          src={isPreview
-                            .replace("watch", "embed")
-                            .replace("?v=", "/")}
-                          title="YouTube video player"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                          className="rounded-xl"
-                        ></iframe>
+                    <Tabs defaultValue="youtube">
+                      <div className="mx-8">
+                        <TabsList>
+                          <TabsTrigger value="youtube">Youtube</TabsTrigger>
+                          <TabsTrigger value="twitter">Twitter</TabsTrigger>
+                          <TabsTrigger value="spotify">Spotify</TabsTrigger>
+                        </TabsList>
                       </div>
-                    )}
 
+                      <TabsContent value="youtube">
+                        <label className="text-sm font-semibold">Link</label>
+                        <Input
+                          onChange={(e) => {
+                            const link = e.target.value;
+                            setIsPreview(link);
+                            if (
+                              link &&
+                              !link.includes("youtube.com") &&
+                              !link.includes("youtu.be")
+                            ) {
+                              toast.error(
+                                "Invalid Youtube link. Please paste a valid Youtube URL."
+                              );
+                            }
+                          }}
+                        />
+                        {isPreview &&
+                        (isPreview.includes("youtube.com") ||
+                          isPreview.includes("youtu.be")) ? (
+                          <div className="border p-4 rounded-xl mt-3">
+                            <iframe
+                              width="445"
+                              height="250"
+                              src={isPreview
+                                .replace("watch", "embed")
+                                .replace("?v=", "/")}
+                              title="YouTube video player"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              referrerPolicy="strict-origin-when-cross-origin"
+                              allowFullScreen
+                              className="rounded-xl"
+                            ></iframe>
+                          </div>
+                        ) : null}
+                      </TabsContent>
+                      <TabsContent value="twitter">
+                        <div className="space-y-3">
+                          <label className="text-sm font-medium text-foreground/80">
+                            Twitter Link
+                          </label>
+                          <Input
+                            className="focus-visible:ring-2 focus-visible:ring-primary/50"
+                            placeholder="Paste Twitter/X link here..."
+                            onChange={(e) => setIsPreview(e.target.value)}
+                          />
+                          {isPreview && (
+                            <div className="border p-4 rounded-xl mt-3 bg-card/50 shadow-sm">
+                              <div className="relative">
+                                <blockquote
+                                  className="twitter-tweet"
+                                  data-theme="dark"
+                                  data-cards="hidden"
+                                  data-conversation="none"
+                                >
+                                  <p lang="en" dir="ltr">
+                                    <a href={isPreview}></a>
+                                  </p>
+                                  <a
+                                    href={isPreview?.replace(
+                                      "x.com",
+                                      "twitter.com"
+                                    )}
+                                  ></a>
+                                </blockquote>
+                              </div>
+                              <script
+                                async
+                                src="https://platform.twitter.com/widgets.js"
+                                charSet="utf-8"
+                              ></script>
+                            </div>
+                          )}
+                        </div>
+                      </TabsContent>
+                      <TabsContent value="spotify">
+                        <SpotifyTab />
+                      </TabsContent>
+                    </Tabs>
                     <label className="text-sm font-semibold">Tags</label>
                     <Input
                       type="text"
@@ -106,9 +175,18 @@ export const ContentArea = () => {
                       onChange={(e) => setTagsInput(e.target.value)}
                       onKeyDown={handleTagInput}
                     />
-                    <div className="flex gap-2">
-                      {tags.map((tag) => (
-                        <Badge className="rounded-lg">{tag}</Badge>
+                    <div className="flex gap-2 mb-12">
+                      {tags.map((tag, index) => (
+                        <Badge
+                          variant={"destructive"}
+                          key={index}
+                          className="rounded-lg"
+                        >
+                          {tag}
+                          <span onClick={() => handleRemoveTagInput(tag)}>
+                            <X className="w-3 h-3 cursor-pointer" />
+                          </span>
+                        </Badge>
                       ))}
                     </div>
                   </div>
