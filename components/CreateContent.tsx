@@ -16,10 +16,40 @@ import { KeyboardEvent, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import axios from "axios";
+
+enum ContentType {
+  Youtube = "youtube",
+  Twitter = "twitter",
+  Spotify = "spotify",
+  Notes = "Notes",
+}
 
 export const CreateContent = () => {
   const [tagsInput, setTagsInput] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
+  const [title, setTitle] = useState<string>("");
+  const [type, setType] = useState<ContentType>(ContentType.Youtube);
+  const [link, setLink] = useState<string>("");
+
+  const handleSubmit = async () => {
+    try {
+      await axios.post("/api/content", {
+        title,
+        type,
+        link,
+        tags,
+      });
+      toast.success("Content created successfully");
+      setTitle("");
+      setType(ContentType.Youtube);
+      setLink("");
+      setTags([]);
+    } catch (error) {
+      console.error("Error while creating content", error);
+      toast.error("Error while creating content");
+    }
+  };
 
   const handleTagInput = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -61,26 +91,39 @@ export const CreateContent = () => {
             <TabsContent value="content">
               <div className="space-y-4">
                 <label className="text-sm font-semibold">Title</label>
-                <Input placeholder="Give a title for your content" />
+                <Input
+                  value={title}
+                  placeholder="Give a title for your content"
+                  onChange={(e) => setTitle(e.target.value)}
+                />
                 <label className="text-sm font-semibold flex justify-center">
                   Content Type
                 </label>
-                <Tabs defaultValue="youtube">
+                <Tabs
+                  defaultValue="youtube"
+                  onValueChange={(value) => setType(value as ContentType)}
+                >
                   <div className="mx-8">
                     <TabsList>
-                      <TabsTrigger value="youtube">Youtube</TabsTrigger>
-                      <TabsTrigger value="twitter">Twitter</TabsTrigger>
-                      <TabsTrigger value="spotify">Spotify</TabsTrigger>
+                      <TabsTrigger value={ContentType.Youtube}>
+                        Youtube
+                      </TabsTrigger>
+                      <TabsTrigger value={ContentType.Twitter}>
+                        Twitter
+                      </TabsTrigger>
+                      <TabsTrigger value={ContentType.Spotify}>
+                        Spotify
+                      </TabsTrigger>
                     </TabsList>
                   </div>
 
-                  <TabsContent value="youtube">
+                  <TabsContent value={ContentType.Youtube}>
                     <YoutubeTab />
                   </TabsContent>
-                  <TabsContent value="twitter">
+                  <TabsContent value={ContentType.Twitter}>
                     <TwitterTab />
                   </TabsContent>
-                  <TabsContent value="spotify">
+                  <TabsContent value={ContentType.Spotify}>
                     <SpotifyTab />
                   </TabsContent>
                 </Tabs>
@@ -92,7 +135,7 @@ export const CreateContent = () => {
                   onChange={(e) => setTagsInput(e.target.value)}
                   onKeyDown={handleTagInput}
                 />
-                <div className="border h-40 border-dashed rounded-xl p-3">
+                <div className="border-2 h-40 border-dashed rounded-xl p-3">
                   <div className="flex flex-wrap gap-2 mb-12">
                     {tags.length === 0 ? (
                       <p className="text-muted-foreground text-sm text-center">
@@ -101,9 +144,16 @@ export const CreateContent = () => {
                     ) : (
                       tags.map((tag, index) => (
                         <Badge
-                          variant={"destructive"}
                           key={index}
-                          className="rounded-lg"
+                          className={`rounded-lg  ${
+                            type === ContentType.Twitter
+                              ? "bg-blue-500 hover:bg-blue-600"
+                              : type === ContentType.Spotify
+                              ? "bg-green-500 hover:bg-green-600"
+                              : type === ContentType.Youtube
+                              ? "bg-red-500 hover:bg-red-600"
+                              : ""
+                          }`}
                         >
                           {tag}
                           <span onClick={() => handleRemoveTagInput(tag)}>
@@ -118,6 +168,9 @@ export const CreateContent = () => {
             </TabsContent>
             <TabsContent value="Notes"></TabsContent>
           </Tabs>
+          <Button onClick={handleSubmit} className="w-full mt-5 font-semibold">
+            Submit
+          </Button>
         </div>
       </SheetContent>
     </Sheet>
