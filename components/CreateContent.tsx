@@ -17,34 +17,32 @@ import { toast } from "sonner";
 import { Badge } from "./ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import axios from "axios";
-
-enum ContentType {
-  Youtube = "youtube",
-  Twitter = "twitter",
-  Spotify = "spotify",
-  Notes = "Notes",
-}
+import { ContentType, useContentState } from "@/app/store/contentState";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CreateContent = () => {
   const [tagsInput, setTagsInput] = useState<string>("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [title, setTitle] = useState<string>("");
-  const [type, setType] = useState<ContentType>(ContentType.Youtube);
-  const [link, setLink] = useState<string>("");
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const { title, type, link, tags, setTitle, setTags, setType, setLink } =
+    useContentState();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async () => {
     try {
-      await axios.post("/api/content", {
+      const response = await axios.post("/api/content", {
         title,
         type,
         link,
         tags,
       });
-      toast.success("Content created successfully");
-      setTitle("");
-      setType(ContentType.Youtube);
-      setLink("");
-      setTags([]);
+
+      if (response.status === 201) {
+        toast.success("Content created successfully");
+        setIsSheetOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["content"] });
+      } else {
+        toast.error("Failed to create content");
+      }
     } catch (error) {
       console.error("Error while creating content", error);
       toast.error("Error while creating content");
@@ -68,10 +66,26 @@ export const CreateContent = () => {
     setTags(tags.filter((tag) => tag !== tagId));
   };
 
+  const resetForm = () => {
+    setTitle("");
+    setType(ContentType.YOUTUBE);
+    setLink("");
+    setTags([]);
+    setTagsInput("");
+  };
+
   return (
-    <Sheet>
+    <Sheet
+      open={isSheetOpen}
+      onOpenChange={(open) => {
+        setIsSheetOpen(open);
+        if (!open) {
+          resetForm();
+        }
+      }}
+    >
       <SheetTrigger asChild>
-        <Button>
+        <Button onClick={() => setIsSheetOpen(true)}>
           <Plus /> Add Content
         </Button>
       </SheetTrigger>
@@ -100,30 +114,30 @@ export const CreateContent = () => {
                   Content Type
                 </label>
                 <Tabs
-                  defaultValue="youtube"
+                  defaultValue={ContentType.YOUTUBE}
                   onValueChange={(value) => setType(value as ContentType)}
                 >
                   <div className="mx-8">
                     <TabsList>
-                      <TabsTrigger value={ContentType.Youtube}>
+                      <TabsTrigger value={ContentType.YOUTUBE}>
                         Youtube
                       </TabsTrigger>
-                      <TabsTrigger value={ContentType.Twitter}>
+                      <TabsTrigger value={ContentType.TWITTER}>
                         Twitter
                       </TabsTrigger>
-                      <TabsTrigger value={ContentType.Spotify}>
+                      <TabsTrigger value={ContentType.SPOTIFY}>
                         Spotify
                       </TabsTrigger>
                     </TabsList>
                   </div>
 
-                  <TabsContent value={ContentType.Youtube}>
+                  <TabsContent value={ContentType.YOUTUBE}>
                     <YoutubeTab />
                   </TabsContent>
-                  <TabsContent value={ContentType.Twitter}>
+                  <TabsContent value={ContentType.TWITTER}>
                     <TwitterTab />
                   </TabsContent>
-                  <TabsContent value={ContentType.Spotify}>
+                  <TabsContent value={ContentType.SPOTIFY}>
                     <SpotifyTab />
                   </TabsContent>
                 </Tabs>
@@ -146,11 +160,11 @@ export const CreateContent = () => {
                         <Badge
                           key={index}
                           className={`rounded-lg  ${
-                            type === ContentType.Twitter
+                            type === ContentType.TWITTER
                               ? "bg-blue-500 hover:bg-blue-600"
-                              : type === ContentType.Spotify
+                              : type === ContentType.SPOTIFY
                               ? "bg-green-500 hover:bg-green-600"
-                              : type === ContentType.Youtube
+                              : type === ContentType.YOUTUBE
                               ? "bg-red-500 hover:bg-red-600"
                               : ""
                           }`}
