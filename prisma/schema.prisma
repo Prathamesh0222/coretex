@@ -24,7 +24,7 @@ model Content {
   title       String
   link        String
   type        ContentType
-  user        User          @relation(fields: [userId], references: [id])
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -35,7 +35,7 @@ model Notes {
   id          String      @id @default(uuid())
   title       String
   description String
-  user        User        @relation(fields: [userId], references: [id])
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -50,18 +50,18 @@ model Tags {
 }
 
 model ContentTags {
-  content   Content @relation(fields: [contentId], references: [id])
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
   contentId String
-  tags      Tags    @relation(fields: [tagsId], references: [id])
+  tags      Tags    @relation(fields: [tagsId], references: [id], onDelete: Cascade)
   tagsId    String
 
   @@id([contentId, tagsId])
 }
 
 model NotesTags {
-  notes   Notes  @relation(fields: [notesId], references: [id])
+  notes   Notes  @relation(fields: [notesId], references: [id], onDelete: Cascade)
   notesId String
-  tags    Tags   @relation(fields: [tagsId], references: [id])
+  tags    Tags   @relation(fields: [tagsId], references: [id], onDelete: Cascade)
   tagsId  String
 
   @@id([notesId, tagsId])
@@ -70,7 +70,7 @@ model NotesTags {
 model Link {
   id     String @id @default(uuid())
   hash   String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
 
