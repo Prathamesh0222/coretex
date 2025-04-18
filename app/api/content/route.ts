@@ -79,3 +79,41 @@ const contentPostHandler = async (
 };
 
 export const POST = validate(ContentSchema)(contentPostHandler);
+
+export const GET = async () => {
+  const session = await getServerSession(authOptions);
+
+  const userId = session?.user.id;
+  try {
+    const response = await prisma.content.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        ContentTags: {
+          include: {
+            tags: true,
+          },
+        },
+      },
+    });
+    return NextResponse.json(
+      {
+        content: response,
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error("Error while fetching data", error);
+    return NextResponse.json(
+      {
+        error: "Error while fetching data",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+};
