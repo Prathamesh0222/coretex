@@ -3,7 +3,7 @@ import { Input } from "./ui/input";
 import { toast } from "sonner";
 
 export const TwitterTab = () => {
-  const { isPreview, setIsPreview } = useContentState();
+  const { isPreview, setIsPreview, setLink } = useContentState();
 
   return (
     <div className="space-y-3">
@@ -14,7 +14,8 @@ export const TwitterTab = () => {
         onChange={(e) => {
           const link = e.target.value;
           setIsPreview(link);
-          if (link && !link.includes("twitter.com")) {
+          setLink(link);
+          if (link && !link.includes("x.com")) {
             toast.error(
               "Invalid Twitter Link. Please paste a valid Twitter URL."
             );
@@ -22,7 +23,7 @@ export const TwitterTab = () => {
         }}
       />
       {isPreview &&
-        (isPreview.includes("twitter.com") ? (
+        (isPreview.includes("x.com") ? (
           <div className="border p-4 rounded-xl mt-3 bg-card/50 shadow-sm">
             <div className="relative">
               <blockquote

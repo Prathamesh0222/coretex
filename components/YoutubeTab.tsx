@@ -3,7 +3,7 @@ import { Input } from "./ui/input";
 import { toast } from "sonner";
 
 export const YoutubeTab = () => {
-  const { isPreview, setIsPreview } = useContentState();
+  const { isPreview, setIsPreview, setLink } = useContentState();
 
   return (
     <>
@@ -13,6 +13,7 @@ export const YoutubeTab = () => {
         onChange={(e) => {
           const link = e.target.value;
           setIsPreview(link);
+          setLink(link);
           if (
             link &&
             !link.includes("youtube.com") &&
