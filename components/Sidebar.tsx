@@ -63,7 +63,7 @@ export const Sidebar = () => {
   return (
     <div
       className={`
-        h-screen bg-[#f6f7f7]/40 dark:bg-[#141212]/95 backdrop-blur-md
+         bg-[#f6f7f7]/40 dark:bg-[#141212]/95 backdrop-blur-md
         border-r border-gray-200 dark:border-gray-800
         transition-all duration-300 ease-in-out
         ${isSidebarOpen ? "w-[280px] p-4" : "w-[70px] p-3.5"}

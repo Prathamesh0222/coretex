@@ -17,10 +17,10 @@ export default function Dashboard() {
   }, [session.status, router]);
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <Sidebar />
-      <div className="w-full p-3">
-        <div className="border h-full p-2 rounded-xl dark:bg-[#141212] bg-[#f6f7f7]">
+      <div className="w-full p-3 h-screen overflow-hidden">
+        <div className="border h-full p-2 rounded-xl dark:bg-[#141212] bg-[#f6f7f7] overflow-y-auto">
           <ContentArea />
         </div>
       </div>
