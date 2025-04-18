@@ -1,13 +1,12 @@
 import { z } from "zod";
-
-const ContentType = ["YOUTUBE", "TWITTER", "SPOTIFY"] as const;
+import { ContentType } from "../store/contentState";
 
 export const ContentSchema = z.object({
   title: z.string(),
-  type: z.enum(ContentType, {
-    message: `Type must be one of ${ContentType.join(", ")}`,
+  type: z.nativeEnum(ContentType, {
+    message: `Type must be one of ${Object.values(ContentType).join(", ")}`,
   }),
-  link: z.string().url({ message: "Must be a valid URL" }),
+  link: z.string(),
   tags: z.array(z.string()),
 });
 
