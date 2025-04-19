@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -12,6 +11,7 @@ import { Badge } from "./ui/badge";
 import { ContentType } from "@/app/store/contentState";
 import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
+import { SpotifyEmbed } from "./SpotifyEmbed";
 
 export const ContentArea = () => {
   const { data: fetchContents, isLoading, error } = useContent();
@@ -46,41 +46,30 @@ export const ContentArea = () => {
               {content.type === ContentType.TWITTER && (
                 <TwitterEmbed link={content.link} />
               )}
+              {content.type === ContentType.SPOTIFY && (
+                <SpotifyEmbed link={content.link} />
+              )}
               <div className="flex flex-wrap gap-2 mt-2">
                 {content.ContentTags.map((contentTag, index) => (
-                  <Badge key={index}>{contentTag.tags.title}</Badge>
+                  <Badge
+                    key={index}
+                    className={`rounded-lg mt-3  ${
+                      content.type === ContentType.TWITTER
+                        ? "bg-blue-500 hover:bg-blue-600"
+                        : content.type === ContentType.SPOTIFY
+                        ? "bg-green-500 hover:bg-green-600"
+                        : content.type === ContentType.YOUTUBE
+                        ? "bg-red-500 hover:bg-red-600"
+                        : ""
+                    }`}
+                  >
+                    {contentTag.tags.title}
+                  </Badge>
                 ))}
               </div>
             </CardContent>
-            <CardFooter>
-              <p>Created Content</p>
-            </CardFooter>
           </Card>
         ))}
-        <Card>
-          <CardHeader>
-            <CardTitle>Card Title</CardTitle>
-            <CardDescription>Card Description</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>Card Content</p>
-          </CardContent>
-          <CardFooter>
-            <p>Card Footer</p>
-          </CardFooter>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Card Title</CardTitle>
-            <CardDescription>Card Description</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>Card Content</p>
-          </CardContent>
-          <CardFooter>
-            <p>Card Footer</p>
-          </CardFooter>
-        </Card>
       </div>
     </div>
   );
