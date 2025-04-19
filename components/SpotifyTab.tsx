@@ -3,7 +3,7 @@ import { Input } from "./ui/input";
 import { toast } from "sonner";
 
 export const SpotifyTab = () => {
-  const { isPreview, setIsPreview } = useContentState();
+  const { isPreview, setIsPreview, setLink } = useContentState();
 
   const getEmbedUrl = (link: string) => {
     try {
@@ -26,6 +26,7 @@ export const SpotifyTab = () => {
         onChange={(e) => {
           const link = e.target.value;
           setIsPreview(link);
+          setLink(link);
           if (link && !link.includes("open.spotify.com")) {
             toast.error(
               "Invalid Spotify link. Please paste a valid Spotify URL."
