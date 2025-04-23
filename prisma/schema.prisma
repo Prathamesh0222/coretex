@@ -78,4 +78,5 @@ enum ContentType {
   YOUTUBE
   TWITTER
   SPOTIFY
+  NOTES
 }
