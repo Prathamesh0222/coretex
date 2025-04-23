@@ -1,17 +1,15 @@
+import { TwitterTweetEmbed } from "react-twitter-embed";
+
 export const TwitterEmbed = ({ link }: { link: string }) => {
+  const tweetId = link.split("/").pop();
   return (
-    <>
-      <blockquote className="twitter-tweet" data-theme="dark">
-        <p lang="en" dir="ltr">
-          <a href={link} />
-        </p>
-        <a href={link.replace("x.com", "twitter.com")}></a>
-      </blockquote>
-      <script
-        async
-        src="https://platform.twitter.com/widgets.js"
-        charSet="utf-8"
-      ></script>
-    </>
+    <div
+      style={{
+        overflow: "auto",
+        borderRadius: "7.2%",
+      }}
+    >
+      <TwitterTweetEmbed tweetId={tweetId!} options={{ theme: "dark" }} />
+    </div>
   );
 };
