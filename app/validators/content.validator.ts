@@ -6,6 +6,7 @@ export const ContentSchema = z.object({
   type: z.nativeEnum(ContentType, {
     message: `Type must be one of ${Object.values(ContentType).join(", ")}`,
   }),
+  description: z.string().optional(),
   link: z.string(),
   tags: z.array(z.string()),
 });

@@ -1,18 +1,32 @@
 import { authOptions } from "@/app/config/auth.config";
 import { validate } from "@/app/middlewares/validate.middleware";
+import { ContentType } from "@/app/store/contentState";
 import { prisma } from "@/app/utils/prisma";
 import {
   ContentInput,
   ContentSchema,
 } from "@/app/validators/content.validator";
+import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+
+const upsertTags = async (tx: Prisma.TransactionClient, tags: string[]) => {
+  return Promise.all(
+    tags.map((tag) => {
+      return tx.tags.upsert({
+        where: { title: tag },
+        update: {},
+        create: { title: tag },
+      });
+    })
+  );
+};
 
 const contentPostHandler = async (
   req: NextRequest,
   context: { validatedData: ContentInput }
 ) => {
-  const { title, type, link, tags } = context.validatedData;
+  const { title, type, link, tags, description } = context.validatedData;
   const session = await getServerSession(authOptions);
 
   if (!session?.user.id) {
@@ -26,23 +40,40 @@ const contentPostHandler = async (
     );
   }
 
+  if (type === ContentType.NOTES && !description) {
+    return NextResponse.json(
+      {
+        error: "Description is required for NOTES",
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
   const userId = session.user.id;
   try {
-    await prisma.$transaction(async (prisma) => {
-      const TagsRecord = await Promise.all(
-        tags.map((tag) =>
-          prisma.tags.upsert({
-            where: {
-              title: tag,
+    if (type === ContentType.NOTES) {
+      await prisma.$transaction(async (prisma) => {
+        const TagsRecord = await upsertTags(prisma, tags);
+        await prisma.notes.create({
+          data: {
+            title,
+            description: description as string,
+            userId,
+            NotesTags: {
+              create: TagsRecord.map((tag) => ({
+                tagsId: tag.id,
+              })),
             },
-            update: {},
-            create: {
-              title: tag,
-            },
-          })
-        )
-      );
-      await prisma.content.create({
+          },
+        });
+      });
+    }
+
+    await prisma.$transaction(async (tx) => {
+      const TagsRecord = await upsertTags(tx, tags);
+      await tx.content.create({
         data: {
           title,
           link,
@@ -95,6 +126,9 @@ export const GET = async () => {
             tags: true,
           },
         },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return NextResponse.json(

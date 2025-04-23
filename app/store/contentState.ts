@@ -4,6 +4,7 @@ export enum ContentType {
   YOUTUBE = "YOUTUBE",
   TWITTER = "TWITTER",
   SPOTIFY = "SPOTIFY",
+  NOTES = "NOTES",
 }
 
 interface ContentStateProps {
