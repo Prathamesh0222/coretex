@@ -13,6 +13,7 @@ import { ContentType } from "@/app/store/contentState";
 import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { SpotifyEmbed } from "./SpotifyEmbed";
+import { Trash } from "lucide-react";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -70,7 +71,21 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
             >
               <CardHeader>
                 <CardTitle>{content.title}</CardTitle>
-                <CardDescription>Content Type: {content.type}</CardDescription>
+                <CardDescription>
+                  <div
+                    className={`border rounded-md w-1/5 text-center text-xs ${
+                      content.type === ContentType.YOUTUBE
+                        ? "bg-red-600/10 text-red-500"
+                        : content.type === ContentType.TWITTER
+                        ? "bg-blue-600/10 text-blue-500"
+                        : content.type === ContentType.SPOTIFY
+                        ? "bg-green-600/10 text-green-500"
+                        : ""
+                    }`}
+                  >
+                    {content.type}
+                  </div>
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {content.type === ContentType.YOUTUBE && (
@@ -101,7 +116,11 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                   ))}
                 </div>
               </CardContent>
-              <CardFooter className="border-t">hi there</CardFooter>
+              <CardFooter className="border-t">
+                <div className="flex justify-end w-full">
+                  <Trash size={15} />
+                </div>
+              </CardFooter>
             </Card>
           </div>
         ))}
