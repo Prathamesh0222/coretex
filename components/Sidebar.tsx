@@ -27,28 +27,37 @@ const SidebarComponents = [
   {
     icon: <Home className="w-5 h-5" />,
     title: "Home",
+    filter: "all",
   },
   {
     icon: <LayoutDashboard className="w-5 h-5" />,
     title: "Dashboard",
+    filter: "dashboard",
   },
   {
     icon: <Youtube className="w-5 h-5" />,
     title: "Youtube",
+    filter: "youtube",
   },
   {
     icon: <Twitter className="w-5 h-5" />,
     title: "Twitter",
+    filter: "twitter",
   },
   {
     icon: <Music className="w-5 h-5" />,
     title: "Spotify",
+    filter: "spotify",
   },
 ];
 
-export const Sidebar = () => {
+interface SidebarProps {
+  onFilterChange: (filter: string) => void;
+}
+
+export const Sidebar = ({ onFilterChange }: SidebarProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-  const [isActive, setIsActive] = useState<number | null>(null);
+  const [activeFilter, setActiveFilter] = useState<string>("all");
   const { theme, setTheme } = useTheme();
   const session = useSession();
 
@@ -56,8 +65,9 @@ export const Sidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleActive = (index: number) => {
-    setIsActive(isActive === index ? null : index);
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    onFilterChange(filter);
   };
 
   return (
@@ -110,12 +120,12 @@ export const Sidebar = () => {
           {SidebarComponents.map((sidebar, index) => (
             <div
               key={index}
-              onClick={() => handleActive(index)}
+              onClick={() => handleFilterChange(sidebar.filter)}
               className={`
                 flex items-center gap-3 p-2.5 rounded-xl cursor-pointer
                 transition-all duration-200 ease-in-out
                 ${
-                  isActive === index
+                  activeFilter === sidebar.filter
                     ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
                     : "hover:bg-gray-100 dark:hover:bg-gray-800"
                 }
@@ -123,7 +133,7 @@ export const Sidebar = () => {
             >
               <div
                 className={`${
-                  isActive === index
+                  activeFilter === sidebar.filter
                     ? "text-white"
                     : "text-gray-700 dark:text-gray-300"
                 }`}
@@ -133,7 +143,7 @@ export const Sidebar = () => {
               {isSidebarOpen && (
                 <div
                   className={`text-sm font-medium ${
-                    isActive === index
+                    activeFilter === sidebar.filter
                       ? "text-white"
                       : "text-gray-700 dark:text-gray-300"
                   }`}
