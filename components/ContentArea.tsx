@@ -13,7 +13,7 @@ import { ContentType } from "@/app/store/contentState";
 import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { SpotifyEmbed } from "./SpotifyEmbed";
-import { Trash } from "lucide-react";
+import { Music, Trash, Twitter, Youtube } from "lucide-react";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -57,7 +57,7 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
         </span>
         <CreateContent />
       </div>
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12">
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 w-full">
         {filteredContent?.map((content) => (
           <div key={content.id} className="break-inside-avoid mb-4">
             <Card
@@ -70,22 +70,43 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
               }`}
             >
               <CardHeader>
-                <CardTitle>{content.title}</CardTitle>
-                <CardDescription>
-                  <div
-                    className={`border rounded-md w-1/5 text-center text-xs ${
-                      content.type === ContentType.YOUTUBE
-                        ? "bg-red-600/10 text-red-500"
-                        : content.type === ContentType.TWITTER
-                        ? "bg-blue-600/10 text-blue-500"
-                        : content.type === ContentType.SPOTIFY
-                        ? "bg-green-600/10 text-green-500"
-                        : ""
-                    }`}
-                  >
-                    {content.type}
+                <div className="flex items-center gap-2">
+                  <span>
+                    {content.type === ContentType.YOUTUBE ? (
+                      <div className="p-2 border rounded-full bg-red-500/20">
+                        <Youtube size={15} className="text-red-500" />
+                      </div>
+                    ) : content.type === ContentType.TWITTER ? (
+                      <div className="p-2 border rounded-full bg-blue-500/20">
+                        <Twitter size={15} className="text-blue-500" />
+                      </div>
+                    ) : content.type === ContentType.SPOTIFY ? (
+                      <div className="p-2 border rounded-full bg-green-500/20">
+                        <Music size={15} className="text-green-500" />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </span>
+                  <div className="space-y-2">
+                    <CardTitle>{content.title}</CardTitle>
+                    <CardDescription>
+                      <div
+                        className={`border rounded-md text-center text-xs w-16 ${
+                          content.type === ContentType.YOUTUBE
+                            ? "bg-red-600/10 text-red-500"
+                            : content.type === ContentType.TWITTER
+                            ? "bg-blue-600/10 text-blue-500"
+                            : content.type === ContentType.SPOTIFY
+                            ? "bg-green-600/10 text-green-500"
+                            : ""
+                        }`}
+                      >
+                        {content.type}
+                      </div>
+                    </CardDescription>
                   </div>
-                </CardDescription>
+                </div>
               </CardHeader>
               <CardContent>
                 {content.type === ContentType.YOUTUBE && (

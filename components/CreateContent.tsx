@@ -182,7 +182,10 @@ export const CreateContent = () => {
             </TabsContent>
             <TabsContent value="Notes"></TabsContent>
           </Tabs>
-          <Button onClick={handleSubmit} className="w-full mt-5 font-semibold">
+          <Button
+            onClick={handleSubmit}
+            className="w-full mt-5 font-semibold mb-12"
+          >
             Submit
           </Button>
         </div>
