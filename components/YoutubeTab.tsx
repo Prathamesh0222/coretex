@@ -1,13 +1,19 @@
 import { useContentState } from "@/app/store/contentState";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
+import { Asterisk } from "lucide-react";
 
 export const YoutubeTab = () => {
   const { isPreview, setIsPreview, setLink } = useContentState();
 
   return (
     <>
-      <label className="text-sm font-semibold">Youtube Link</label>
+      <label className="flex text-sm font-semibold mb-3 mt-2">
+        Youtube Link
+        <span>
+          <Asterisk size={12} className="text-yellow-500" />
+        </span>
+      </label>
       <Input
         placeholder="Paste Youtube link here..."
         onChange={(e) => {

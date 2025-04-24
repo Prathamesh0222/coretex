@@ -1,6 +1,7 @@
 import { useContentState } from "@/app/store/contentState";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
+import { Asterisk } from "lucide-react";
 
 export const SpotifyTab = () => {
   const { isPreview, setIsPreview, setLink } = useContentState();
@@ -20,7 +21,12 @@ export const SpotifyTab = () => {
 
   return (
     <>
-      <label className="text-sm font-semibold">Spotify Link</label>
+      <label className="flex text-sm font-semibold mb-3 mt-2">
+        Spotify Link
+        <span>
+          <Asterisk size={12} className="text-yellow-500" />
+        </span>
+      </label>
       <Input
         placeholder="Paste Spotify link here..."
         onChange={(e) => {

@@ -1,4 +1,4 @@
-import { Plus, X } from "lucide-react";
+import { Asterisk, Plus, X } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -23,8 +23,18 @@ import { useQueryClient } from "@tanstack/react-query";
 export const CreateContent = () => {
   const [tagsInput, setTagsInput] = useState<string>("");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const { title, type, link, tags, setTitle, setTags, setType, setLink } =
-    useContentState();
+  const {
+    title,
+    type,
+    link,
+    tags,
+    description,
+    setTitle,
+    setTags,
+    setType,
+    setLink,
+    setDescription,
+  } = useContentState();
   const queryClient = useQueryClient();
 
   const handleSubmit = async () => {
@@ -33,6 +43,7 @@ export const CreateContent = () => {
         title,
         type,
         link,
+        summary: description,
         tags,
       });
 
@@ -103,8 +114,13 @@ export const CreateContent = () => {
               <TabsTrigger value="Notes">Notes</TabsTrigger>
             </TabsList>
             <TabsContent value="content">
-              <div className="space-y-4">
-                <label className="text-sm font-semibold">Title</label>
+              <div className="space-y-3">
+                <label className="text-sm font-semibold flex mt-2.5">
+                  Title
+                  <span>
+                    <Asterisk size={12} className="text-yellow-500" />
+                  </span>
+                </label>
                 <Input
                   value={title}
                   placeholder="Give a title for your content"
@@ -112,6 +128,9 @@ export const CreateContent = () => {
                 />
                 <label className="text-sm font-semibold flex justify-center">
                   Content Type
+                  <span>
+                    <Asterisk size={12} className="text-yellow-500" />
+                  </span>
                 </label>
                 <Tabs
                   defaultValue={ContentType.YOUTUBE}
@@ -141,7 +160,33 @@ export const CreateContent = () => {
                     <SpotifyTab />
                   </TabsContent>
                 </Tabs>
-                <label className="text-sm font-semibold">Tags</label>
+                <div>
+                  <label className="text-sm font-semibold">Description</label>
+                  <div className="mt-3">
+                    <textarea
+                      value={description}
+                      placeholder="Write a description"
+                      className="bg-primary/5 rounded-md p-3 w-full border text-sm h-40"
+                      maxLength={255}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <p
+                      className={
+                        description.length === 255
+                          ? "text-red-500 font-semibold text-sm mt-2"
+                          : `text-sm mt-2 text-muted-foreground font-semibold`
+                      }
+                    >
+                      Character Count: {description.length}/255
+                    </p>
+                  </div>
+                </div>
+                <label className="flex text-sm font-semibold">
+                  Tags
+                  <span>
+                    <Asterisk size={12} className="text-yellow-500" />
+                  </span>
+                </label>
                 <Input
                   type="text"
                   placeholder="Press enter to add the tag"

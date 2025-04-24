@@ -1,13 +1,19 @@
 import { useContentState } from "@/app/store/contentState";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
+import { Asterisk } from "lucide-react";
 
 export const TwitterTab = () => {
   const { isPreview, setIsPreview, setLink } = useContentState();
 
   return (
     <div className="space-y-3">
-      <label className="text-sm font-semibold">Twitter Link</label>
+      <label className="flex text-sm font-semibold mb-3 mt-2">
+        Twitter Link
+        <span>
+          <Asterisk size={12} className="text-yellow-500" />
+        </span>
+      </label>
       <Input
         className="focus-visible:ring-2 focus-visible:ring-primary/50"
         placeholder="Paste Twitter/X link here..."
