@@ -7,6 +7,7 @@ export const ContentSchema = z.object({
     message: `Type must be one of ${Object.values(ContentType).join(", ")}`,
   }),
   description: z.string().optional(),
+  summary: z.string().optional(),
   link: z.string(),
   tags: z.array(z.string()),
 });

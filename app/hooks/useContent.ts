@@ -15,7 +15,9 @@ interface Content {
   id: string;
   title: string;
   type: ContentType;
+  summary: string;
   link: string;
+  createdAt: string;
   ContentTags: ContentTag[];
 }
 
@@ -24,6 +26,8 @@ export const useContent = () => {
     queryKey: ["content"],
     queryFn: async () => {
       const response = await axios.get("/api/content");
+      console.log(response.data.content);
+
       return response.data.content;
     },
   });
