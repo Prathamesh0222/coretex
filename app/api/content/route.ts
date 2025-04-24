@@ -26,7 +26,8 @@ const contentPostHandler = async (
   req: NextRequest,
   context: { validatedData: ContentInput }
 ) => {
-  const { title, type, link, tags, description } = context.validatedData;
+  const { title, type, link, tags, description, summary } =
+    context.validatedData;
   const session = await getServerSession(authOptions);
 
   if (!session?.user.id) {
@@ -78,6 +79,7 @@ const contentPostHandler = async (
           title,
           link,
           type,
+          summary,
           userId,
           ContentTags: {
             create: TagsRecord.map((tag) => ({

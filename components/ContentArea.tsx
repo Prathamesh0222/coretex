@@ -13,7 +13,14 @@ import { ContentType } from "@/app/store/contentState";
 import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { SpotifyEmbed } from "./SpotifyEmbed";
-import { Music, Trash, Twitter, Youtube } from "lucide-react";
+import {
+  Calendar,
+  ClipboardPen,
+  Music,
+  Trash,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -118,17 +125,30 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                 {content.type === ContentType.SPOTIFY && (
                   <SpotifyEmbed link={content.link} />
                 )}
+                {content.summary && (
+                  <div className="border bg-red-500/20 border-red-300/40 p-3 rounded-xl text-sm mt-4 shadow-sm hover:shadow-md transition-all duration-200">
+                    <span className="flex items-center gap-2 font-semibold text-xs uppercase mb-1 text-muted-foreground">
+                      <ClipboardPen
+                        size={14}
+                        className="text-muted-foreground"
+                      />
+                      Summary
+                    </span>
+                    <p className="tracking-tight pl-1">{content.summary}</p>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap gap-2 mt-4">
                   {content.ContentTags.map((contentTag, index) => (
                     <Badge
                       key={index}
                       className={`rounded-lg font-semibold  ${
                         content.type === ContentType.TWITTER
-                          ? "bg-blue-500 hover:bg-blue-600"
+                          ? "bg-blue-600/10 hover:bg-blue-600/20 text-blue-500"
                           : content.type === ContentType.SPOTIFY
-                          ? "bg-green-500 hover:bg-green-600"
+                          ? "bg-green-600/10 hover:bg-green-600/20 text-green-500"
                           : content.type === ContentType.YOUTUBE
-                          ? "bg-red-500 hover:bg-red-600"
+                          ? "bg-red-600/10 hover:bg-red-600/20 text-red-500"
                           : ""
                       }`}
                     >
@@ -137,7 +157,12 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                   ))}
                 </div>
               </CardContent>
-              <CardFooter className="border-t">
+              <CardFooter className="border-t flex items-center">
+                <div className="flex text-xs gap-1 items-center text-muted-foreground">
+                  <Calendar size={12} />
+                  <p>Created:</p>
+                  {new Date(content.createdAt).toLocaleDateString("en-GB")}
+                </div>
                 <div className="flex justify-end w-full">
                   <Trash size={15} />
                 </div>
