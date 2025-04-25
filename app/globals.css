@@ -120,3 +120,105 @@
     @apply bg-background text-foreground;
   }
 }
+
+.tiptap-editor {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.tiptap-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.tiptap-toolbar button {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--background);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tiptap-toolbar button.is-active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.tiptap-toolbar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tiptap {
+  padding: 1rem;
+  min-height: 200px;
+  outline: none;
+}
+
+.tiptap ul,
+.tiptap ol {
+  padding: 0 1rem;
+  margin: 1rem 0;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3,
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+  line-height: 1.1;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.tiptap h1 {
+  font-size: 1.5rem;
+}
+
+.tiptap h2 {
+  font-size: 1.3rem;
+}
+
+.tiptap h3 {
+  font-size: 1.1rem;
+}
+
+.tiptap code {
+  background-color: var(--muted);
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  font-size: 0.85rem;
+  padding: 0.25em 0.5em;
+}
+
+.tiptap pre {
+  background: var(--muted);
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.tiptap blockquote {
+  border-left: 3px solid var(--border);
+  margin: 1rem 0;
+  padding-left: 1rem;
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
