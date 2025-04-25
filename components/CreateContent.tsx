@@ -19,10 +19,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import axios from "axios";
 import { ContentType, useContentState } from "@/app/store/contentState";
 import { useQueryClient } from "@tanstack/react-query";
+import { NotesEditor } from "./NotesEditor";
 
 export const CreateContent = () => {
   const [tagsInput, setTagsInput] = useState<string>("");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+
   const {
     title,
     type,
@@ -225,7 +227,28 @@ export const CreateContent = () => {
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="Notes"></TabsContent>
+            <TabsContent value="Notes">
+              <div className="space-y-3">
+                <label className="text-sm font-semibold flex mt-2.5">
+                  Title
+                  <span>
+                    <Asterisk size={12} className="text-yellow-500" />
+                  </span>
+                </label>
+                <Input
+                  value={title}
+                  placeholder="Give a title for your content"
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+                <label className="text-sm font-semibold flex mt-2.5">
+                  Description
+                  <span>
+                    <Asterisk size={12} className="text-yellow-500" />
+                  </span>
+                </label>
+                <NotesEditor />
+              </div>
+            </TabsContent>
           </Tabs>
           <Button
             onClick={handleSubmit}
