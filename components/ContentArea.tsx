@@ -21,6 +21,18 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "./ui/button";
+import { toast } from "sonner";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -28,6 +40,7 @@ interface ContentAreaProps {
 
 export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   const { data: fetchContents, isLoading, error } = useContent();
+  const queryClient = useQueryClient();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -51,16 +64,29 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
     return filter.charAt(0).toUpperCase() + filter.slice(1);
   };
 
+  const removeContent = async (contentId: string) => {
+    try {
+      const response = await axios.delete("/api/content", {
+        data: { id: contentId },
+      });
+
+      if (response.status === 200) {
+        queryClient.invalidateQueries({ queryKey: ["content"] });
+        toast.success("Content deleted successfully");
+      } else {
+        toast.error("Failed to delete content");
+      }
+    } catch (error) {
+      console.error("Error while deleting content", error);
+      toast.error("Error while deleting content");
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between">
         <span>
           <h1 className="text-2xl">{formatTitle(currentFilter)}</h1>
-          <p className="text-muted-foreground">
-            {currentFilter === "all"
-              ? "Your Content"
-              : `Your ${formatTitle(currentFilter)} Content`}
-          </p>
         </span>
         <CreateContent />
       </div>
@@ -164,7 +190,31 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                   {new Date(content.createdAt).toLocaleDateString("en-GB")}
                 </div>
                 <div className="flex justify-end w-full">
-                  <Trash size={15} />
+                  <Dialog>
+                    <DialogTrigger>
+                      <Trash size={15} className="cursor-pointer" />
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Are you absolutely sure?</DialogTitle>
+                        <DialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your content and remove your data from our
+                          servers.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          onClick={() => removeContent(content.id)}
+                          variant={"destructive"}
+                          className="cursor-pointer"
+                        >
+                          Delete
+                        </Button>
+                        <Button>Cancel</Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardFooter>
             </Card>

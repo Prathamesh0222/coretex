@@ -1,4 +1,4 @@
-import { Asterisk, Plus, X } from "lucide-react";
+import { Asterisk, Plus, Search, X } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -88,176 +88,182 @@ export const CreateContent = () => {
   };
 
   return (
-    <Sheet
-      open={isSheetOpen}
-      onOpenChange={(open) => {
-        setIsSheetOpen(open);
-        if (!open) {
-          resetForm();
-        }
-      }}
-    >
-      <SheetTrigger asChild>
-        <Button onClick={() => setIsSheetOpen(true)}>
-          <Plus /> Add Content
-        </Button>
-      </SheetTrigger>
-      <SheetContent className="overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>Create Content</SheetTitle>
-          <SheetDescription>
-            Give title and content link for creating a content
-          </SheetDescription>
-        </SheetHeader>
-        <div className="mx-4">
-          <Tabs defaultValue="content">
-            <TabsList>
-              <TabsTrigger value="content">Content</TabsTrigger>
-              <TabsTrigger value="Notes">Notes</TabsTrigger>
-            </TabsList>
-            <TabsContent value="content">
-              <div className="space-y-3">
-                <label className="text-sm font-semibold flex mt-2.5">
-                  Title
-                  <span>
-                    <Asterisk size={12} className="text-yellow-500" />
-                  </span>
-                </label>
-                <Input
-                  value={title}
-                  placeholder="Give a title for your content"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <label className="text-sm font-semibold flex justify-center">
-                  Content Type
-                  <span>
-                    <Asterisk size={12} className="text-yellow-500" />
-                  </span>
-                </label>
-                <Tabs
-                  defaultValue={ContentType.YOUTUBE}
-                  onValueChange={(value) => setType(value as ContentType)}
-                >
-                  <div className="mx-8">
-                    <TabsList>
-                      <TabsTrigger value={ContentType.YOUTUBE}>
-                        Youtube
-                      </TabsTrigger>
-                      <TabsTrigger value={ContentType.TWITTER}>
-                        Twitter
-                      </TabsTrigger>
-                      <TabsTrigger value={ContentType.SPOTIFY}>
-                        Spotify
-                      </TabsTrigger>
-                    </TabsList>
-                  </div>
-
-                  <TabsContent value={ContentType.YOUTUBE}>
-                    <YoutubeTab />
-                  </TabsContent>
-                  <TabsContent value={ContentType.TWITTER}>
-                    <TwitterTab />
-                  </TabsContent>
-                  <TabsContent value={ContentType.SPOTIFY}>
-                    <SpotifyTab />
-                  </TabsContent>
-                </Tabs>
-                <div>
-                  <label className="text-sm font-semibold">Description</label>
-                  <div className="mt-3">
-                    <textarea
-                      value={description}
-                      placeholder="Write a description"
-                      className="bg-primary/5 rounded-md p-3 w-full border text-sm h-40"
-                      maxLength={255}
-                      onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <p
-                      className={
-                        description.length === 255
-                          ? "text-red-500 font-semibold text-sm mt-2"
-                          : `text-sm mt-2 text-muted-foreground font-semibold`
-                      }
-                    >
-                      Character Count: {description.length}/255
-                    </p>
-                  </div>
-                </div>
-                <label className="flex text-sm font-semibold">
-                  Tags
-                  <span>
-                    <Asterisk size={12} className="text-yellow-500" />
-                  </span>
-                </label>
-                <Input
-                  type="text"
-                  placeholder="Press enter to add the tag"
-                  value={tagsInput}
-                  onChange={(e) => setTagsInput(e.target.value)}
-                  onKeyDown={handleTagInput}
-                />
-                <div className="border-2 h-40 border-dashed rounded-xl p-3">
-                  <div className="flex flex-wrap gap-2 mb-12">
-                    {tags.length === 0 ? (
-                      <p className="text-muted-foreground text-sm text-center">
-                        Tags will appear here as you add them.
-                      </p>
-                    ) : (
-                      tags.map((tag, index) => (
-                        <Badge
-                          key={index}
-                          className={`rounded-lg  ${
-                            type === ContentType.TWITTER
-                              ? "bg-blue-500 hover:bg-blue-600"
-                              : type === ContentType.SPOTIFY
-                              ? "bg-green-500 hover:bg-green-600"
-                              : type === ContentType.YOUTUBE
-                              ? "bg-red-500 hover:bg-red-600"
-                              : ""
-                          }`}
-                        >
-                          {tag}
-                          <span onClick={() => handleRemoveTagInput(tag)}>
-                            <X className="w-3 h-3 cursor-pointer" />
-                          </span>
-                        </Badge>
-                      ))
-                    )}
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="Notes">
-              <div className="space-y-3">
-                <label className="text-sm font-semibold flex mt-2.5">
-                  Title
-                  <span>
-                    <Asterisk size={12} className="text-yellow-500" />
-                  </span>
-                </label>
-                <Input
-                  value={title}
-                  placeholder="Give a title for your content"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <label className="text-sm font-semibold flex mt-2.5">
-                  Description
-                  <span>
-                    <Asterisk size={12} className="text-yellow-500" />
-                  </span>
-                </label>
-                <NotesEditor />
-              </div>
-            </TabsContent>
-          </Tabs>
-          <Button
-            onClick={handleSubmit}
-            className="w-full mt-5 font-semibold mb-12"
-          >
-            Submit
+    <div className="flex gap-2 mr-2">
+      <div className="flex items-center relative">
+        <Search size={35} className="absolute p-2" />
+        <Input className="pl-9" />
+      </div>
+      <Sheet
+        open={isSheetOpen}
+        onOpenChange={(open) => {
+          setIsSheetOpen(open);
+          if (!open) {
+            resetForm();
+          }
+        }}
+      >
+        <SheetTrigger asChild>
+          <Button onClick={() => setIsSheetOpen(true)}>
+            <Plus /> Add Content
           </Button>
-        </div>
-      </SheetContent>
-    </Sheet>
+        </SheetTrigger>
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Create Content</SheetTitle>
+            <SheetDescription>
+              Give title and content link for creating a content
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mx-4">
+            <Tabs defaultValue="content">
+              <TabsList>
+                <TabsTrigger value="content">Content</TabsTrigger>
+                <TabsTrigger value="Notes">Notes</TabsTrigger>
+              </TabsList>
+              <TabsContent value="content">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold flex mt-2.5">
+                    Title
+                    <span>
+                      <Asterisk size={12} className="text-yellow-500" />
+                    </span>
+                  </label>
+                  <Input
+                    value={title}
+                    placeholder="Give a title for your content"
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <label className="text-sm font-semibold flex justify-center">
+                    Content Type
+                    <span>
+                      <Asterisk size={12} className="text-yellow-500" />
+                    </span>
+                  </label>
+                  <Tabs
+                    defaultValue={ContentType.YOUTUBE}
+                    onValueChange={(value) => setType(value as ContentType)}
+                  >
+                    <div className="mx-8">
+                      <TabsList>
+                        <TabsTrigger value={ContentType.YOUTUBE}>
+                          Youtube
+                        </TabsTrigger>
+                        <TabsTrigger value={ContentType.TWITTER}>
+                          Twitter
+                        </TabsTrigger>
+                        <TabsTrigger value={ContentType.SPOTIFY}>
+                          Spotify
+                        </TabsTrigger>
+                      </TabsList>
+                    </div>
+
+                    <TabsContent value={ContentType.YOUTUBE}>
+                      <YoutubeTab />
+                    </TabsContent>
+                    <TabsContent value={ContentType.TWITTER}>
+                      <TwitterTab />
+                    </TabsContent>
+                    <TabsContent value={ContentType.SPOTIFY}>
+                      <SpotifyTab />
+                    </TabsContent>
+                  </Tabs>
+                  <div>
+                    <label className="text-sm font-semibold">Description</label>
+                    <div className="mt-3">
+                      <textarea
+                        value={description}
+                        placeholder="Write a description"
+                        className="bg-primary/5 rounded-md p-3 w-full border text-sm h-40"
+                        maxLength={255}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                      <p
+                        className={
+                          description.length === 255
+                            ? "text-red-500 font-semibold text-sm mt-2"
+                            : `text-sm mt-2 text-muted-foreground font-semibold`
+                        }
+                      >
+                        Character Count: {description.length}/255
+                      </p>
+                    </div>
+                  </div>
+                  <label className="flex text-sm font-semibold">
+                    Tags
+                    <span>
+                      <Asterisk size={12} className="text-yellow-500" />
+                    </span>
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Press enter to add the tag"
+                    value={tagsInput}
+                    onChange={(e) => setTagsInput(e.target.value)}
+                    onKeyDown={handleTagInput}
+                  />
+                  <div className="border-2 h-40 border-dashed rounded-xl p-3">
+                    <div className="flex flex-wrap gap-2 mb-12">
+                      {tags.length === 0 ? (
+                        <p className="text-muted-foreground text-sm text-center">
+                          Tags will appear here as you add them.
+                        </p>
+                      ) : (
+                        tags.map((tag, index) => (
+                          <Badge
+                            key={index}
+                            className={`rounded-lg  ${
+                              type === ContentType.TWITTER
+                                ? "bg-blue-500 hover:bg-blue-600"
+                                : type === ContentType.SPOTIFY
+                                ? "bg-green-500 hover:bg-green-600"
+                                : type === ContentType.YOUTUBE
+                                ? "bg-red-500 hover:bg-red-600"
+                                : ""
+                            }`}
+                          >
+                            {tag}
+                            <span onClick={() => handleRemoveTagInput(tag)}>
+                              <X className="w-3 h-3 cursor-pointer" />
+                            </span>
+                          </Badge>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="Notes">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold flex mt-2.5">
+                    Title
+                    <span>
+                      <Asterisk size={12} className="text-yellow-500" />
+                    </span>
+                  </label>
+                  <Input
+                    value={title}
+                    placeholder="Give a title for your content"
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <label className="text-sm font-semibold flex mt-2.5">
+                    Description
+                    <span>
+                      <Asterisk size={12} className="text-yellow-500" />
+                    </span>
+                  </label>
+                  <NotesEditor />
+                </div>
+              </TabsContent>
+            </Tabs>
+            <Button
+              onClick={handleSubmit}
+              className="w-full mt-5 font-semibold mb-12"
+            >
+              Submit
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 };
