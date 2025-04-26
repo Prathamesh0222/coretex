@@ -15,7 +15,7 @@ export const NotesEditor = () => {
     <div className="relative">
       <Toolbar editor={editor} />
       <EditorContent
-        className="border rounded-lg pt-12 overflow-y-auto h-[400px] bg-secondary"
+        className="border rounded-lg pt-12 overflow-y-auto h-[400px]"
         editor={editor}
       />
     </div>

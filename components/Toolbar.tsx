@@ -8,16 +8,13 @@ import {
   Strikethrough,
   List,
   ListOrdered,
-  CodeSquare,
   Quote,
   Minus,
-  Undo,
-  Redo,
 } from "lucide-react";
 
 export const Toolbar = ({ editor }: any) => {
   return (
-    <div className="tiptap-toolbar absolute z-20 bg-background border rounded-t-lg w-full">
+    <div className="tiptap-toolbar absolute z-20 bg-background border rounded-t-lg w-full flex justify-center">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
@@ -50,17 +47,6 @@ export const Toolbar = ({ editor }: any) => {
         }
       >
         <Strikethrough size={15} />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleCode().run()}
-        disabled={!editor.can().chain().focus().toggleCode().run()}
-        className={
-          editor.isActive("code")
-            ? "is-active border p-2 rounded-md bg-black text-white dark:bg-white dark:text-black"
-            : "border p-2 rounded-md"
-        }
-      >
-        <Code size={15} />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
