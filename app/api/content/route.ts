@@ -116,6 +116,17 @@ export const POST = validate(ContentSchema)(contentPostHandler);
 export const GET = async () => {
   const session = await getServerSession(authOptions);
 
+  if (!session?.user.id) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+
   const userId = session?.user.id;
   try {
     const response = await prisma.content.findMany({
@@ -146,6 +157,58 @@ export const GET = async () => {
     return NextResponse.json(
       {
         error: "Error while fetching data",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+};
+
+export const DELETE = async (req: NextRequest) => {
+  const { id: contentId } = await req.json();
+
+  if (!contentId) {
+    return NextResponse.json(
+      {
+        error: "Content ID is required",
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user.id) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
+    const userId = session.user.id;
+    await prisma.content.delete({
+      where: {
+        id: contentId,
+        userId,
+      },
+    });
+
+    return NextResponse.json(
+      { message: "Content deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error while deleting content", error);
+    return NextResponse.json(
+      {
+        error: "Error while deleting content",
       },
       {
         status: 500,
