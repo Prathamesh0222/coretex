@@ -13,6 +13,7 @@ interface ContentStateProps {
   link: string;
   description: string;
   type: ContentType;
+  searchQuery: string;
   tags: string[];
   setIsPreview: (e: string) => void;
   setTitle: (e: string) => void;
@@ -20,6 +21,7 @@ interface ContentStateProps {
   setLink: (e: string) => void;
   setType: (e: ContentType) => void;
   setTags: (e: string[]) => void;
+  setSearchQuery: (e: string) => void;
 }
 
 export const useContentState = create<ContentStateProps>((set) => ({
@@ -29,10 +31,12 @@ export const useContentState = create<ContentStateProps>((set) => ({
   description: "",
   type: ContentType.YOUTUBE,
   tags: [],
+  searchQuery: "",
   setIsPreview: (isPreview) => set({ isPreview }),
   setTitle: (title) => set({ title }),
   setType: (type) => set({ type }),
   setDescription: (description) => set({ description }),
   setLink: (link) => set({ link }),
   setTags: (tags) => set({ tags }),
+  setSearchQuery: (searchQuery) => set({ searchQuery }),
 }));

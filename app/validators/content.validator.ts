@@ -8,7 +8,7 @@ export const ContentSchema = z.object({
   }),
   description: z.string().optional(),
   summary: z.string().optional(),
-  link: z.string(),
+  link: z.string().optional(),
   tags: z.array(z.string()),
 });
 
