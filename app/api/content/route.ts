@@ -56,7 +56,7 @@ const contentPostHandler = async (
   try {
     if (type === ContentType.NOTES) {
       await prisma.$transaction(async (prisma) => {
-        const TagsRecord = await upsertTags(prisma, tags);
+        const TagsRecord = tags ? await upsertTags(prisma, tags) : [];
         await prisma.notes.create({
           data: {
             title,
@@ -70,25 +70,36 @@ const contentPostHandler = async (
           },
         });
       });
-    }
-
-    await prisma.$transaction(async (tx) => {
-      const TagsRecord = await upsertTags(tx, tags);
-      await tx.content.create({
-        data: {
-          title,
-          link,
-          type,
-          summary,
-          userId,
-          ContentTags: {
-            create: TagsRecord.map((tag) => ({
-              tagsId: tag.id,
-            })),
+    } else {
+      if (!link || !tags) {
+        return NextResponse.json(
+          {
+            error: "Link and tags are required for non-notes content",
           },
-        },
+          {
+            status: 400,
+          }
+        );
+      }
+
+      await prisma.$transaction(async (tx) => {
+        const TagsRecord = await upsertTags(tx, tags);
+        await tx.content.create({
+          data: {
+            title,
+            link,
+            type,
+            summary,
+            userId,
+            ContentTags: {
+              create: TagsRecord.map((tag) => ({
+                tagsId: tag.id,
+              })),
+            },
+          },
+        });
       });
-    });
+    }
 
     return NextResponse.json(
       {
@@ -144,9 +155,27 @@ export const GET = async () => {
         createdAt: "desc",
       },
     });
+
+    const notes = await prisma.notes.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        NotesTags: {
+          include: {
+            tags: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
     return NextResponse.json(
       {
         content: response,
+        notes: notes,
       },
       {
         status: 200,
