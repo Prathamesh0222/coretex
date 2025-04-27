@@ -128,7 +128,7 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                   : "type" in item && item.type === ContentType.SPOTIFY
                   ? "border-green-500"
                   : !("type" in item)
-                  ? "border-purple-500"
+                  ? "border-yellow-500"
                   : ""
               }`}
             >
@@ -148,8 +148,8 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                         <Music size={15} className="text-green-500" />
                       </div>
                     ) : !("type" in item) ? (
-                      <div className="p-2 border rounded-full bg-purple-500/20">
-                        <Notebook size={15} className="text-purple-500" />
+                      <div className="p-2 border rounded-full bg-yellow-500/20">
+                        <Notebook size={15} className="text-yellow-500" />
                       </div>
                     ) : (
                       ""
@@ -169,7 +169,7 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                               item.type === ContentType.SPOTIFY
                             ? "bg-green-600/10 text-green-500"
                             : !("type" in item)
-                            ? "bg-purple-600/10 text-purple-500"
+                            ? "bg-yellow-600/10 text-yellow-500"
                             : ""
                         }`}
                       >
@@ -196,7 +196,17 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                   />
                 )}
                 {"summary" in item && item.summary && (
-                  <div className="border bg-red-500/20 border-red-300/40 p-3 rounded-xl text-sm mt-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div
+                    className={`border ${
+                      item.type === ContentType.YOUTUBE
+                        ? "dark:bg-red-500/20 bg-red-800/30  border-red-300/40"
+                        : item.type === ContentType.TWITTER
+                        ? "bg-blue-500/20 border-blue-300/40"
+                        : item.type === ContentType.SPOTIFY
+                        ? "bg-green-400/20 border-green-300/40"
+                        : ""
+                    } p-3 rounded-xl text-sm mt-4 shadow-sm hover:shadow-md transition-all duration-200`}
+                  >
                     <span className="flex items-center gap-2 font-semibold text-xs uppercase mb-1 text-muted-foreground">
                       <ClipboardPen
                         size={14}
@@ -232,7 +242,7 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                           key={index}
                           className={`rounded-lg font-semibold  ${
                             !("type" in item)
-                              ? "bg-purple-600/10 hover:bg-purple-600/20 text-purple-500"
+                              ? "bg-yellow-600/10 hover:bg-yellow-600/20 text-yellow-500"
                               : ""
                           }`}
                         >
