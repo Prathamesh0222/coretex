@@ -5,6 +5,7 @@ import {
   LogOut,
   Moon,
   Music,
+  Notebook,
   PanelLeftOpen,
   PanelRightOpen,
   Settings,
@@ -48,6 +49,11 @@ const SidebarComponents = [
     icon: <Music className="w-5 h-5" />,
     title: "Spotify",
     filter: "spotify",
+  },
+  {
+    icon: <Notebook className="w-5 h-5" />,
+    title: "Notes",
+    filter: "notes",
   },
 ];
 

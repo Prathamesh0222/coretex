@@ -9,7 +9,7 @@ import {
 import { CreateContent } from "./CreateContent";
 import { useContent } from "@/app/hooks/useContent";
 import { Badge } from "./ui/badge";
-import { ContentType } from "@/app/store/contentState";
+import { ContentType, useContentState } from "@/app/store/contentState";
 import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { SpotifyEmbed } from "./SpotifyEmbed";
@@ -17,6 +17,7 @@ import {
   Calendar,
   ClipboardPen,
   Music,
+  Notebook,
   Trash,
   Twitter,
   Youtube,
@@ -40,24 +41,49 @@ interface ContentAreaProps {
 
 export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   const { data: fetchContents, isLoading, error } = useContent();
+  const { searchQuery } = useContentState();
   const queryClient = useQueryClient();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  const filteredContent = fetchContents?.filter((content) => {
-    switch (currentFilter.toLowerCase()) {
-      case "youtube":
-        return content.type === ContentType.YOUTUBE;
-      case "twitter":
-        return content.type === ContentType.TWITTER;
-      case "spotify":
-        return content.type === ContentType.SPOTIFY;
-      case "dashboard":
-      case "all":
-      default:
-        return true;
-    }
+  const allContents = [
+    ...(fetchContents?.content || []),
+    ...(fetchContents?.notes || []),
+  ];
+
+  const filteredContent = allContents?.filter((items) => {
+    const matchesFilter = (() => {
+      switch (currentFilter.toLowerCase()) {
+        case "youtube":
+          return "type" in items && items.type === ContentType.YOUTUBE;
+        case "twitter":
+          return "type" in items && items.type === ContentType.TWITTER;
+        case "spotify":
+          return "type" in items && items.type === ContentType.SPOTIFY;
+        case "notes":
+          return !("type" in items);
+        case "dashboard":
+        case "all":
+        default:
+          return true;
+      }
+    })();
+
+    const matchesSearch = searchQuery
+      ? items.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        ("ContentTags" in items
+          ? items.ContentTags.some((tag) =>
+              tag.tags.title.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+          : "NotesTags" in items
+          ? items.NotesTags.some((tag) =>
+              tag.tags.title.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+          : false)
+      : true;
+
+    return matchesFilter && matchesSearch;
   });
 
   const formatTitle = (filter: string) => {
@@ -91,67 +117,85 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
         <CreateContent />
       </div>
       <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 w-full">
-        {filteredContent?.map((content) => (
-          <div key={content.id} className="break-inside-avoid mb-4">
+        {filteredContent?.map((item) => (
+          <div key={item.id} className="break-inside-avoid mb-4">
             <Card
               className={`border-l-5 ${
-                content.type === ContentType.YOUTUBE
+                "type" in item && item.type === ContentType.YOUTUBE
                   ? "border-red-500"
-                  : content.type === ContentType.TWITTER
+                  : "type" in item && item.type === ContentType.TWITTER
                   ? "border-blue-500"
-                  : content.type === ContentType.SPOTIFY && "border-green-500"
+                  : "type" in item && item.type === ContentType.SPOTIFY
+                  ? "border-green-500"
+                  : !("type" in item)
+                  ? "border-purple-500"
+                  : ""
               }`}
             >
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <span>
-                    {content.type === ContentType.YOUTUBE ? (
+                    {"type" in item && item.type === ContentType.YOUTUBE ? (
                       <div className="p-2 border rounded-full bg-red-500/20">
                         <Youtube size={15} className="text-red-500" />
                       </div>
-                    ) : content.type === ContentType.TWITTER ? (
+                    ) : "type" in item && item.type === ContentType.TWITTER ? (
                       <div className="p-2 border rounded-full bg-blue-500/20">
                         <Twitter size={15} className="text-blue-500" />
                       </div>
-                    ) : content.type === ContentType.SPOTIFY ? (
+                    ) : "type" in item && item.type === ContentType.SPOTIFY ? (
                       <div className="p-2 border rounded-full bg-green-500/20">
                         <Music size={15} className="text-green-500" />
+                      </div>
+                    ) : !("type" in item) ? (
+                      <div className="p-2 border rounded-full bg-purple-500/20">
+                        <Notebook size={15} className="text-purple-500" />
                       </div>
                     ) : (
                       ""
                     )}
                   </span>
                   <div className="space-y-2">
-                    <CardTitle>{content.title}</CardTitle>
+                    <CardTitle>{item.title}</CardTitle>
                     <CardDescription>
                       <div
                         className={`border rounded-md text-center text-xs w-16 ${
-                          content.type === ContentType.YOUTUBE
+                          "type" in item && item.type === ContentType.YOUTUBE
                             ? "bg-red-600/10 text-red-500"
-                            : content.type === ContentType.TWITTER
+                            : "type" in item &&
+                              item.type === ContentType.TWITTER
                             ? "bg-blue-600/10 text-blue-500"
-                            : content.type === ContentType.SPOTIFY
+                            : "type" in item &&
+                              item.type === ContentType.SPOTIFY
                             ? "bg-green-600/10 text-green-500"
+                            : !("type" in item)
+                            ? "bg-purple-600/10 text-purple-500"
                             : ""
                         }`}
                       >
-                        {content.type}
+                        {"type" in item ? item.type : "Notes"}
                       </div>
                     </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                {content.type === ContentType.YOUTUBE && (
-                  <YoutubeEmbed link={content.link} />
+                {"type" in item && item.type === ContentType.YOUTUBE && (
+                  <YoutubeEmbed link={item.link} />
                 )}
-                {content.type === ContentType.TWITTER && (
-                  <TwitterEmbed link={content.link} />
+                {"type" in item && item.type === ContentType.TWITTER && (
+                  <TwitterEmbed link={item.link} />
                 )}
-                {content.type === ContentType.SPOTIFY && (
-                  <SpotifyEmbed link={content.link} />
+                {"type" in item && item.type === ContentType.SPOTIFY && (
+                  <SpotifyEmbed link={item.link} />
                 )}
-                {content.summary && (
+                {!("type" in item) && (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                    className="prose"
+                  />
+                )}
+                {"summary" in item && item.summary && (
                   <div className="border bg-red-500/20 border-red-300/40 p-3 rounded-xl text-sm mt-4 shadow-sm hover:shadow-md transition-all duration-200">
                     <span className="flex items-center gap-2 font-semibold text-xs uppercase mb-1 text-muted-foreground">
                       <ClipboardPen
@@ -160,34 +204,49 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                       />
                       Summary
                     </span>
-                    <p className="tracking-tight pl-1">{content.summary}</p>
+                    <p className="tracking-tight pl-1">{item.summary}</p>
                   </div>
                 )}
 
                 <div className="flex flex-wrap gap-2 mt-4">
-                  {content.ContentTags.map((contentTag, index) => (
-                    <Badge
-                      key={index}
-                      className={`rounded-lg font-semibold  ${
-                        content.type === ContentType.TWITTER
-                          ? "bg-blue-600/10 hover:bg-blue-600/20 text-blue-500"
-                          : content.type === ContentType.SPOTIFY
-                          ? "bg-green-600/10 hover:bg-green-600/20 text-green-500"
-                          : content.type === ContentType.YOUTUBE
-                          ? "bg-red-600/10 hover:bg-red-600/20 text-red-500"
-                          : ""
-                      }`}
-                    >
-                      {contentTag.tags.title.toUpperCase()}
-                    </Badge>
-                  ))}
+                  {"ContentTags" in item
+                    ? item.ContentTags.map((contentTag, index) => (
+                        <Badge
+                          key={index}
+                          className={`rounded-lg font-semibold  ${
+                            item.type === ContentType.TWITTER
+                              ? "bg-blue-600/10 hover:bg-blue-600/20 text-blue-500"
+                              : item.type === ContentType.SPOTIFY
+                              ? "bg-green-600/10 hover:bg-green-600/20 text-green-500"
+                              : item.type === ContentType.YOUTUBE
+                              ? "bg-red-600/10 hover:bg-red-600/20 text-red-500"
+                              : ""
+                          }`}
+                        >
+                          {contentTag.tags.title.toUpperCase()}
+                        </Badge>
+                      ))
+                    : "NotesTags" in item
+                    ? item.NotesTags.map((notesTag, index) => (
+                        <Badge
+                          key={index}
+                          className={`rounded-lg font-semibold  ${
+                            !("type" in item)
+                              ? "bg-purple-600/10 hover:bg-purple-600/20 text-purple-500"
+                              : ""
+                          }`}
+                        >
+                          {notesTag.tags.title.toUpperCase()}
+                        </Badge>
+                      ))
+                    : null}
                 </div>
               </CardContent>
               <CardFooter className="border-t flex items-center">
                 <div className="flex text-xs gap-1 items-center text-muted-foreground">
                   <Calendar size={12} />
                   <p>Created:</p>
-                  {new Date(content.createdAt).toLocaleDateString("en-GB")}
+                  {new Date(item.createdAt).toLocaleDateString("en-GB")}
                 </div>
                 <div className="flex justify-end w-full">
                   <Dialog>
@@ -205,7 +264,7 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                       </DialogHeader>
                       <div className="flex gap-2 justify-end">
                         <Button
-                          onClick={() => removeContent(content.id)}
+                          onClick={() => removeContent(item.id)}
                           variant={"destructive"}
                           className="cursor-pointer"
                         >
