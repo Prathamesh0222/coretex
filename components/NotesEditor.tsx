@@ -2,9 +2,16 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Toolbar } from "./Toolbar";
 
-export const NotesEditor = () => {
+export const NotesEditor = ({
+  setNotesDescription,
+}: {
+  setNotesDescription: (value: string) => void;
+}) => {
   const editor = useEditor({
     extensions: [StarterKit],
+    onUpdate: ({ editor }) => {
+      setNotesDescription(editor.getHTML());
+    },
   });
 
   if (!editor) {
