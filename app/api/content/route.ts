@@ -179,8 +179,6 @@ export const GET = async () => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
 
-    console.log("Content", allItems);
-
     return NextResponse.json(allItems);
   } catch (error) {
     console.error("Error while fetching data", error);

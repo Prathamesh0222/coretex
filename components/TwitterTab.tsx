@@ -2,6 +2,7 @@ import { useContentState } from "@/app/store/contentState";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
 import { Asterisk } from "lucide-react";
+import { TwitterEmbed } from "./TwitterEmbed";
 
 export const TwitterTab = () => {
   const { isPreview, setIsPreview, setLink } = useContentState();
@@ -32,23 +33,8 @@ export const TwitterTab = () => {
         (isPreview.includes("x.com") ? (
           <div className="border p-4 rounded-xl mt-3 bg-card/50 shadow-sm">
             <div className="relative">
-              <blockquote
-                className="twitter-tweet"
-                data-theme="dark"
-                data-cards="hidden"
-                data-conversation="none"
-              >
-                <p lang="en" dir="ltr">
-                  <a href={isPreview}></a>
-                </p>
-                <a href={isPreview?.replace("x.com", "twitter.com")}></a>
-              </blockquote>
+              <TwitterEmbed link={isPreview} />
             </div>
-            <script
-              async
-              src="https://platform.twitter.com/widgets.js"
-              charSet="utf-8"
-            ></script>
           </div>
         ) : null)}
     </div>
