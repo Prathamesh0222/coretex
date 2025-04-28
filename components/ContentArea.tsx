@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CreateContent } from "./CreateContent";
-import { useContent } from "@/app/hooks/useContent";
+import { Content, Notes, useContent } from "@/app/hooks/useContent";
 import { Badge } from "./ui/badge";
 import { ContentType, useContentState } from "@/app/store/contentState";
 import { YoutubeEmbed } from "./YoutubeEmbed";
@@ -16,8 +16,11 @@ import { SpotifyEmbed } from "./SpotifyEmbed";
 import {
   Calendar,
   ClipboardPen,
+  Home,
+  LayoutDashboard,
   Music,
   Notebook,
+  Search,
   Trash,
   Twitter,
   Youtube,
@@ -34,6 +37,7 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
+import { Input } from "./ui/input";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -41,18 +45,15 @@ interface ContentAreaProps {
 
 export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   const { data: fetchContents, isLoading, error } = useContent();
-  const { searchQuery } = useContentState();
+  const { searchQuery, setSearchQuery } = useContentState();
   const queryClient = useQueryClient();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  const allContents = [
-    ...(fetchContents?.content || []),
-    ...(fetchContents?.notes || []),
-  ];
+  const allContents: Array<Content | Notes> = fetchContents || [];
 
-  const filteredContent = allContents?.filter((items) => {
+  const filteredContent = allContents.filter((items) => {
     const matchesFilter = (() => {
       switch (currentFilter.toLowerCase()) {
         case "youtube":
@@ -87,7 +88,49 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   });
 
   const formatTitle = (filter: string) => {
-    return filter.charAt(0).toUpperCase() + filter.slice(1);
+    const iconMap = {
+      youtube: (
+        <div className="p-1.5 border rounded-full bg-red-500/20">
+          <Youtube size={20} className="text-red-500" />
+        </div>
+      ),
+      twitter: (
+        <div className="p-1.5 border rounded-full bg-blue-500/20">
+          <Twitter size={20} className="text-blue-500" />
+        </div>
+      ),
+      spotify: (
+        <div className="p-1.5 border rounded-full bg-green-500/20">
+          <Music size={20} className="text-green-500" />
+        </div>
+      ),
+      notes: (
+        <div className="p-1.5 border rounded-full bg-yellow-500/20">
+          <Notebook size={20} className="text-yellow-500" />
+        </div>
+      ),
+      dashboard: (
+        <div className="p-1.5 border rounded-full bg-blue-500/20">
+          <LayoutDashboard size={20} className="text-blue-500" />
+        </div>
+      ),
+      all: (
+        <div className="p-1.5 border rounded-full bg-blue-500/20">
+          <Home size={20} className="text-blue-500" />
+        </div>
+      ),
+    };
+
+    const icon = iconMap[filter.toLowerCase() as keyof typeof iconMap] || null;
+
+    return (
+      <>
+        {icon}
+        {/* <div className="hidden md:block">
+          {filter.charAt(0).toUpperCase() + filter.slice(1)}
+        </div> */}
+      </>
+    );
   };
 
   const removeContent = async (contentId: string) => {
@@ -109,14 +152,24 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between">
+    <div className="lg:container lg:mx-auto p-4">
+      <div className="flex justify-between items-center gap-3">
         <span>
-          <h1 className="text-2xl">{formatTitle(currentFilter)}</h1>
+          <h1 className="text-2xl flex items-center">
+            {formatTitle(currentFilter)}
+          </h1>
         </span>
+        <div className="items-center relative max-w-3xl w-full">
+          <Search size={35} className="absolute p-2" />
+          <Input
+            placeholder="Search for content..."
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
+        </div>
         <CreateContent />
       </div>
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 w-full">
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 mb-12 md:mb-12 lg:mb-0 w-full">
         {filteredContent?.map((item) => (
           <div key={item.id} className="break-inside-avoid mb-4">
             <Card
