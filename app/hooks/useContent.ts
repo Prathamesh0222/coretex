@@ -20,7 +20,7 @@ interface NotesTag {
   };
 }
 
-interface Content {
+export interface Content {
   id: string;
   title: string;
   type: ContentType;
@@ -30,7 +30,7 @@ interface Content {
   ContentTags: ContentTag[];
 }
 
-interface Notes {
+export interface Notes {
   id: string;
   title: string;
   description: string;
@@ -39,13 +39,10 @@ interface Notes {
 }
 
 export const useContent = () => {
-  return useQuery<{ content: Content[]; notes: Notes[] }>({
+  return useQuery<Array<Content | Notes>>({
     queryKey: ["content"],
     queryFn: async () => {
       const response = await axios.get("/api/content");
-      console.log(response.data.content);
-      console.log(response.data.notes);
-
       return response.data;
     },
   });

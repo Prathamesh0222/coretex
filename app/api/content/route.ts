@@ -172,15 +172,16 @@ export const GET = async () => {
       },
     });
 
-    return NextResponse.json(
-      {
-        content: response,
-        notes: notes,
-      },
-      {
-        status: 200,
-      }
+    const allItems = [...response, ...notes];
+
+    allItems.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
+
+    console.log("Content", allItems);
+
+    return NextResponse.json(allItems);
   } catch (error) {
     console.error("Error while fetching data", error);
     return NextResponse.json(
