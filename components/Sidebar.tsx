@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const SidebarComponents = [
   {
@@ -204,7 +204,10 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="p-2 focus:bg-gray-100 dark:focus:bg-gray-800 rounded-lg cursor-pointer">
-                  <div className="flex items-center gap-2">
+                  <div
+                    onClick={() => signOut()}
+                    className="flex items-center gap-2"
+                  >
                     <LogOut className="w-4 h-4" />
                     <span className="text-sm">Logout</span>
                   </div>

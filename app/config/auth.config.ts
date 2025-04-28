@@ -6,6 +6,7 @@ import { JWT } from "next-auth/jwt";
 import { Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import { signIn } from "next-auth/react";
 
 export const authOptions = {
   providers: [
@@ -58,6 +59,35 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async signIn({
+      user,
+      account,
+      profile,
+    }: {
+      user: User;
+      account: { provider: string } | null;
+      profile: any;
+    }) {
+      if (account?.provider === "google" || account?.provider === "github") {
+        const email = user.email || profile.email;
+
+        if (!email) {
+          return false;
+        }
+
+        let dbUser = await prisma.user.create({
+          data: {
+            email,
+            username: user.name || profile.name,
+            password: "",
+          },
+        });
+
+        user.id = dbUser.id;
+
+        return true;
+      }
+    },
     async jwt({ token, user }: { token: JWT; user: User }) {
       if (user) {
         token.id = user.id;
