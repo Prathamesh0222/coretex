@@ -75,8 +75,12 @@ export const authOptions = {
           return false;
         }
 
-        let dbUser = await prisma.user.create({
-          data: {
+        let dbUser = await prisma.user.upsert({
+          where: {
+            email,
+          },
+          update: {},
+          create: {
             email,
             username: user.name || profile.name,
             password: "",
