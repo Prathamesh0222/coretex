@@ -109,18 +109,12 @@ export const CreateContent = () => {
     setType(ContentType.YOUTUBE);
     setLink("");
     setTags([]);
+    setDescription("");
     setTagsInput("");
   };
 
   return (
     <div className="flex gap-2 mr-2">
-      <div className="flex items-center relative">
-        <Search size={35} className="absolute p-2" />
-        <Input
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-9"
-        />
-      </div>
       <Sheet
         open={isSheetOpen}
         onOpenChange={(open) => {
@@ -132,7 +126,7 @@ export const CreateContent = () => {
       >
         <SheetTrigger asChild>
           <Button onClick={() => setIsSheetOpen(true)}>
-            <Plus /> Add Content
+            <Plus /> <span className="hidden md:block">Add Content</span>
           </Button>
         </SheetTrigger>
         <SheetContent className="overflow-y-auto">
