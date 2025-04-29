@@ -1,4 +1,5 @@
 import { Hero } from "@/components/Hero";
+import { LandingConstants } from "@/components/LandingConstants";
 import { LandingFeatures } from "@/components/LandingFeatures";
 import { LandingFooter } from "@/components/LandingFooter";
 import { LandingNavbar } from "@/components/LandingNavbar";
@@ -9,6 +10,7 @@ export default function Home() {
       <LandingNavbar />
       <Hero />
       <LandingFeatures />
+      <LandingConstants />
       <LandingFooter />
     </div>
   );
