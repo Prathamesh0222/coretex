@@ -41,19 +41,21 @@ const features = [
 
 export const LandingFeatures = () => {
   return (
-    <div className="container mx-auto lg:mt-24 xl:mt-64">
+    <div className="container mx-auto md:mt-24 lg:mt-48 xl:mt-96 2xl:mt-64">
       <span className="flex justify-center items-center gap-4">
-        <div className="p-4 border-2 rounded-2xl -rotate-12 bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20 hover:border-red-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
+        <div className="p-3 md:p-4 border-2 rounded-2xl -rotate-12 bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20 hover:border-red-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
           <Youtube className="w-8 h-8 text-red-600" />
         </div>
-        <div className="p-4 border-2 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20 hover:border-blue-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-blue-500/20">
+        <div className="p-3 md:p-4 border-2 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20 hover:border-blue-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-blue-500/20">
           <Twitter className="w-8 h-8 text-blue-500" />
         </div>
-        <div className="p-4 border-2 rounded-2xl rotate-12 bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20 hover:border-green-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-green-500/20">
+        <div className="p-3 md:p-4 border-2 rounded-2xl rotate-12 bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20 hover:border-green-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-green-500/20">
           <Music className="w-8 h-8 text-green-600" />
         </div>
       </span>
-      <h1 className="text-5xl font-semibold text-center mt-7">Features</h1>
+      <h1 className="text-4xl md:text-5xl font-semibold text-center mt-7">
+        Features
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16 px-4">
         {features.map((feature, index) => (
           <div

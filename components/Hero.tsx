@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const Hero = () => {
   return (
-    <div className="container mx-auto h-screen flex flex-col justify-center text-center items-center relative">
+    <div className="container mx-auto h-screen flex flex-col justify-center text-center items-center relative lg:mt-32 2xl:mt-12">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-blue-500/5 via-transparent to-transparent rounded-full blur-3xl" />
       <div className="py-1 px-4 items-center border rounded-full bg-secondary/80 backdrop-blur-sm font-medium text-muted-foreground mb-2 hover:scale-105 transition-transform duration-300 cursor-default xl:mt-64">
         <span className="flex text-sm items-center gap-2">
@@ -14,16 +14,19 @@ export const Hero = () => {
 
       <div className="space-y-6 relative z-10">
         <span className="tracking-tighter leading-none block">
-          <h1 className="text-7xl font-bold">Expand your mind.</h1>
-          <h1 className="text-7xl font-bold">Organize your world.</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold">
+            Expand your mind.
+          </h1>
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold">
+            Organize your world.
+          </h1>
         </span>
 
-        <span className="text-muted-foreground/90 block text-lg">
+        <span className="text-muted-foreground/90 block md:text-lg text-base mx-8 sm:mx-24 md:mx-38 xl:mx-80">
           <p>
             Coretex lets you save videos, tweets, playlist and notes in one
-            place —
+            place and keeping your ideas organized and accessible.
           </p>
-          <p>keeping your ideas organized and accessible.</p>
         </span>
       </div>
 
