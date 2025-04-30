@@ -1,4 +1,5 @@
 import { Hero } from "@/components/Hero";
+import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { LandingConstants } from "@/components/LandingConstants";
 import { LandingFeatures } from "@/components/LandingFeatures";
 import { LandingFooter } from "@/components/LandingFooter";
@@ -10,6 +11,7 @@ export default function Home() {
       <LandingNavbar />
       <Hero />
       <LandingFeatures />
+      <HowItWorksSection />
       <LandingConstants />
       <LandingFooter />
     </div>

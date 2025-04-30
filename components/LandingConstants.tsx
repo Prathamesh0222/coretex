@@ -33,8 +33,8 @@ export const LandingConstants = () => {
     },
   ];
   return (
-    <div className="flex flex-col items-center container mx-auto gap-6 mt-16 mb-24">
-      <div className="flex gap-4 animate-float-slow">
+    <div className="flex flex-col items-center container mx-auto gap-6 mt-16 mb-24 opacity-60">
+      <div className="flex gap-4 animate-float">
         {icons
           .slice()
           .reverse()
