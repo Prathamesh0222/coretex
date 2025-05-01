@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Content   Content[]
+  Notes     Notes[]
+  Link      Link[]
+}
+
+model Content {
+  id          String        @id @default(uuid())
+  title       String
+  link        String
+  type        ContentType
+  summary     String?
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ContentTags ContentTags[]
+}
+
+model Notes {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  NotesTags   NotesTags[]
+}
+
+model Tags {
+  id          String        @id @default(uuid())
+  title       String        @unique
+  ContentTags ContentTags[]
+  NotesTags   NotesTags[]
+}
+
+model ContentTags {
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId String
+  tags      Tags    @relation(fields: [tagsId], references: [id], onDelete: Cascade)
+  tagsId    String
+
+  @@id([contentId, tagsId])
+}
+
+model NotesTags {
+  notes   Notes  @relation(fields: [notesId], references: [id], onDelete: Cascade)
+  notesId String
+  tags    Tags   @relation(fields: [tagsId], references: [id], onDelete: Cascade)
+  tagsId  String
+
+  @@id([notesId, tagsId])
+}
+
+model Link {
+  id     String @id @default(uuid())
+  hash   String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+enum ContentType {
+  YOUTUBE
+  TWITTER
+  SPOTIFY
+  NOTES
+}
