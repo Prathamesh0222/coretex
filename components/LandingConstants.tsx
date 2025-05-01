@@ -28,12 +28,9 @@ export const LandingConstants = () => {
     {
       icon: <Music size={20} className="text-green-500" />,
     },
-    {
-      icon: <Layers size={20} className="text-blue-500" />,
-    },
   ];
   return (
-    <div className="flex flex-col items-center container mx-auto gap-6 mt-16 mb-24 opacity-60">
+    <div className="flex flex-col items-center container mx-auto gap-6  my-32 opacity-60">
       <div className="flex gap-4 animate-float">
         {icons
           .slice()

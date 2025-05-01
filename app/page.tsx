@@ -3,6 +3,7 @@ import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { LandingConstants } from "@/components/LandingConstants";
 import { LandingFeatures } from "@/components/LandingFeatures";
 import { LandingFooter } from "@/components/LandingFooter";
+import { LandingFooter2 } from "@/components/LandingFooter2";
 import { LandingNavbar } from "@/components/LandingNavbar";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
       <LandingFeatures />
       <HowItWorksSection />
       <LandingConstants />
+      <LandingFooter2 />
       <LandingFooter />
     </div>
   );

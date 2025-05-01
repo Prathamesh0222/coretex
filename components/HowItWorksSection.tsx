@@ -1,4 +1,4 @@
-import { FileTextIcon, TwitterIcon, YoutubeIcon } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 export const HowItWorksSection = () => {
   const steps = [
@@ -22,8 +22,8 @@ export const HowItWorksSection = () => {
       steps: [
         "Use powerful search and filters to quickly access any saved item — your second brain, always ready.",
       ],
-      color: "bg-gradient-to-br from-purple-500/10 to-purple-600/5",
-      borderColor: "border-purple-500/20",
+      color: "bg-gradient-to-br from-green-500/10 to-green-600/5",
+      borderColor: "border-green-500/20",
     },
   ];
   return (
@@ -32,20 +32,40 @@ export const HowItWorksSection = () => {
         <div className="absolute top-20 right-20 w-64 h-64 rounded-full bg-accent/5 filter blur-3xl"></div>
         <div className="absolute bottom-40 left-10 w-40 h-40 rounded-full bg-accent/10 filter blur-2xl"></div>
       </div>
-      <h1 className="text-5xl font-semibold text-center mt-7">How It Works</h1>
+      <div className="flex flex-col justify-center text-center items-center mt-12">
+        <Badge
+          className="border border-blue-500/40 shadow shadow-blue-500 font-semibold tracking-tight rounded-xl"
+          variant={"outline"}
+        >
+          Easy to Use
+        </Badge>
+        <h1 className="text-5xl font-semibold text-center mt-2">
+          How It Works
+        </h1>
+      </div>
       <div className=" grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 mx-18">
         {steps.map((step, index) => (
           <div key={index}>
             <div className="flex justify-center items-center mb-12">
-              <div className="p-3 text-center rounded-full border font-semibold w-12">
+              <div
+                className={`p-3 text-center rounded-full border font-semibold w-12 ${step.color} ${step.borderColor}`}
+              >
                 {index}
               </div>
             </div>
+            <div
+              className={`border mb-12 w-full ${step.color} ${step.borderColor}`}
+            />
             <div>
-              <div className="p-6 border rounded-lg space-y-4">
+              <div
+                className={`p-6 border rounded-lg space-y-4 ${step.color} ${step.borderColor}`}
+              >
                 <div className="text-xl font-semibold text-center">
                   {step.title}
                 </div>
+                <p className="text-muted-foreground text-center">
+                  {step.steps}
+                </p>
               </div>
             </div>
           </div>

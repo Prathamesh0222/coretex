@@ -17,7 +17,7 @@ export const LandingNavbar = () => {
         </Button>
         <Button
           variant="default"
-          className="text-lg bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-md hover:shadow-lg transition-shadow duration-300"
+          className="text-lg dark:text-white text-black bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-md hover:shadow-lg transition-shadow duration-300"
         >
           Sign up
         </Button>

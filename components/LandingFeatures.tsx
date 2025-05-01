@@ -41,7 +41,7 @@ const features = [
 
 export const LandingFeatures = () => {
   return (
-    <div className="container mx-auto md:mt-24 lg:mt-48 xl:mt-96 2xl:mt-64">
+    <div className="container mx-auto md:mt-12 lg:mt-30 xl:mt-96 2xl:mt-80">
       <span className="flex justify-center items-center gap-4">
         <div className="p-3 md:p-4 border-2 rounded-2xl -rotate-12 bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20 hover:border-red-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
           <Youtube className="w-8 h-8 text-red-600" />
