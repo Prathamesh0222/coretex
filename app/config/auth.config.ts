@@ -3,10 +3,9 @@ import { SigninSchema } from "../validators/auth.validator";
 import { prisma } from "../utils/prisma";
 import { compare } from "bcryptjs";
 import { JWT } from "next-auth/jwt";
-import { Session, User } from "next-auth";
+import { Profile, Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
-import { signIn } from "next-auth/react";
 
 export const authOptions = {
   providers: [
@@ -66,23 +65,23 @@ export const authOptions = {
     }: {
       user: User;
       account: { provider: string } | null;
-      profile: any;
-    }) {
+      profile?: Profile;
+    }): Promise<boolean> {
       if (account?.provider === "google" || account?.provider === "github") {
-        const email = user.email || profile.email;
+        const email = user.email || profile?.email;
 
         if (!email) {
           return false;
         }
 
-        let dbUser = await prisma.user.upsert({
+        const dbUser = await prisma.user.upsert({
           where: {
             email,
           },
           update: {},
           create: {
             email,
-            username: user.name || profile.name,
+            username: user.name || profile?.name || "",
             password: "",
           },
         });
@@ -91,6 +90,7 @@ export const authOptions = {
 
         return true;
       }
+      return false;
     },
     async jwt({ token, user }: { token: JWT; user: User }) {
       if (user) {

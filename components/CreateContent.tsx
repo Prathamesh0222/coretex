@@ -1,4 +1,4 @@
-import { Asterisk, Plus, Search, X } from "lucide-react";
+import { Asterisk, Plus, X } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -25,7 +25,6 @@ export const CreateContent = () => {
   const [tagsInput, setTagsInput] = useState<string>("");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [notesDescription, setNotesDescription] = useState("");
-  const { setSearchQuery } = useContentState();
 
   const {
     title,

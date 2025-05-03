@@ -14,6 +14,10 @@ export const SpotifyTab = () => {
       const id = pathParts[2];
       return `https://open.spotify.com/embed/${type}/${id}`;
     } catch (error) {
+      console.error(
+        "Invalid Spotify Link. Please paste a valid Spotify URL.",
+        error
+      );
       toast.error("Invalid Spotify Link. Please paste a valid Spotify URL.");
       return null;
     }

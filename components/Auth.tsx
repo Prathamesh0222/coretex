@@ -18,8 +18,7 @@ import {
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
-import { Github, Layers, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Github } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -30,7 +29,6 @@ import { ThemeToggle } from "./ThemeToggle";
 import { CoretexLogo } from "./CortexLogo";
 
 export const Auth = ({ isSignup }: { isSignup: boolean }) => {
-  const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const form = useForm<SignInInput | SignUpInput>({

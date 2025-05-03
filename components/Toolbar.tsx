@@ -1,6 +1,5 @@
 import {
   Bold,
-  Code,
   Heading1,
   Heading2,
   Heading3,
@@ -11,8 +10,9 @@ import {
   Quote,
   Minus,
 } from "lucide-react";
+import { Editor } from "@tiptap/react";
 
-export const Toolbar = ({ editor }: any) => {
+export const Toolbar = ({ editor }: { editor: Editor }) => {
   return (
     <div className="tiptap-toolbar absolute z-20 bg-background border rounded-t-lg w-full flex justify-center">
       <button
