@@ -1,12 +1,4 @@
-import {
-  Brain,
-  File,
-  Github,
-  Layers,
-  Music,
-  Notebook,
-  Youtube,
-} from "lucide-react";
+import { Brain, File, Github, Music, Notebook, Youtube } from "lucide-react";
 
 export const LandingConstants = () => {
   const icons = [

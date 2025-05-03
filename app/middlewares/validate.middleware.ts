@@ -8,11 +8,11 @@ import { ZodSchema } from "zod";
  */
 
 export const validate =
-  (schema: ZodSchema) =>
+  <T>(schema: ZodSchema<T>) =>
   (
     handler: (
       req: NextRequest,
-      context: { validatedData: any }
+      context: { validatedData: T }
     ) => Promise<NextResponse>
   ) =>
   async (req: NextRequest) => {
