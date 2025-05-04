@@ -31,7 +31,7 @@ export const Hero = () => {
       </div>
 
       <div className="relative mt-20 w-full">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl blur dark:opacity-30 opacity-70 group-hover:opacity-100 transition duration-1000"></div>
         <div className="flex relative border p-0.5 bg-accent rounded-xl backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 lg:w-5xl xl:w-7xl">
           <Image
             alt="Coretex Dashboard Preview"

@@ -12,7 +12,7 @@ export const LandingConstants = () => {
       icon: <Brain size={20} className="text-purple-500" />,
     },
     {
-      icon: <Github size={20} className="text-white" />,
+      icon: <Github size={20} className="dark:text-white text-black" />,
     },
     {
       icon: <Youtube size={20} className="text-red-500" />,
