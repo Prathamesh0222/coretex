@@ -26,6 +26,6 @@ jobs:
             cd coretex
             npm install bun
             git pull origin main
-            bun install
+            bun install --legacy-peer-deps
             pm2 restart coretex
-            EOF
+          EOF
