@@ -28,9 +28,11 @@ export const LandingNavbar = () => {
           size={38}
           className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 transition-all duration-300 group-hover:shadow-blue-500/50 group-hover:scale-105"
         />
-        <h1 className="text-2xl font-bold tracking-tight">Coretex</h1>
+        <h1 className="text-lg md:text-2xl font-bold tracking-tight">
+          Coretex
+        </h1>
       </div>
-      <div className="space-x-4 items-center">
+      <div className="gap-2 md:space-x-4 items-center flex">
         <Button variant={"ghost"} onClick={() => handleTheme()}>
           {theme === "dark" ? <Sun /> : <Moon />}
         </Button>

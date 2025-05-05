@@ -16,6 +16,7 @@ import { SpotifyEmbed } from "./SpotifyEmbed";
 import {
   Calendar,
   ClipboardPen,
+  Download,
   Home,
   LayoutDashboard,
   Music,
@@ -44,11 +45,10 @@ interface ContentAreaProps {
 }
 
 export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
-  const { data: fetchContents, isLoading, error } = useContent();
+  const { data: fetchContents, error } = useContent();
   const { searchQuery, setSearchQuery } = useContentState();
   const queryClient = useQueryClient();
 
-  if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   const allContents: Array<Content | Notes> = fetchContents || [];
@@ -169,6 +169,14 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
         </div>
         <CreateContent />
       </div>
+      {filteredContent.length === 0 && (
+        <div className="w-full flex flex-col items-center justify-center h-80 gap-4">
+          <Download size={60} className="text-gray-400" />
+          <h1 className="text-xl font-semibold text-gray-500">
+            No content found
+          </h1>
+        </div>
+      )}
       <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 mb-12 md:mb-12 lg:mb-0 w-full">
         {filteredContent?.map((item) => (
           <div key={item.id} className="break-inside-avoid mb-4">
