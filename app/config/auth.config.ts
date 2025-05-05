@@ -73,24 +73,27 @@ export const authOptions = {
         if (!email) {
           return false;
         }
+        try {
+          const dbUser = await prisma.user.upsert({
+            where: {
+              email,
+            },
+            update: {},
+            create: {
+              email,
+              username: user.name || profile?.name || "",
+              password: "",
+            },
+          });
 
-        const dbUser = await prisma.user.upsert({
-          where: {
-            email,
-          },
-          update: {},
-          create: {
-            email,
-            username: user.name || profile?.name || "",
-            password: "",
-          },
-        });
-
-        user.id = dbUser.id;
-
-        return true;
+          user.id = dbUser.id;
+          return true;
+        } catch (error) {
+          console.error("Error while creating user", error);
+          return false;
+        }
       }
-      return false;
+      return true;
     },
     async jwt({ token, user }: { token: JWT; user: User }) {
       if (user) {

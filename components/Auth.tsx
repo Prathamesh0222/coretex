@@ -57,6 +57,7 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
       });
 
       if (result?.error) {
+        console.error("Signin error:", result.error);
         throw new Error(result.error);
       }
       router.push("/dashboard");
