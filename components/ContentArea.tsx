@@ -175,6 +175,10 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
           <h1 className="text-xl font-semibold text-gray-500">
             No content found
           </h1>
+          <p className="text-gray-400 text-center max-w-md">
+            Your content library is empty. Click the + button in the top right
+            corner to add your first piece of content.
+          </p>
         </div>
       )}
       <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 mb-12 md:mb-12 lg:mb-0 w-full">
