@@ -123,14 +123,7 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
 
     const icon = iconMap[filter.toLowerCase() as keyof typeof iconMap] || null;
 
-    return (
-      <>
-        {icon}
-        {/* <div className="hidden md:block">
-          {filter.charAt(0).toUpperCase() + filter.slice(1)}
-        </div> */}
-      </>
-    );
+    return <>{icon}</>;
   };
 
   const removeContent = async (contentId: string) => {
