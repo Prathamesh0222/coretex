@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export const LandingNavbar = () => {
   const { theme, setTheme } = useTheme();
@@ -24,7 +25,18 @@ export const LandingNavbar = () => {
   }
 
   return (
-    <div className="flex justify-between items-center p-6 max-w-7xl mx-auto z-10 relative">
+    <motion.div
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.3,
+        delay: 0.4,
+        type: "spring",
+        stiffness: 100,
+        damping: 17,
+      }}
+      className="flex justify-between items-center p-6 max-w-7xl mx-auto z-10 relative"
+    >
       <div className="flex gap-3 items-center group cursor-pointer">
         <Layers
           size={38}
@@ -57,6 +69,6 @@ export const LandingNavbar = () => {
           Sign up
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -1,38 +1,34 @@
+"use client";
+
+import { steps } from "@/app/utils/mapData";
 import { Badge } from "./ui/badge";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 export const HowItWorksSection = () => {
-  const steps = [
-    {
-      title: "Capture Anything",
-      steps:
-        "Save YouTube videos, tweets, Spotify playlists, or write quick notes — all in one unified space.",
-      color: "bg-gradient-to-br from-red-500/10 to-red-600/5",
-      borderColor: "border-red-500/20",
-    },
-    {
-      title: "Organize Effortlessly",
-      steps: [
-        "Add tags, group content, and attach notes to keep everything structured and easy to revisit.",
-      ],
-      color: "bg-gradient-to-br from-blue-500/10 to-blue-600/5",
-      borderColor: "border-blue-500/20",
-    },
-    {
-      title: "Find It Fast",
-      steps: [
-        "Use powerful search and filters to quickly access any saved item — your second brain, always ready.",
-      ],
-      color: "bg-gradient-to-br from-green-500/10 to-green-600/5",
-      borderColor: "border-green-500/20",
-    },
-  ];
+  const titleRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(titleRef, {
+    once: false,
+  });
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto mt-28">
       <div className="absolute top-0 left-0 w-full h-full">
         <div className="absolute top-20 right-20 w-64 h-64 rounded-full bg-accent/5 filter blur-3xl"></div>
         <div className="absolute bottom-40 left-10 w-40 h-40 rounded-full bg-accent/10 filter blur-2xl"></div>
       </div>
-      <div className="flex flex-col justify-center text-center items-center mt-12">
+      <motion.div
+        ref={titleRef}
+        initial={{ y: -50, opacity: 0 }}
+        animate={isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
+        transition={{
+          duration: 0.3,
+          delay: 0.4,
+          type: "spring",
+          stiffness: 100,
+          damping: 17,
+        }}
+        className="flex flex-col justify-center text-center items-center mt-12"
+      >
         <Badge
           className="border border-blue-500/40 shadow shadow-blue-500 font-semibold tracking-tight rounded-xl"
           variant={"outline"}
@@ -42,10 +38,22 @@ export const HowItWorksSection = () => {
         <h1 className="text-5xl font-semibold text-center mt-2">
           How It Works
         </h1>
-      </div>
+      </motion.div>
       <div className=" grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 mx-18">
         {steps.map((step, index) => (
-          <div key={index}>
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{
+              duration: 0.3,
+              delay: index * 0.1,
+              type: "spring",
+              damping: 10,
+              stiffness: 100,
+            }}
+          >
             <div className="flex justify-center items-center mb-12">
               <div
                 className={`p-3 text-center rounded-full border font-semibold w-12 ${step.color} ${step.borderColor}`}
@@ -68,7 +76,7 @@ export const HowItWorksSection = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

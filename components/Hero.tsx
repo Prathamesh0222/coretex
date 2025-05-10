@@ -1,9 +1,29 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 export const Hero = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(heroRef, {
+    once: false,
+  });
   return (
-    <div className="container mx-auto h-screen flex flex-col justify-center text-center items-center relative lg:mt-32 2xl:mt-12">
+    <motion.div
+      ref={heroRef}
+      initial={{ y: 50, opacity: 0 }}
+      animate={isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
+      transition={{
+        duration: 0.4,
+        delay: 0.6,
+        type: "spring",
+        stiffness: 100,
+        damping: 17,
+      }}
+      className="container mx-auto h-screen flex flex-col justify-center text-center items-center relative lg:mt-32 2xl:mt-12"
+    >
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-blue-500/5 via-transparent to-transparent rounded-full blur-3xl" />
       <div className="py-1 px-4 items-center border rounded-full bg-secondary/80 backdrop-blur-sm font-medium text-muted-foreground mb-2 hover:scale-105 transition-transform duration-300 cursor-default xl:mt-64">
         <span className="flex text-sm items-center gap-2">
@@ -43,6 +63,6 @@ export const Hero = () => {
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

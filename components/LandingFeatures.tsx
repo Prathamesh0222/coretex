@@ -1,65 +1,58 @@
-import { Music, Twitter, Youtube, Book, Search, FileText } from "lucide-react";
+"use client";
 
-const features = [
-  {
-    icon: <Youtube className="w-6 h-6 text-red-600" />,
-    title: "YouTube Integration",
-    description:
-      "Save YouTube videos by pasting the link. Coretex automatically fetches and displays the video thumbnail for easy reference.",
-  },
-  {
-    icon: <Twitter className="w-6 h-6 text-blue-500" />,
-    title: "Twitter Integration",
-    description:
-      "Save tweets by pasting the link. Brainly embeds the tweet so you can view it directly within the app.",
-  },
-  {
-    icon: <Music className="w-6 h-6 text-green-600" />,
-    title: "Spotify Integration",
-    description:
-      "Save Spotify playlists by pasting the link. Coretex automatically fetches and displays the playlist cover art and tracklist.",
-  },
-  {
-    icon: <Book className="w-6 h-6 text-purple-600" />,
-    title: "Rich Text Notes",
-    description:
-      "Create and format notes using a rich text editor. Supports bold, italic, headings, bullet points, and more.",
-  },
-  {
-    icon: <FileText className="w-6 h-6 text-orange-500" />,
-    title: "Content Summaries",
-    description:
-      "Add summaries to your saved content for quick reference. Summaries help you understand and organize your content better.",
-  },
-  {
-    icon: <Search className="w-6 h-6 text-pink-500" />,
-    title: "Search Functionality",
-    description:
-      "Quickly find saved content using a powerful search bar. Search by title, tags, type, or summary.",
-  },
-];
+import { Music, Twitter, Youtube, Book, Search, FileText } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { features } from "@/app/utils/mapData";
 
 export const LandingFeatures = () => {
+  const featureRef = useRef(null);
+  const isInView = useInView(featureRef, {
+    once: false,
+  });
+
   return (
     <div className="container mx-auto md:mt-12 lg:mt-30 xl:mt-96 2xl:mt-80">
-      <span className="flex justify-center items-center gap-4">
-        <div className="p-3 md:p-4 border-2 rounded-2xl -rotate-12 bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20 hover:border-red-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
-          <Youtube className="w-8 h-8 text-red-600" />
-        </div>
-        <div className="p-3 md:p-4 border-2 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20 hover:border-blue-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-blue-500/20">
-          <Twitter className="w-8 h-8 text-blue-500" />
-        </div>
-        <div className="p-3 md:p-4 border-2 rounded-2xl rotate-12 bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20 hover:border-green-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-green-500/20">
-          <Music className="w-8 h-8 text-green-600" />
-        </div>
-      </span>
-      <h1 className="text-4xl md:text-5xl font-semibold text-center mt-7">
-        Features
-      </h1>
+      <motion.div
+        ref={featureRef}
+        initial={{ y: 50, opacity: 0 }}
+        animate={isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
+        transition={{
+          duration: 0.3,
+          delay: 0.2,
+          type: "spring",
+          stiffness: 100,
+          damping: 17,
+        }}
+      >
+        <span className="flex justify-center items-center gap-4">
+          <div className="p-3 md:p-4 border-2 rounded-2xl -rotate-12 bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20 hover:border-red-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
+            <Youtube className="w-8 h-8 text-red-600" />
+          </div>
+          <div className="p-3 md:p-4 border-2 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20 hover:border-blue-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-blue-500/20">
+            <Twitter className="w-8 h-8 text-blue-500" />
+          </div>
+          <div className="p-3 md:p-4 border-2 rounded-2xl rotate-12 bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20 hover:border-green-500/40 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-green-500/20">
+            <Music className="w-8 h-8 text-green-600" />
+          </div>
+        </span>
+        <h1 className="text-4xl md:text-5xl font-semibold text-center mt-7">
+          Features
+        </h1>
+      </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16 px-4">
         {features.map((feature, index) => (
-          <div
+          <motion.div
             key={index}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              delay: index * 0.1,
+              type: "spring",
+              stiffness: 100,
+              damping: 17,
+            }}
             className="p-8 rounded-xl bg-background/50 backdrop-blur-sm hover:bg-accent/50 transition-all duration-300 group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -79,7 +72,7 @@ export const LandingFeatures = () => {
             </div>
 
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

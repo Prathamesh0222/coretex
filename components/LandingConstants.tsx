@@ -1,26 +1,6 @@
-import { Brain, File, Github, Music, Notebook, Youtube } from "lucide-react";
+import { icons } from "@/app/utils/mapData";
 
 export const LandingConstants = () => {
-  const icons = [
-    {
-      icon: <File size={20} className="text-orange-500" />,
-    },
-    {
-      icon: <Notebook size={20} className="text-yellow-500" />,
-    },
-    {
-      icon: <Brain size={20} className="text-purple-500" />,
-    },
-    {
-      icon: <Github size={20} className="dark:text-white text-black" />,
-    },
-    {
-      icon: <Youtube size={20} className="text-red-500" />,
-    },
-    {
-      icon: <Music size={20} className="text-green-500" />,
-    },
-  ];
   return (
     <div className="flex flex-col items-center container mx-auto gap-6  my-32 opacity-60">
       <div className="flex gap-4 animate-float">
