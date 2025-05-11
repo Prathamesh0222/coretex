@@ -11,6 +11,7 @@
     "dev:docker": "bunx prisma migrate dev && next dev --turbopack"
   },
   "dependencies": {
+    "@google/genai": "^0.13.0",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "^6.5.0",
     "@radix-ui/react-dialog": "^1.1.11",
