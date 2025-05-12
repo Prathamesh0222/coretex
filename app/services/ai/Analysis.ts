@@ -14,28 +14,37 @@ export async function analyzeContent(
   url: string,
   type: ContentType
 ): Promise<AIContentSuggestions> {
-  const videoData = await getYoutubeVideoData(url);
+  let videoData;
+
+  switch (type) {
+    case "YOUTUBE":
+      videoData = await getYoutubeVideoData(url);
+      break;
+    case "SPOTIFY":
+      videoData = await getSpotifyData(url);
+      break;
+    default:
+      throw new Error("Unsupported content type");
+  }
   const content = `
-      Analyze this YouTube video:
-    Title: ${videoData.title}
-    Description: ${videoData.description}
-    Tags: ${videoData.tags.join(", ")}
+      Analyze this video:
+    Title: ${videoData?.title}
+    Description: ${videoData?.description}
+    Tags: ${videoData?.tags.join(", ")}
 
     Please provide in JSON format only:
     {
-      "suggestedTitle": "${videoData.title}",
+      "suggestedTitle": "${videoData?.title}",
       "suggestedTags": [5 relevant tags based on content],
       "summary": [brief summary under 255 characters]
     }
     `;
-  console.log("Content", content);
 
   const response = await ai.models.generateContent({
     model: "gemini-2.0-flash",
     contents: content,
   });
   const text = response.text;
-  console.log("asdasdadsad", text);
   if (!text) {
     throw new Error("Failed to get AI response");
   }
@@ -71,4 +80,57 @@ async function getYoutubeVideoData(url: string) {
     description: videoData.description,
     tags: videoData.tags || [],
   };
+}
+
+async function getSpotifyUserToken() {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+  const response = await axios.post(
+    "https://accounts.spotify.com/api/token",
+    new URLSearchParams({ grant_type: "client_credentials" }).toString(),
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${auth}`,
+      },
+    }
+  );
+
+  return response.data.access_token;
+}
+
+async function getSpotifyData(url: string) {
+  const id = url.split("/").pop()?.split("?")[0];
+  const type = url.includes("/track/") ? "track" : "playlist";
+
+  if (!id) throw new Error("Invalid Spotify URL");
+
+  const token = await getSpotifyUserToken();
+  try {
+    const response = await axios.get(
+      `https://api.spotify.com/v1/${type}s/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return {
+      title: response.data.name,
+      description:
+        type === "track"
+          ? `By ${response.data.artists[0].name}`
+          : `Playlist by ${response.data.owner.display_name}`,
+      tags: [
+        response.data.type,
+        response.data.artists?.[0]?.name || "Various Artists",
+      ],
+    };
+  } catch (error) {
+    console.error("Failed while fetching metadata", error);
+    throw error;
+  }
 }
