@@ -1,6 +1,6 @@
 "use client";
 
-import { Music, Twitter, Youtube, Book, Search, FileText } from "lucide-react";
+import { Music, Twitter, Youtube } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { features } from "@/app/utils/mapData";
