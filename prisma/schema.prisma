@@ -69,10 +69,13 @@ model NotesTags {
 }
 
 model Link {
-  id     String @id @default(uuid())
-  hash   String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  id        String   @id @default(uuid())
+  hash      String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ContentType {
