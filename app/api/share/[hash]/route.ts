@@ -2,11 +2,11 @@ import { prisma } from "@/app/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
-  req: NextRequest,
-  { params }: { params: { hash: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ hash: string }> }
 ) => {
   try {
-    const { hash } = params;
+    const { hash } = await params;
 
     const link = await prisma.link.findFirst({
       where: {
@@ -62,6 +62,7 @@ export const GET = async (
       },
     });
   } catch (error) {
+    console.error("Error fetching shared content:", error);
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }

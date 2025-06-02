@@ -1,7 +1,7 @@
 import { authOptions } from "@/app/config/auth.config";
 import { prisma } from "@/app/utils/prisma";
 import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 function generatesHash() {
   const char = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -12,7 +12,7 @@ function generatesHash() {
   return result;
 }
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
+export const POST = async () => {
   try {
     const session = await getServerSession(authOptions);
 
@@ -65,9 +65,13 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
     return NextResponse.json({
       success: true,
-      shareUrl: `http://localhost:3000/share/${newLink.hash}`,
+      data: {
+        hash: newLink.hash,
+        shareUrl: `http://localhost:3000/share/${newLink.hash}`,
+      },
     });
   } catch (error) {
+    console.error("Failed", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 };
