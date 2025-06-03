@@ -39,6 +39,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { Input } from "./ui/input";
+import { ShareButton } from "./ShareButton";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -160,7 +161,10 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
             className="pl-9"
           />
         </div>
-        <CreateContent />
+        <div className="flex gap-5 items-center">
+          <ShareButton />
+          <CreateContent />
+        </div>
       </div>
       {filteredContent.length === 0 && (
         <div className="w-full flex flex-col items-center justify-center h-80 gap-4">
