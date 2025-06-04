@@ -235,7 +235,7 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                             : ""
                         }`}
                       >
-                        {"type" in item ? item.type : "Notes"}
+                        {"type" in item ? item.type : "NOTES"}
                       </div>
                     </CardDescription>
                   </div>

@@ -13,9 +13,9 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ClipboardPen, Layers } from "lucide-react";
 
 type SharedContent = {
   id: string;
@@ -23,6 +23,7 @@ type SharedContent = {
   link: string;
   type: ContentType;
   userId: string;
+  summary: string;
   createdAt: Date;
   updatedAt: Date;
   ContentTags: {
@@ -36,14 +37,14 @@ type SharedContent = {
 type SharedNote = {
   id: string;
   title: string;
-  content: string;
+  description: string;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
   NotesTags: {
     tags: {
       id: string;
-      name: string;
+      title: string;
     };
   }[];
 };
@@ -66,7 +67,6 @@ export default function ShareBrain() {
       try {
         setLoading(true);
         const response = await axios.get(`/api/share/${hash}`);
-        console.log("Response", response);
         if (response.data && response.data.success) {
           setData(response.data.data);
         } else {
@@ -86,10 +86,24 @@ export default function ShareBrain() {
     }
   }, [hash]);
 
+  const allItems = [
+    ...(data?.contents || []).map((item) => ({
+      ...item,
+      itemType: "content" as const,
+    })),
+    ...(data?.notes || []).map((item) => ({
+      ...item,
+      itemType: "note" as const,
+    })),
+  ];
+
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto p-6 text-center">
-        <div className="text-xl">Loading...</div>
+      <div className="flex flex-col justify-center items-center h-screen animate-pulse duration-300">
+        <Layers
+          size={60}
+          className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 transition-all duration-300 group-hover:shadow-blue-500/50 group-hover:scale-105"
+        />
       </div>
     );
   }
@@ -110,80 +124,123 @@ export default function ShareBrain() {
         {data.user?.username}&apos;s Second Brain
       </h1>
 
-      {data.contents && data.contents.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">📚 Content</h2>
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 mb-12 md:mb-12 lg:mb-0 w-full">
-            {data.contents.map((content) => (
-              <div key={content.id} className="break-inside-avoid">
-                <Card>
-                  <CardHeader>
-                    <h1>{content.title}</h1>
-                    <Badge
-                      className={
-                        content.type === ContentType.YOUTUBE
-                          ? "bg-red-500/20 border border-red-500 text-red-500"
-                          : content.type === ContentType.TWITTER
-                          ? "bg-blue-500/20 border-blue-500 text-blue-500"
-                          : "bg-green-500/20 border border-green-500 text-green-500"
-                      }
+      {allItems.length > 0 && (
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 mb-12 md:mb-12 lg:mb-0 w-full">
+          {allItems.map((item) => (
+            <div key={item.id} className="break-inside-avoid mb-4">
+              <Card
+                className={`border-l-5 ${
+                  "type" in item && item.type === ContentType.YOUTUBE
+                    ? "border-red-500"
+                    : "type" in item && item.type === ContentType.TWITTER
+                    ? "border-blue-500"
+                    : "type" in item && item.type === ContentType.SPOTIFY
+                    ? "border-green-500"
+                    : !("type" in item)
+                    ? "border-yellow-500"
+                    : ""
+                }`}
+              >
+                <CardHeader>
+                  <h1>{item.title}</h1>
+                  <div
+                    className={`border rounded-md text-center text-xs w-16 ${
+                      "type" in item && item.type === ContentType.YOUTUBE
+                        ? "bg-red-600/10 text-red-500"
+                        : "type" in item && item.type === ContentType.TWITTER
+                        ? "bg-blue-600/10 text-blue-500"
+                        : "type" in item && item.type === ContentType.SPOTIFY
+                        ? "bg-green-600/10 text-green-500"
+                        : !("type" in item)
+                        ? "bg-yellow-600/10 text-yellow-500"
+                        : ""
+                    }`}
+                  >
+                    {"type" in item ? item.type : "NOTES"}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {item.itemType === "note" ? (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: item.description }}
+                      className="prose prose-sm max-w-none"
+                    />
+                  ) : item.type === ContentType.YOUTUBE ? (
+                    <YoutubeEmbed link={item.link} />
+                  ) : item.type === ContentType.TWITTER ? (
+                    <TwitterEmbed link={item.link} />
+                  ) : (
+                    <SpotifyEmbed link={item.link} />
+                  )}
+                  {item.itemType === "content" && item.summary && (
+                    <div
+                      className={`border ${
+                        item.type === ContentType.YOUTUBE
+                          ? "dark:bg-red-500/20 bg-red-800/30  border-red-300/40"
+                          : item.type === ContentType.TWITTER
+                          ? "bg-blue-500/20 border-blue-300/40"
+                          : item.type === ContentType.SPOTIFY
+                          ? "bg-green-400/20 border-green-300/40"
+                          : ""
+                      } p-3 rounded-xl text-sm mt-4 shadow-sm hover:shadow-md transition-all duration-200`}
                     >
-                      {content.type}
-                    </Badge>
-                  </CardHeader>
-                  <CardContent>
-                    {content.type === ContentType.YOUTUBE ? (
-                      <YoutubeEmbed link={content.link} />
-                    ) : content.type === ContentType.TWITTER ? (
-                      <TwitterEmbed link={content.link} />
-                    ) : (
-                      <SpotifyEmbed link={content.link} />
-                    )}
-                  </CardContent>
-                  <CardFooter></CardFooter>
-                </Card>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {data.notes && data.notes.length > 0 && (
-        <div>
-          <h2 className="text-2xl font-bold mb-4">📝 Notes</h2>
-          {data.notes.map((note) => (
-            <div key={note.id} className="border p-4 mb-4 rounded">
-              <h3 className="text-xl font-semibold">{note.title}</h3>
-              <p className="whitespace-pre-wrap">{note.content}</p>
-              {note.NotesTags && note.NotesTags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {note.NotesTags.map((noteTag, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded"
-                    >
-                      {noteTag.tags.name}
-                    </span>
-                  ))}
-                </div>
-              )}
+                      <span className="flex items-center gap-2 font-semibold text-xs uppercase mb-1 text-muted-foreground">
+                        <ClipboardPen
+                          size={14}
+                          className="text-muted-foreground"
+                        />
+                        Summary
+                      </span>
+                      <p className="tracking-tight pl-1">{item.summary}</p>
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter>
+                  <div className="flex gap-2">
+                    {item.itemType === "note"
+                      ? item.NotesTags.map((tag, index) => (
+                          <Badge
+                            className="rounded-lg font-semibold bg-yellow-600/10 hover:bg-yellow-600/20 text-yellow-500"
+                            key={index}
+                          >
+                            {tag.tags.title.toUpperCase()}
+                          </Badge>
+                        ))
+                      : item.ContentTags.map((tag, index) => (
+                          <Badge
+                            className={`rounded-lg font-semibold  ${
+                              item.type === ContentType.TWITTER
+                                ? "bg-blue-600/10 hover:bg-blue-600/20 text-blue-500"
+                                : item.type === ContentType.SPOTIFY
+                                ? "bg-green-600/10 hover:bg-green-600/20 text-green-500"
+                                : item.type === ContentType.YOUTUBE
+                                ? "bg-red-600/10 hover:bg-red-600/20 text-red-500"
+                                : ""
+                            }`}
+                            key={index}
+                          >
+                            {tag.tags.title.toUpperCase()}
+                          </Badge>
+                        ))}
+                  </div>
+                </CardFooter>
+              </Card>
             </div>
           ))}
         </div>
       )}
 
-      {(!data.contents || data.contents.length === 0) &&
-        (!data.notes || data.notes.length === 0) && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">🧠</div>
-            <h3 className="text-xl text-gray-600 mb-2">
-              This Second Brain is Empty
-            </h3>
-            <p className="text-gray-500">
-              {data.user?.username} hasn&apos;t added any content or notes yet.
-            </p>
-          </div>
-        )}
+      {allItems.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-gray-400 text-6xl mb-4">🧠</div>
+          <h3 className="text-xl text-gray-600 mb-2">
+            This Second Brain is Empty
+          </h3>
+          <p className="text-gray-500">
+            {data.user?.username} hasn&apos;t added any content or notes yet.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
