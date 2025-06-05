@@ -15,45 +15,16 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ClipboardPen, Layers } from "lucide-react";
-
-type SharedContent = {
-  id: string;
-  title: string;
-  link: string;
-  type: ContentType;
-  userId: string;
-  summary: string;
-  createdAt: Date;
-  updatedAt: Date;
-  ContentTags: {
-    tags: {
-      id: string;
-      title: string;
-    };
-  }[];
-};
-
-type SharedNote = {
-  id: string;
-  title: string;
-  description: string;
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  NotesTags: {
-    tags: {
-      id: string;
-      title: string;
-    };
-  }[];
-};
-
-type ShareData = {
-  user: { username: string };
-  contents: SharedContent[];
-  notes: SharedNote[];
-};
+import {
+  ClipboardPen,
+  Layers,
+  Music,
+  Notebook,
+  Twitter,
+  Youtube,
+} from "lucide-react";
+import { ShareData } from "@/types/content-type";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function ShareBrain() {
   const params = useParams();
@@ -119,128 +90,164 @@ export default function ShareBrain() {
   }
 
   return (
-    <div className="w-full mx-auto container p-6 h-screen">
-      <h1 className="text-3xl font-bold mb-6">
-        {data.user?.username}&apos;s Second Brain
-      </h1>
-
-      {allItems.length > 0 && (
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 mb-12 md:mb-12 lg:mb-0 w-full">
-          {allItems.map((item) => (
-            <div key={item.id} className="break-inside-avoid mb-4">
-              <Card
-                className={`border-l-5 ${
-                  "type" in item && item.type === ContentType.YOUTUBE
-                    ? "border-red-500"
-                    : "type" in item && item.type === ContentType.TWITTER
-                    ? "border-blue-500"
-                    : "type" in item && item.type === ContentType.SPOTIFY
-                    ? "border-green-500"
-                    : !("type" in item)
-                    ? "border-yellow-500"
-                    : ""
-                }`}
-              >
-                <CardHeader>
-                  <h1>{item.title}</h1>
-                  <div
-                    className={`border rounded-md text-center text-xs w-16 ${
-                      "type" in item && item.type === ContentType.YOUTUBE
-                        ? "bg-red-600/10 text-red-500"
-                        : "type" in item && item.type === ContentType.TWITTER
-                        ? "bg-blue-600/10 text-blue-500"
-                        : "type" in item && item.type === ContentType.SPOTIFY
-                        ? "bg-green-600/10 text-green-500"
-                        : !("type" in item)
-                        ? "bg-yellow-600/10 text-yellow-500"
-                        : ""
-                    }`}
-                  >
-                    {"type" in item ? item.type : "NOTES"}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {item.itemType === "note" ? (
-                    <div
-                      dangerouslySetInnerHTML={{ __html: item.description }}
-                      className="prose prose-sm max-w-none"
-                    />
-                  ) : item.type === ContentType.YOUTUBE ? (
-                    <YoutubeEmbed link={item.link} />
-                  ) : item.type === ContentType.TWITTER ? (
-                    <TwitterEmbed link={item.link} />
-                  ) : (
-                    <SpotifyEmbed link={item.link} />
-                  )}
-                  {item.itemType === "content" && item.summary && (
-                    <div
-                      className={`border ${
-                        item.type === ContentType.YOUTUBE
-                          ? "dark:bg-red-500/20 bg-red-800/30  border-red-300/40"
-                          : item.type === ContentType.TWITTER
-                          ? "bg-blue-500/20 border-blue-300/40"
-                          : item.type === ContentType.SPOTIFY
-                          ? "bg-green-400/20 border-green-300/40"
-                          : ""
-                      } p-3 rounded-xl text-sm mt-4 shadow-sm hover:shadow-md transition-all duration-200`}
-                    >
-                      <span className="flex items-center gap-2 font-semibold text-xs uppercase mb-1 text-muted-foreground">
-                        <ClipboardPen
-                          size={14}
-                          className="text-muted-foreground"
-                        />
-                        Summary
-                      </span>
-                      <p className="tracking-tight pl-1">{item.summary}</p>
-                    </div>
-                  )}
-                </CardContent>
-                <CardFooter>
-                  <div className="flex gap-2">
-                    {item.itemType === "note"
-                      ? item.NotesTags.map((tag, index) => (
-                          <Badge
-                            className="rounded-lg font-semibold bg-yellow-600/10 hover:bg-yellow-600/20 text-yellow-500"
-                            key={index}
-                          >
-                            {tag.tags.title.toUpperCase()}
-                          </Badge>
-                        ))
-                      : item.ContentTags.map((tag, index) => (
-                          <Badge
-                            className={`rounded-lg font-semibold  ${
-                              item.type === ContentType.TWITTER
-                                ? "bg-blue-600/10 hover:bg-blue-600/20 text-blue-500"
-                                : item.type === ContentType.SPOTIFY
-                                ? "bg-green-600/10 hover:bg-green-600/20 text-green-500"
-                                : item.type === ContentType.YOUTUBE
-                                ? "bg-red-600/10 hover:bg-red-600/20 text-red-500"
-                                : ""
-                            }`}
-                            key={index}
-                          >
-                            {tag.tags.title.toUpperCase()}
-                          </Badge>
-                        ))}
-                  </div>
-                </CardFooter>
-              </Card>
+    <div className="lg:border lg:m-4 lg:rounded-xl lg:h-[97vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] dark:bg-[#141212] bg-[#f6f7f7]">
+      <div className="w-full p-12">
+        <div className="flex justify-between">
+          <div className="flex items-center text-center gap-2">
+            <div className="w-10 h-10 rounded-full border flex items-center justify-center dark:text-black text-white font-semibold bg-black dark:bg-white">
+              {data.user.username.split(" ")[0].charAt(0).toUpperCase()}
             </div>
-          ))}
+            <h1 className="text-3xl font-bold">
+              {data.user?.username}&apos;s Second Brain
+            </h1>
+          </div>
+          <ThemeToggle />
         </div>
-      )}
-
-      {allItems.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-gray-400 text-6xl mb-4">🧠</div>
-          <h3 className="text-xl text-gray-600 mb-2">
-            This Second Brain is Empty
-          </h3>
-          <p className="text-gray-500">
-            {data.user?.username} hasn&apos;t added any content or notes yet.
-          </p>
-        </div>
-      )}
+        {allItems.length > 0 && (
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 mb-12 md:mb-12 lg:mb-0 w-full">
+            {allItems.map((item) => (
+              <div key={item.id} className="break-inside-avoid mb-4">
+                <Card
+                  className={`border-l-5 ${
+                    "type" in item && item.type === ContentType.YOUTUBE
+                      ? "border-red-500"
+                      : "type" in item && item.type === ContentType.TWITTER
+                      ? "border-blue-500"
+                      : "type" in item && item.type === ContentType.SPOTIFY
+                      ? "border-green-500"
+                      : !("type" in item)
+                      ? "border-yellow-500"
+                      : ""
+                  }`}
+                >
+                  <CardHeader>
+                    <div className="flex items-center gap-2">
+                      <span>
+                        {"type" in item && item.type === ContentType.YOUTUBE ? (
+                          <div className="p-2 border rounded-full bg-red-500/20">
+                            <Youtube size={15} className="text-red-500" />
+                          </div>
+                        ) : "type" in item &&
+                          item.type === ContentType.TWITTER ? (
+                          <div className="p-2 border rounded-full bg-blue-500/20">
+                            <Twitter size={15} className="text-blue-500" />
+                          </div>
+                        ) : "type" in item &&
+                          item.type === ContentType.SPOTIFY ? (
+                          <div className="p-2 border rounded-full bg-green-500/20">
+                            <Music size={15} className="text-green-500" />
+                          </div>
+                        ) : !("type" in item) ? (
+                          <div className="p-2 border rounded-full bg-yellow-500/20">
+                            <Notebook size={15} className="text-yellow-500" />
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                      <div className="space-y-2">
+                        <h1 className="font-semibold">{item.title}</h1>
+                        <div
+                          className={`border rounded-md text-center text-xs w-16 ${
+                            "type" in item && item.type === ContentType.YOUTUBE
+                              ? "bg-red-600/10 text-red-500"
+                              : "type" in item &&
+                                item.type === ContentType.TWITTER
+                              ? "bg-blue-600/10 text-blue-500"
+                              : "type" in item &&
+                                item.type === ContentType.SPOTIFY
+                              ? "bg-green-600/10 text-green-500"
+                              : !("type" in item)
+                              ? "bg-yellow-600/10 text-yellow-500"
+                              : ""
+                          }`}
+                        >
+                          {"type" in item ? item.type : "NOTES"}
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {item.itemType === "note" ? (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item.description }}
+                        className="prose prose-sm max-w-none"
+                      />
+                    ) : item.type === ContentType.YOUTUBE ? (
+                      <YoutubeEmbed link={item.link} />
+                    ) : item.type === ContentType.TWITTER ? (
+                      <TwitterEmbed link={item.link} />
+                    ) : (
+                      <SpotifyEmbed link={item.link} />
+                    )}
+                    {item.itemType === "content" && item.summary && (
+                      <div
+                        className={`border ${
+                          item.type === ContentType.YOUTUBE
+                            ? "dark:bg-red-500/20 bg-red-800/30 border-red-300/40"
+                            : item.type === ContentType.TWITTER
+                            ? "bg-blue-500/20 border-blue-300/40"
+                            : item.type === ContentType.SPOTIFY
+                            ? "bg-green-400/20 border-green-300/40"
+                            : ""
+                        } p-3 rounded-xl text-sm mt-4 shadow-sm hover:shadow-md transition-all duration-200`}
+                      >
+                        <span className="flex items-center gap-2 font-semibold text-xs uppercase mb-1 text-muted-foreground">
+                          <ClipboardPen
+                            size={14}
+                            className="text-muted-foreground"
+                          />
+                          Summary
+                        </span>
+                        <p className="tracking-tight pl-1">{item.summary}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                  <CardFooter>
+                    <div className="flex flex-wrap gap-2">
+                      {item.itemType === "note"
+                        ? item.NotesTags.map((tag, index) => (
+                            <Badge
+                              className="rounded-lg font-semibold bg-yellow-600/10 hover:bg-yellow-600/20 text-yellow-500"
+                              key={index}
+                            >
+                              {tag.tags.title.toUpperCase()}
+                            </Badge>
+                          ))
+                        : item.ContentTags.map((tag, index) => (
+                            <Badge
+                              className={`rounded-lg font-semibold  ${
+                                item.type === ContentType.TWITTER
+                                  ? "bg-blue-600/10 hover:bg-blue-600/20 text-blue-500"
+                                  : item.type === ContentType.SPOTIFY
+                                  ? "bg-green-600/10 hover:bg-green-600/20 text-green-500"
+                                  : item.type === ContentType.YOUTUBE
+                                  ? "bg-red-600/10 hover:bg-red-600/20 text-red-500"
+                                  : ""
+                              }`}
+                              key={index}
+                            >
+                              {tag.tags.title.toUpperCase()}
+                            </Badge>
+                          ))}
+                    </div>
+                  </CardFooter>
+                </Card>
+              </div>
+            ))}
+          </div>
+        )}
+        {allItems.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-xl text-gray-600 mb-2">
+              This Second Brain is Empty
+            </h3>
+            <p className="text-gray-500">
+              {data.user?.username} hasn&apos;t added any content or notes yet.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
