@@ -49,7 +49,7 @@ export const POST = async () => {
         success: true,
         data: {
           hash: existingLink.hash,
-          shareUrl: `http://localhost:3000/share/${existingLink.hash}`,
+          shareUrl: `${process.env.NEXTAUTH_URL}/share/${existingLink.hash}`,
         },
       });
     }
@@ -67,7 +67,7 @@ export const POST = async () => {
       success: true,
       data: {
         hash: newLink.hash,
-        shareUrl: `http://localhost:3000/share/${newLink.hash}`,
+        shareUrl: `${process.env.NEXTAUTH_URL}/share/${newLink.hash}`,
       },
     });
   } catch (error) {
