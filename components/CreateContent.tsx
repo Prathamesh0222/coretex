@@ -1,4 +1,4 @@
-import { Asterisk, Plus, X } from "lucide-react";
+import { Asterisk, Plus, Wand2, X } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -20,11 +20,13 @@ import axios from "axios";
 import { ContentType, useContentState } from "@/app/store/contentState";
 import { useQueryClient } from "@tanstack/react-query";
 import { NotesEditor } from "./NotesEditor";
+import { analyzeContentAction } from "@/app/actions/analyzeContent";
 
 export const CreateContent = () => {
   const [tagsInput, setTagsInput] = useState<string>("");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [notesDescription, setNotesDescription] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const {
     title,
@@ -112,13 +114,43 @@ export const CreateContent = () => {
     setTagsInput("");
   };
 
+  const handleAIAnalysis = async () => {
+    if (!link) {
+      toast.error("Please enter a cotent link first");
+      return;
+    }
+
+    try {
+      setIsAnalyzing(true);
+      const result = await analyzeContentAction(link, type);
+
+      if (result.success && result.data) {
+        setTitle(result.data.suggestedTitle);
+        setDescription(result.data.summary);
+        const newTags = result.data.suggestedTags.filter(
+          (tag: string) => !tags.includes(tag)
+        );
+        setTags([...tags, ...newTags]);
+
+        toast.success("Content analyzed successfully!");
+      } else {
+        toast.error("Failed to analyze content");
+      }
+    } catch (error) {
+      console.error("Error analyzing content:", error);
+      toast.error("Failed to analyze content");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   return (
     <div className="flex gap-2 mr-2">
       <Sheet
         open={isSheetOpen}
         onOpenChange={(open) => {
           setIsSheetOpen(open);
-          if (!open) {
+          if (open) {
             resetForm();
           }
         }}
@@ -180,12 +212,45 @@ export const CreateContent = () => {
 
                     <TabsContent value={ContentType.YOUTUBE}>
                       <YoutubeTab />
+                      {link && (
+                        <Button
+                          onClick={handleAIAnalysis}
+                          variant="outline"
+                          className="w-full mt-2 gap-2"
+                          disabled={isAnalyzing}
+                        >
+                          <Wand2 size={16} />
+                          {isAnalyzing ? "Analyzing..." : "Analyze with AI"}
+                        </Button>
+                      )}
                     </TabsContent>
                     <TabsContent value={ContentType.TWITTER}>
                       <TwitterTab />
+                      {link && (
+                        <Button
+                          onClick={handleAIAnalysis}
+                          variant="outline"
+                          className="w-full mt-2 gap-2"
+                          disabled={isAnalyzing}
+                        >
+                          <Wand2 size={16} />
+                          {isAnalyzing ? "Analyzing..." : "Analyze with AI"}
+                        </Button>
+                      )}
                     </TabsContent>
                     <TabsContent value={ContentType.SPOTIFY}>
                       <SpotifyTab />
+                      {link && (
+                        <Button
+                          onClick={handleAIAnalysis}
+                          variant="outline"
+                          className="w-full mt-2 gap-2"
+                          disabled={isAnalyzing}
+                        >
+                          <Wand2 size={16} />
+                          {isAnalyzing ? "Analyzing..." : "Analyze with AI"}
+                        </Button>
+                      )}
                     </TabsContent>
                   </Tabs>
                   <div>
@@ -197,6 +262,7 @@ export const CreateContent = () => {
                         className="bg-primary/5 rounded-md p-3 w-full border text-sm h-40"
                         maxLength={255}
                         onChange={(e) => setDescription(e.target.value)}
+                        disabled={isAnalyzing}
                       />
                       <p
                         className={
@@ -265,6 +331,7 @@ export const CreateContent = () => {
                     value={title}
                     placeholder="Give a title for your content"
                     onChange={(e) => setTitle(e.target.value)}
+                    disabled={isAnalyzing}
                   />
                   <label className="text-sm font-semibold flex mt-2.5">
                     Description
@@ -285,6 +352,7 @@ export const CreateContent = () => {
                     value={tagsInput}
                     onChange={(e) => setTagsInput(e.target.value)}
                     onKeyDown={handleTagInput}
+                    disabled={isAnalyzing}
                   />
                   <div className="border-2 h-40 border-dashed rounded-xl p-3">
                     <div className="flex flex-wrap gap-2 mb-12">
