@@ -18,7 +18,7 @@ export const validate =
   async (req: NextRequest) => {
     try {
       const data = await req.json();
-      const parsedData = await schema.safeParseAsync(data);
+      const parsedData = await schema.safeParse(data);
       if (!parsedData.success) {
         return NextResponse.json({
           error: parsedData.error.errors,
