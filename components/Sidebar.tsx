@@ -1,18 +1,12 @@
 import {
-  Home,
   Layers,
-  LayoutDashboard,
   LogOut,
   Moon,
-  Music,
-  Notebook,
   PanelLeftOpen,
   PanelRightOpen,
   Settings,
   Sun,
-  Twitter,
   User,
-  Youtube,
 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -23,39 +17,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { signOut, useSession } from "next-auth/react";
-
-const SidebarComponents = [
-  {
-    icon: <Home className="w-5 h-5" />,
-    title: "Home",
-    filter: "all",
-  },
-  {
-    icon: <LayoutDashboard className="w-5 h-5" />,
-    title: "Dashboard",
-    filter: "dashboard",
-  },
-  {
-    icon: <Youtube className="w-5 h-5" />,
-    title: "Youtube",
-    filter: "youtube",
-  },
-  {
-    icon: <Twitter className="w-5 h-5" />,
-    title: "Twitter",
-    filter: "twitter",
-  },
-  {
-    icon: <Music className="w-5 h-5" />,
-    title: "Spotify",
-    filter: "spotify",
-  },
-  {
-    icon: <Notebook className="w-5 h-5" />,
-    title: "Notes",
-    filter: "notes",
-  },
-];
+import {
+  SidebarComponents,
+  SidebarFilterComponents,
+  SidebarMobileComponents,
+} from "@/lib/constants/SidebarComponents";
 
 interface SidebarProps {
   onFilterChange: (filter: string) => void;
@@ -63,7 +29,7 @@ interface SidebarProps {
 
 export const Sidebar = ({ onFilterChange }: SidebarProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-  const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [activeFilter, setActiveFilter] = useState<string>("dashboard");
   const { theme, setTheme } = useTheme();
   const session = useSession();
 
@@ -163,6 +129,43 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                 )}
               </div>
             ))}
+            <div className="border w-full my-6" />
+            {SidebarFilterComponents.map((sidebar, index) => (
+              <div
+                key={index}
+                onClick={() => handleFilterChange(sidebar.filter)}
+                className={`
+                flex items-center gap-3 p-2.5 rounded-xl cursor-pointer
+                transition-all duration-200 ease-in-out
+                ${
+                  activeFilter === sidebar.filter
+                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                }
+              `}
+              >
+                <div
+                  className={`${
+                    activeFilter === sidebar.filter
+                      ? "text-white"
+                      : "text-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  {sidebar.icon}
+                </div>
+                {isSidebarOpen && (
+                  <div
+                    className={`text-sm font-medium ${
+                      activeFilter === sidebar.filter
+                        ? "text-white"
+                        : "text-gray-700 dark:text-gray-300"
+                    }`}
+                  >
+                    {sidebar.title}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
           <div
             className={`flex items-center pt-3 border-t border-gray-200 dark:border-gray-800 ${
@@ -222,9 +225,9 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
           </div>
         </div>
       </div>
-      <div className="lg:hidden block fixed bottom-0 p-3 bg-[#f6f7f7]/40 dark:bg-[#141212] w-full rounded-t-2xl">
+      <div className="lg:hidden block fixed bottom-0 p-3 bg-[#f6f7f7]/40 dark:bg-[#141212] w-full rounded-t-2xl z-20">
         <div className="flex items-center justify-between container mx-auto">
-          {SidebarComponents.map((sidebar, index) => (
+          {SidebarMobileComponents.map((sidebar, index) => (
             <div
               key={index}
               onClick={() => handleFilterChange(sidebar.filter)}
