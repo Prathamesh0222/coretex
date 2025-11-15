@@ -8,7 +8,7 @@ export const SpotifyEmbed = ({ link }: { link: string }) => {
   };
   return (
     <iframe
-      style={{ borderRadius: "12px" }}
+      style={{ borderRadius: "12px", marginTop: "24px" }}
       src={getEmbedUrl(link)}
       width="100%"
       height="352"
