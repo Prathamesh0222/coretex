@@ -1,5 +1,6 @@
 import { authOptions } from "@/app/config/auth.config";
 import { validate } from "@/app/middlewares/validate.middleware";
+import { ai } from "@/app/services/ai/Analysis";
 import { ContentType } from "@/app/store/contentState";
 import { prisma } from "@/app/utils/prisma";
 import {
@@ -53,23 +54,34 @@ const contentPostHandler = async (
   }
 
   const userId = session.user.id;
+
   try {
+    let createdContentId: string;
+    let textToEmbed: string;
     if (type === ContentType.NOTES) {
-      await prisma.$transaction(async (prisma) => {
-        const TagsRecord = tags ? await upsertTags(prisma, tags) : [];
-        await prisma.notes.create({
-          data: {
-            title,
-            description: description as string,
-            userId,
-            NotesTags: {
-              create: TagsRecord.map((tag) => ({
-                tagsId: tag.id,
-              })),
+      const result = await prisma.$transaction(
+        async (prisma): Promise<{ id: string; text: string }> => {
+          const TagsRecord = tags ? await upsertTags(prisma, tags) : [];
+          const createdNote = await prisma.notes.create({
+            data: {
+              title,
+              description: description as string,
+              userId,
+              NotesTags: {
+                create: TagsRecord.map((tag) => ({
+                  tagsId: tag.id,
+                })),
+              },
             },
-          },
-        });
-      });
+          });
+          return {
+            id: createdNote.id,
+            text: `${title} ${description}`,
+          };
+        }
+      );
+      createdContentId = result.id;
+      textToEmbed = result.text;
     } else {
       if (!link || !tags) {
         return NextResponse.json(
@@ -82,23 +94,81 @@ const contentPostHandler = async (
         );
       }
 
-      await prisma.$transaction(async (tx) => {
-        const TagsRecord = await upsertTags(tx, tags);
-        await tx.content.create({
-          data: {
-            title,
-            link,
-            type,
-            summary,
-            userId,
-            ContentTags: {
-              create: TagsRecord.map((tag) => ({
-                tagsId: tag.id,
-              })),
+      const result = await prisma.$transaction(
+        async (
+          tx
+        ): Promise<{ id: string; text: string; isContent: boolean }> => {
+          const TagsRecord = await upsertTags(tx, tags);
+          const createdContent = await tx.content.create({
+            data: {
+              title,
+              link,
+              type,
+              summary,
+              userId,
+              ContentTags: {
+                create: TagsRecord.map((tag) => ({
+                  tagsId: tag.id,
+                })),
+              },
             },
-          },
-        });
+          });
+          const tagTitles = TagsRecord.map((tag) => tag.title).join(" ");
+          return {
+            id: createdContent.id,
+            text: `${title} ${summary} ${tagTitles}`.trim(),
+            isContent: true,
+          };
+        }
+      );
+      createdContentId = result.id;
+      textToEmbed = result.text;
+    }
+
+    try {
+      const embeddingResponse = await ai.models.embedContent({
+        model: "gemini-embedding-001",
+        contents: textToEmbed,
       });
+
+      const embedding = embeddingResponse.embeddings?.[0]?.values;
+
+      const finalEmbedding =
+        embedding && embedding.length === 3072
+          ? embedding.slice(0, 1536)
+          : embedding;
+
+      if (finalEmbedding && finalEmbedding.length === 1536) {
+        if (type === ContentType.NOTES) {
+          await prisma.$executeRaw`
+            UPDATE "Notes" 
+            SET embedding = ${finalEmbedding}::vector 
+            WHERE id = ${createdContentId}
+          `;
+        } else {
+          await prisma.$executeRaw`
+            UPDATE "Content" 
+            SET embedding = ${finalEmbedding}::vector 
+            WHERE id = ${createdContentId}
+          `;
+        }
+        console.log(
+          `Embedding saved for ${
+            type === ContentType.NOTES ? "Notes" : "Content"
+          } with id: ${createdContentId}`
+        );
+      } else {
+        console.warn(`Embedding not saved - invalid dimensions:`, {
+          hasEmbedding: !!finalEmbedding,
+          length: finalEmbedding?.length,
+          expectedLength: 1536,
+          contentId: createdContentId,
+          type: type === ContentType.NOTES ? "Notes" : "Content",
+        });
+      }
+    } catch (embeddingError) {
+      console.error("Error generating embedding:", embeddingError);
+      console.error("Content ID that failed:", createdContentId);
     }
 
     return NextResponse.json(
