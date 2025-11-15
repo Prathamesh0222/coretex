@@ -4,7 +4,7 @@ import { getYoutubeVideoData } from "../metadata/YoutubeVideoData";
 import { getSpotifyData } from "../metadata/SpotifyData";
 import { getTwitterData } from "../metadata/TwitterData";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+export const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export interface AIContentSuggestions {
   suggestedTitle: string;

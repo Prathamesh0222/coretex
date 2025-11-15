@@ -14,6 +14,7 @@ import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { SpotifyEmbed } from "./SpotifyEmbed";
 import {
+  ArrowUpRight,
   Calendar,
   ClipboardPen,
   Download,
@@ -21,7 +22,6 @@ import {
   LayoutDashboard,
   Music,
   Notebook,
-  Search,
   Trash,
   Twitter,
   Youtube,
@@ -38,8 +38,8 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
-import { Input } from "./ui/input";
 import { ShareButton } from "./ShareButton";
+import { VectorSearchChatbox } from "./VectorSearchChatbox";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -54,6 +54,14 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
 
   const allContents: Array<Content | Notes> = fetchContents || [];
 
+  if (currentFilter.toLowerCase() === "search") {
+    return (
+      <div className="h-full w-full">
+        <VectorSearchChatbox />
+      </div>
+    );
+  }
+
   const filteredContent = allContents.filter((items) => {
     const matchesFilter = (() => {
       switch (currentFilter.toLowerCase()) {
@@ -66,7 +74,6 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
         case "notes":
           return !("type" in items);
         case "dashboard":
-        case "all":
         default:
           return true;
       }
@@ -116,8 +123,11 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
         </div>
       ),
       all: (
-        <div className="p-1.5 border rounded-full bg-blue-500/20">
-          <Home size={20} className="text-blue-500" />
+        <div className="flex gap-2 items-center">
+          <div className="p-1.5 border rounded-full bg-blue-500/20">
+            <Home size={20} className="text-blue-500" />
+          </div>
+          <h2 className="text-lg font-semibold">Home</h2>
         </div>
       ),
     };
@@ -153,14 +163,6 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
             {formatTitle(currentFilter)}
           </h1>
         </span>
-        <div className="items-center relative max-w-3xl w-full">
-          <Search size={35} className="absolute p-2" />
-          <Input
-            placeholder="Search for content..."
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
         <div className="flex gap-5 items-center">
           <ShareButton />
           <CreateContent />
@@ -182,11 +184,11 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
         {filteredContent?.map((item) => (
           <div key={item.id} className="break-inside-avoid mb-4">
             <Card
-              className={`border-l-5 ${
+              className={`border-l-5 bg-background/15 ${
                 "type" in item && item.type === ContentType.YOUTUBE
                   ? "border-red-500"
                   : "type" in item && item.type === ContentType.TWITTER
-                  ? "border-blue-500"
+                  ? "border-blue-500 gap-0"
                   : "type" in item && item.type === ContentType.SPOTIFY
                   ? "border-green-500"
                   : !("type" in item)
@@ -285,7 +287,7 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                     ? item.ContentTags.map((contentTag, index) => (
                         <Badge
                           key={index}
-                          className={`rounded-lg font-semibold  ${
+                          className={`rounded-lg font-semibold ${
                             item.type === ContentType.TWITTER
                               ? "bg-blue-600/10 hover:bg-blue-600/20 text-blue-500"
                               : item.type === ContentType.SPOTIFY
@@ -320,7 +322,8 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                   <p>Created:</p>
                   {new Date(item.createdAt).toLocaleDateString("en-GB")}
                 </div>
-                <div className="flex justify-end w-full">
+                <div className="flex justify-end gap-4 w-full">
+                  <ArrowUpRight className="size-5" />
                   <Dialog>
                     <DialogTrigger>
                       <Trash size={15} className="cursor-pointer" />
