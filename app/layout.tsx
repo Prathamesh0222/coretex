@@ -3,9 +3,13 @@ import "./globals.css";
 import { CustomProvider } from "./providers/CustomProvider";
 import { AuthProvider } from "./providers/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-manrope",
+});
 
 export const metadata: Metadata = {
   title: "Coretex",
@@ -20,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} antialiased`}
+        className={`${manrope.className} antialiased`}
         suppressHydrationWarning
       >
         <AuthProvider>
