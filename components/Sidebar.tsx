@@ -1,4 +1,5 @@
 import {
+  Folder,
   Layers,
   LogOut,
   Moon,
@@ -8,7 +9,7 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +23,8 @@ import {
   SidebarFilterComponents,
   SidebarMobileComponents,
 } from "@/lib/constants/SidebarComponents";
+import { CreateSpaceDialog } from "./CreateSpaceDialog";
+import axios from "axios";
 
 interface SidebarProps {
   onFilterChange: (filter: string) => void;
@@ -30,8 +33,24 @@ interface SidebarProps {
 export const Sidebar = ({ onFilterChange }: SidebarProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [activeFilter, setActiveFilter] = useState<string>("dashboard");
+  const [spaces, setSpaces] = useState<any[]>([]);
   const { theme, setTheme } = useTheme();
   const session = useSession();
+
+  const fetchSpaces = async () => {
+    try {
+      const response = await axios.get("/api/space");
+      setSpaces(response.data);
+    } catch (error) {
+      console.error("Failed to fetch spaces", error);
+    }
+  };
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      fetchSpaces();
+    }
+  }, [session.status]);
 
   const handleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -166,6 +185,54 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                 )}
               </div>
             ))}
+
+            <div className="border w-full my-6" />
+            <div className="flex items-center justify-between px-2 mb-2">
+              {isSidebarOpen && (
+                <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Spaces
+                </h3>
+              )}
+              <CreateSpaceDialog onSpaceCreated={fetchSpaces} />
+            </div>
+            <div className="space-y-4 overflow-y-auto max-h-[200px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              {spaces.map((space) => (
+                <div
+                  key={space.id}
+                  onClick={() => handleFilterChange(`space:${space.id}`)}
+                  className={`
+                    flex items-center gap-3 p-2.5 rounded-xl cursor-pointer
+                    transition-all duration-200 ease-in-out
+                    ${
+                      activeFilter === `space:${space.id}`
+                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
+                        : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                    }
+                  `}
+                >
+                  <div
+                    className={`${
+                      activeFilter === `space:${space.id}`
+                        ? "text-white"
+                        : "text-gray-700 dark:text-gray-300"
+                    }`}
+                  >
+                    <Folder size={20} />
+                  </div>
+                  {isSidebarOpen && (
+                    <div
+                      className={`text-sm font-medium truncate ${
+                        activeFilter === `space:${space.id}`
+                          ? "text-white"
+                          : "text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      {space.name}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
           <div
             className={`flex items-center pt-3 border-t border-gray-200 dark:border-gray-800 ${

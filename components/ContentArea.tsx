@@ -40,6 +40,9 @@ import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { ShareButton } from "./ShareButton";
 import { VectorSearchChatbox } from "./VectorSearchChatbox";
+import { AddToSpaceDropdown } from "./AddToSpaceDropdown";
+import { useSpaces } from "@/app/hooks/useSpace";
+import { Folder } from "lucide-react";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -47,12 +50,17 @@ interface ContentAreaProps {
 
 export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   const { data: fetchContents, error } = useContent();
-  const { searchQuery, setSearchQuery } = useContentState();
+  const { searchQuery } = useContentState();
   const queryClient = useQueryClient();
+  const { data: spaces } = useSpaces();
 
   if (error) return <div>Error: {error.message}</div>;
 
   const allContents: Array<Content | Notes> = fetchContents || [];
+
+  const isSpaceFilter = currentFilter.startsWith("space:");
+  const spaceId = isSpaceFilter ? currentFilter.replace("space:", "") : null;
+  const currentSpace = spaces?.find((space) => space.id === spaceId);
 
   if (currentFilter.toLowerCase() === "search") {
     return (
@@ -64,6 +72,10 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
 
   const filteredContent = allContents.filter((items) => {
     const matchesFilter = (() => {
+      if (isSpaceFilter && spaceId) {
+        return items.spacesId === spaceId;
+      }
+
       switch (currentFilter.toLowerCase()) {
         case "youtube":
           return "type" in items && items.type === ContentType.YOUTUBE;
@@ -96,6 +108,17 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   });
 
   const formatTitle = (filter: string) => {
+    if (isSpaceFilter && currentSpace) {
+      return (
+        <div className="flex gap-2 items-center">
+          <div className="p-1.5 border rounded-full bg-purple-500/20">
+            <Folder size={20} className="text-purple-500" />
+          </div>
+          <h2 className="text-lg font-semibold">{currentSpace.name}</h2>
+        </div>
+      );
+    }
+
     const iconMap = {
       youtube: (
         <div className="p-1.5 border rounded-full bg-red-500/20">
@@ -322,8 +345,15 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                   <p>Created:</p>
                   {new Date(item.createdAt).toLocaleDateString("en-GB")}
                 </div>
-                <div className="flex justify-end gap-4 w-full">
+                <div className="flex justify-end gap-2 w-full items-center">
                   <ArrowUpRight className="size-5" />
+                  <AddToSpaceDropdown
+                    contentId={"type" in item ? item.id : undefined}
+                    notesId={!("type" in item) ? item.id : undefined}
+                    currentSpaceId={item.spacesId}
+                    isViewingSpace={isSpaceFilter}
+                    viewingSpaceId={spaceId}
+                  />
                   <Dialog>
                     <DialogTrigger>
                       <Trash size={15} className="cursor-pointer" />
