@@ -28,6 +28,7 @@ export interface Content {
   link: string;
   createdAt: string;
   ContentTags: ContentTag[];
+  spacesId?: string | null;
 }
 
 export interface Notes {
@@ -36,6 +37,7 @@ export interface Notes {
   description: string;
   createdAt: string;
   NotesTags: NotesTag[];
+  spacesId?: string | null;
 }
 
 export const useContent = () => {
