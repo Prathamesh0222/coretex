@@ -25,6 +25,7 @@ import {
 } from "@/lib/constants/SidebarComponents";
 import { CreateSpaceDialog } from "./CreateSpaceDialog";
 import axios from "axios";
+import { Space } from "@/types/space-type";
 
 interface SidebarProps {
   onFilterChange: (filter: string) => void;
@@ -33,7 +34,7 @@ interface SidebarProps {
 export const Sidebar = ({ onFilterChange }: SidebarProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [activeFilter, setActiveFilter] = useState<string>("dashboard");
-  const [spaces, setSpaces] = useState<any[]>([]);
+  const [spaces, setSpaces] = useState<Space[]>([]);
   const { theme, setTheme } = useTheme();
   const session = useSession();
 
