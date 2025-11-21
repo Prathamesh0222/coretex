@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   AddToSpaceData,
@@ -7,6 +7,7 @@ import {
   RemoveFromSpaceData,
   Space,
 } from "@/types/space-type";
+import { queryClient } from "../providers/CustomProvider";
 
 export const useSpaces = () => {
   return useQuery<Space[]>({
@@ -19,8 +20,6 @@ export const useSpaces = () => {
 };
 
 export const useCreateSpace = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (data: CreateSpaceData) => {
       const response = await axios.post("/api/space", data);
@@ -38,8 +37,6 @@ export const useCreateSpace = () => {
 };
 
 export const useAddToSpace = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (data: AddToSpaceData) => {
       const response = await axios.patch("/api/space", {
@@ -62,8 +59,6 @@ export const useAddToSpace = () => {
 };
 
 export const useRemoveFromSpace = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (data: RemoveFromSpaceData) => {
       const response = await axios.patch("/api/space/remove", data);
@@ -77,6 +72,25 @@ export const useRemoveFromSpace = () => {
     onError: (error) => {
       console.error(error);
       toast.error("Failed to remove from space");
+    },
+  });
+};
+
+export const useDeleteSpace = () => {
+  return useMutation({
+    mutationFn: async (spaceId: string) => {
+      const response = await axios.delete("/api/space", {
+        data: spaceId,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Space deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["spaces"] });
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to delete space");
     },
   });
 };

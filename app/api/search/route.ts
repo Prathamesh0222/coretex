@@ -4,6 +4,12 @@ import { prisma } from "@/app/utils/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
+interface EmbedContentResponse {
+  embeddings?: Array<{
+    values?: number[];
+  }>;
+}
+
 export const POST = async (req: NextRequest) => {
   const session = await getServerSession(authOptions);
 
@@ -34,7 +40,7 @@ export const POST = async (req: NextRequest) => {
     const userId = session.user.id;
 
     let queryEmbedding: number[] | undefined;
-    let queryEmbeddingResponse: any;
+    let queryEmbeddingResponse: EmbedContentResponse;
     try {
       queryEmbeddingResponse = await ai.models.embedContent({
         model: "gemini-embedding-001",

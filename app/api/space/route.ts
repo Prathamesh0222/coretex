@@ -180,3 +180,71 @@ export const GET = async () => {
     );
   }
 };
+
+export const DELETE = async (req: NextRequest) => {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user.id) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
+    const { spaceId } = await req.json();
+
+    if (!spaceId) {
+      return NextResponse.json(
+        {
+          error: "Space ID is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const space = await prisma.spaces.findFirst({
+      where: {
+        id: spaceId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!space) {
+      return NextResponse.json(
+        {
+          error: "Space not found or unauthorized",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    await prisma.spaces.delete({
+      where: {
+        id: spaceId,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        message: "Space deleted successfully",
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error("Error deleting space", error);
+    return NextResponse.json(
+      { error: "Error deleting space" },
+      { status: 500 }
+    );
+  }
+};
