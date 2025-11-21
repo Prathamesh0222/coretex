@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "bun run prisma/seed.ts",
-    "dev:docker": "bunx prisma migrate dev && next dev --turbopack"
+    "dev:docker": "bunx prisma migrate dev && next dev --turbopack",
+    "prepare": "husky"
   },
   "dependencies": {
     "@google/genai": "^0.13.0",
@@ -31,6 +32,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.9.2",
+    "husky": "^9.1.7",
     "lucide-react": "^0.487.0",
     "motion": "^12.10.5",
     "next": "15.2.4",
