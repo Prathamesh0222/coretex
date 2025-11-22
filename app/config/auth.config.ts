@@ -1,11 +1,11 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SigninSchema } from "../validators/auth.validator";
-import { prisma } from "../utils/prisma";
 import { compare } from "bcryptjs";
 import { JWT } from "next-auth/jwt";
 import { Profile, Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import { prisma } from "@/lib/prisma";
 
 export const authOptions = {
   providers: [

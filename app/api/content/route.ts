@@ -1,8 +1,7 @@
 import { authOptions } from "@/app/config/auth.config";
-import { validate } from "@/app/middlewares/validate.middleware";
+import { validate } from "@/middlewares/validate.middleware";
 import { ai } from "@/app/services/ai/Analysis";
-import { ContentType } from "@/app/store/contentState";
-import { prisma } from "@/app/utils/prisma";
+import { ContentType } from "@/store/contentState";
 import {
   ContentInput,
   ContentSchema,
@@ -10,6 +9,7 @@ import {
 import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 const upsertTags = async (tx: Prisma.TransactionClient, tags: string[]) => {
   return Promise.all(

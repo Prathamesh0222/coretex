@@ -1,4 +1,4 @@
-import { ContentType } from "@/app/store/contentState";
+import { ContentType } from "@/store/contentState";
 import { GoogleGenAI } from "@google/genai";
 import { getYoutubeVideoData } from "../metadata/YoutubeVideoData";
 import { getSpotifyData } from "../metadata/SpotifyData";

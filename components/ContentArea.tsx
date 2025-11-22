@@ -7,9 +7,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CreateContent } from "./CreateContent";
-import { Content, Notes, useContent } from "@/app/hooks/useContent";
 import { Badge } from "./ui/badge";
-import { ContentType, useContentState } from "@/app/store/contentState";
+import { ContentType, useContentState } from "@/store/contentState";
 import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { SpotifyEmbed } from "./SpotifyEmbed";
@@ -40,6 +39,7 @@ import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { ShareButton } from "./ShareButton";
 import { VectorSearchChatbox } from "./VectorSearchChatbox";
+import { Content, Notes, useContent } from "@/hooks/useContent";
 
 interface ContentAreaProps {
   currentFilter: string;
