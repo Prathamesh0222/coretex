@@ -1,5 +1,5 @@
-import { ContentType } from "@/app/store/contentState";
-import { prisma } from "@/app/utils/prisma";
+import { prisma } from "@/lib/prisma";
+import { ContentType } from "@/store/contentState";
 
 async function main() {
   const users = await prisma.user.create({
