@@ -5,7 +5,6 @@ export async function POST(req: NextRequest) {
   try {
     const { url, type } = await req.json();
     const suggestions = await analyzeContent(url, type);
-    console.log("Suggestions", suggestions);
     return NextResponse.json(suggestions);
   } catch (error) {
     console.error("Failed to analyze content", error);

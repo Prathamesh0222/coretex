@@ -1,7 +1,7 @@
 "use server";
 
 import { analyzeContent } from "../services/ai/Analysis";
-import { ContentType } from "../store/contentState";
+import { ContentType } from "../../store/contentState";
 
 export const analyzeContentAction = async (url: string, type: ContentType) => {
   try {

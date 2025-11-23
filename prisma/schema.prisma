@@ -20,27 +20,29 @@ model User {
 }
 
 model Content {
-  id          String        @id @default(uuid())
+  id          String                       @id @default(uuid())
   title       String
   link        String
   type        ContentType
   summary     String?
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime                     @default(now())
+  updatedAt   DateTime                     @updatedAt
   ContentTags ContentTags[]
+  embedding   Unsupported("vector(1536)")?
 }
 
 model Notes {
-  id          String      @id @default(uuid())
+  id          String                       @id @default(uuid())
   title       String
   description String
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime                     @default(now())
+  updatedAt   DateTime                     @updatedAt
   NotesTags   NotesTags[]
+  embedding   Unsupported("vector(1536)")?
 }
 
 model Tags {

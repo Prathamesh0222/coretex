@@ -4,7 +4,7 @@ export const YoutubeEmbed = ({ link }: { link: string }) => {
   }
 
   return (
-    <div className="w-full aspect-video">
+    <div className="w-full aspect-video mt-6">
       <iframe
         width="100%"
         height="100%"

@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { Badge } from "./ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import axios from "axios";
-import { ContentType, useContentState } from "@/app/store/contentState";
+import { ContentType, useContentState } from "@/store/contentState";
 import { useQueryClient } from "@tanstack/react-query";
 import { NotesEditor } from "./NotesEditor";
 import { analyzeContentAction } from "@/app/actions/analyzeContent";
