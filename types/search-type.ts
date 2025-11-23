@@ -1,4 +1,4 @@
-import { ContentType } from "@/app/store/contentState";
+import { ContentType } from "@/store/contentState";
 
 export interface ContentTag {
   contentId: string;

@@ -157,7 +157,7 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
-                        className="py-5"
+                        className="py-5 bg-muted/50"
                         placeholder="john@example.com"
                         type="string"
                         {...field}
@@ -177,7 +177,7 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
                     <FormControl>
                       <Input
                         placeholder="*********"
-                        className="py-5"
+                        className="py-5 bg-muted/50"
                         type="password"
                         {...field}
                         required

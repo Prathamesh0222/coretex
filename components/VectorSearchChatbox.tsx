@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useSearch } from "@/app/hooks/useSearch";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
@@ -23,16 +22,16 @@ import {
   BrainCircuit,
 } from "lucide-react";
 import { Badge } from "./ui/badge";
-import { ContentType } from "@/app/store/contentState";
+import { ContentType } from "@/store/contentState";
 import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { SpotifyEmbed } from "./SpotifyEmbed";
+import { useSearch } from "@/hooks/useSearch";
 
 export const VectorSearchChatbox = () => {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, search, clearMessages, isPending } = useSearch();
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };

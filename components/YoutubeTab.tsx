@@ -1,4 +1,4 @@
-import { useContentState } from "@/app/store/contentState";
+import { useContentState } from "@/store/contentState";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
 import { Asterisk } from "lucide-react";
