@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { useCreateSpace } from "@/app/hooks/useSpace";
+import { useCreateSpace } from "@/hooks/useSpace";
 
 interface CreateSpaceDialogProps {
   onSpaceCreated: () => void;

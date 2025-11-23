@@ -7,11 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import {
-  useSpaces,
-  useAddToSpace,
-  useRemoveFromSpace,
-} from "@/app/hooks/useSpace";
+import { useSpaces, useAddToSpace, useRemoveFromSpace } from "@/hooks/useSpace";
 import { Button } from "@/components/ui/button";
 
 interface AddToSpaceDropdownProps {
