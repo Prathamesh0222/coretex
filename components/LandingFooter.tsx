@@ -7,13 +7,13 @@ export const LandingFooter = () => {
   const socialLinks = [
     {
       name: "GitHub",
-      href: process.env.GITHUB_URL,
+      href: process.env.NEXT_PUBLIC_GITHUB_URL,
       icon: Github,
       ariaLabel: "Visit GitHub profile",
     },
     {
       name: "LinkedIn",
-      href: process.env.LINKEDIN_URL,
+      href: process.env.NEXT_PUBLIC_LINKEDIN_URL,
       icon: Linkedin,
       ariaLabel: "Connect on LinkedIn",
     },
