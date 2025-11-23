@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export const LandingNavbar = () => {
   const { theme, setTheme } = useTheme();
@@ -25,7 +25,12 @@ export const LandingNavbar = () => {
   }
 
   return (
-    <div className="border-b border-border/50 w-full z-10 relative">
+    <motion.div
+      initial={{ opacity: 0, y: -100 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="border-b border-border/50 w-full z-10 relative"
+    >
       <div className="max-w-6xl mx-auto border-x border-border/50 flex justify-between items-center w-full p-4">
         <div className="flex gap-3 items-center group cursor-pointer">
           <Layers
@@ -58,6 +63,6 @@ export const LandingNavbar = () => {
           </Button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
