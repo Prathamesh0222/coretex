@@ -4,7 +4,8 @@ import { rerankResults } from "@/app/services/ai/Reranker";
 import { SearchResult } from "@/types/search-type";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { searchRateLimit } from "@/lib/redis";
+import { getCached, setCache, hashKey } from "@/lib/cache";
 
 export const POST = async (req: NextRequest) => {
   const session = await getServerSession(authOptions);
@@ -16,6 +17,29 @@ export const POST = async (req: NextRequest) => {
       },
       {
         status: 401,
+      }
+    );
+  }
+
+  const { success, limit, reset, remaining } = await searchRateLimit.limit(
+    session.user.id
+  );
+
+  if (!success) {
+    return NextResponse.json(
+      {
+        error: "Too many searches. Please wait a moment.",
+        limit,
+        reset,
+        remaining,
+      },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
       }
     );
   }
@@ -34,6 +58,16 @@ export const POST = async (req: NextRequest) => {
     }
 
     const userId = session.user.id;
+
+    const searchCacheKey = `search:${userId}:${hashKey(query)}:${limit}`;
+    const cachedResults = await getCached<{
+      results: SearchResult[];
+      query: string;
+    }>(searchCacheKey);
+
+    if (cachedResults) {
+      return NextResponse.json(cachedResults);
+    }
 
     let queryEmbedding: number[];
     try {
@@ -129,10 +163,14 @@ export const POST = async (req: NextRequest) => {
 
     const rerankedResults = await rerankResults(query, enrichedResults);
 
-    return NextResponse.json({
+    const responseData = {
       results: rerankedResults,
       query,
-    });
+    };
+
+    await setCache(searchCacheKey, responseData, 300);
+
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error("Error while searching", error);
     return NextResponse.json(
