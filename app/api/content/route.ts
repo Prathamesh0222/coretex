@@ -1,11 +1,11 @@
 import { authOptions } from "@/app/config/auth.config";
 import { validate } from "@/middlewares/validate.middleware";
-import { ai } from "@/app/services/ai/Analysis";
 import { ContentType } from "@/store/contentState";
 import {
   ContentInput,
   ContentSchema,
 } from "@/app/validators/content.validator";
+import { generateEmbedding } from "@/lib/embedding";
 import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -58,6 +58,7 @@ const contentPostHandler = async (
   try {
     let createdContentId: string;
     let textToEmbed: string;
+
     if (type === ContentType.NOTES) {
       const result = await prisma.$transaction(
         async (prisma): Promise<{ id: string; text: string }> => {
@@ -126,45 +127,20 @@ const contentPostHandler = async (
     }
 
     try {
-      const embeddingResponse = await ai.models.embedContent({
-        model: "gemini-embedding-001",
-        contents: textToEmbed,
-      });
+      const embedding = await generateEmbedding(textToEmbed);
 
-      const embedding = embeddingResponse.embeddings?.[0]?.values;
-
-      const finalEmbedding =
-        embedding && embedding.length === 3072
-          ? embedding.slice(0, 1536)
-          : embedding;
-
-      if (finalEmbedding && finalEmbedding.length === 1536) {
-        if (type === ContentType.NOTES) {
-          await prisma.$executeRaw`
+      if (type === ContentType.NOTES) {
+        await prisma.$executeRaw`
             UPDATE "Notes" 
-            SET embedding = ${finalEmbedding}::vector 
+            SET embedding = ${embedding}::vector 
             WHERE id = ${createdContentId}
           `;
-        } else {
-          await prisma.$executeRaw`
-            UPDATE "Content" 
-            SET embedding = ${finalEmbedding}::vector 
-            WHERE id = ${createdContentId}
-          `;
-        }
-        console.log(
-          `Embedding saved for ${
-            type === ContentType.NOTES ? "Notes" : "Content"
-          } with id: ${createdContentId}`
-        );
       } else {
-        console.warn(`Embedding not saved - invalid dimensions:`, {
-          hasEmbedding: !!finalEmbedding,
-          length: finalEmbedding?.length,
-          expectedLength: 1536,
-          contentId: createdContentId,
-          type: type === ContentType.NOTES ? "Notes" : "Content",
-        });
+        await prisma.$executeRaw`
+            UPDATE "Content" 
+            SET embedding = ${embedding}::vector 
+            WHERE id = ${createdContentId}
+          `;
       }
     } catch (embeddingError) {
       console.error("Error generating embedding:", embeddingError);
