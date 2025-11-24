@@ -198,7 +198,13 @@ export const VectorSearchChatbox = () => {
                                         variant="secondary"
                                         className="text-xs shrink-0 ml-2"
                                       >
-                                        {(result.similarity * 100).toFixed(1)}%
+                                        {result.aiScore
+                                          ? `${(result.aiScore * 100).toFixed(
+                                              1
+                                            )}%`
+                                          : `${(
+                                              result.similarity * 100
+                                            ).toFixed(1)}%`}
                                       </Badge>
                                     </div>
                                   </CardHeader>
@@ -231,31 +237,17 @@ export const VectorSearchChatbox = () => {
                                           </p>
                                         </div>
                                       )}
-                                    {(result.resultType === "content"
-                                      ? result.ContentTags.length > 0
-                                      : result.NotesTags.length > 0) && (
+                                    {result.tags && result.tags.length > 0 && (
                                       <div className="flex flex-wrap gap-2 pt-2 border-t">
-                                        {result.resultType === "content"
-                                          ? result.ContentTags.map(
-                                              (tag, idx) => (
-                                                <Badge
-                                                  key={idx}
-                                                  variant="outline"
-                                                  className="text-xs"
-                                                >
-                                                  {tag.tags.title}
-                                                </Badge>
-                                              )
-                                            )
-                                          : result.NotesTags.map((tag, idx) => (
-                                              <Badge
-                                                key={idx}
-                                                variant="outline"
-                                                className="text-xs"
-                                              >
-                                                {tag.tags.title}
-                                              </Badge>
-                                            ))}
+                                        {result.tags.map((tag, idx) => (
+                                          <Badge
+                                            key={idx}
+                                            variant="outline"
+                                            className="text-xs"
+                                          >
+                                            {tag.title}
+                                          </Badge>
+                                        ))}
                                       </div>
                                     )}
                                   </CardContent>
