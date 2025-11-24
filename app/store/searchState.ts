@@ -1,4 +1,4 @@
-import { Message, SearchResult } from "@/types/search-type";
+import { Message } from "@/types/search-type";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
