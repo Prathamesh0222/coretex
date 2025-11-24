@@ -10,6 +10,7 @@ import { generateEmbedding } from "@/lib/embedding";
 import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { contentCreationRateLimit } from "@/lib/redis";
 
 const upsertTags = async (tx: Prisma.TransactionClient, tags: string[]) => {
   return Promise.all(
@@ -42,6 +43,28 @@ const contentPostHandler = async (
     );
   }
 
+  const { success, limit, reset, remaining } =
+    await contentCreationRateLimit.limit(session.user.id);
+
+  if (!success) {
+    return NextResponse.json(
+      {
+        error: "Too many content creations. Please wait a moment.",
+        limit,
+        reset,
+        remaining,
+      },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      }
+    );
+  }
+
   if (type === ContentType.NOTES && !description) {
     return NextResponse.json(
       {
@@ -54,6 +77,31 @@ const contentPostHandler = async (
   }
 
   const userId = session.user.id;
+
+  if (type !== ContentType.NOTES && link) {
+    try {
+      const existingContent = await prisma.content.findFirst({
+        where: {
+          userId,
+          link,
+        },
+      });
+
+      if (existingContent) {
+        return NextResponse.json(
+          {
+            error: "You've already saved this content",
+            existingId: existingContent.id,
+          },
+          {
+            status: 409,
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Error checking for duplicates:", error);
+    }
+  }
 
   try {
     let createdContentId: string;
