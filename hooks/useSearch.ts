@@ -7,12 +7,15 @@ export const useSearch = () => {
   const { messages, addMessage, clearMessages } = useSearchState();
 
   const mutation = useMutation<SearchResult[], Error, SearchResponse>({
-    mutationFn: async ({ query, limit = 10 }) => {
+    mutationFn: async ({ query, limit }) => {
       const response = await axios.post("/api/search", { query, limit });
       return response.data.results;
     },
     onSuccess: (data) => {
-      const filteredResults = data.filter((result) => result.similarity > 0.5);
+      const filteredResults = data.filter((result) => {
+        const score = result.aiScore ?? result.similarity;
+        return score > 0.5;
+      });
 
       const resultMessage: Message = {
         id: Date.now().toString(),
