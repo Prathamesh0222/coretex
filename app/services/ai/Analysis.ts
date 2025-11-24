@@ -3,8 +3,11 @@ import { GoogleGenAI } from "@google/genai";
 import { getYoutubeVideoData } from "../metadata/YoutubeVideoData";
 import { getSpotifyData } from "../metadata/SpotifyData";
 import { getTwitterData } from "../metadata/TwitterData";
+import { getCached, setCache, hashKey } from "@/lib/cache";
 
 export const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+const ANALYSIS_CACHE_TTL = 86400 * 30;
 
 export interface AIContentSuggestions {
   suggestedTitle: string;
@@ -16,6 +19,13 @@ export async function analyzeContent(
   url: string,
   type: ContentType
 ): Promise<AIContentSuggestions> {
+  const cacheKey = `analysis:${hashKey(url)}:${type}`;
+
+  const cached = await getCached<AIContentSuggestions>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
   let videoData;
 
   switch (type) {
@@ -58,5 +68,9 @@ export async function analyzeContent(
     .replace(/```\n?/g, "")
     .trim();
 
-  return JSON.parse(cleanedText);
+  const result = JSON.parse(cleanedText);
+
+  await setCache(cacheKey, result, ANALYSIS_CACHE_TTL);
+
+  return result;
 }
