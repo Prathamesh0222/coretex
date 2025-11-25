@@ -37,8 +37,9 @@ import { ShareButton } from "./ShareButton";
 import { VectorSearchChatbox } from "./VectorSearchChatbox";
 import { AddToSpaceDropdown } from "./AddToSpaceDropdown";
 import { Folder } from "lucide-react";
-import { Content, Notes, removeContent, useContent } from "@/hooks/useContent";
+import { removeContent, useContent } from "@/hooks/useContent";
 import { useSpaces } from "@/hooks/useSpace";
+import { Content, Notes } from "@/types/content-type";
 
 interface ContentAreaProps {
   currentFilter: string;
