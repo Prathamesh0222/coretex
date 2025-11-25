@@ -47,7 +47,10 @@ export default function Dashboard() {
               : "overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           }`}
         >
-          <ContentArea currentFilter={currentFilter} />
+          <ContentArea
+            currentFilter={currentFilter}
+            onFilterChange={setCurrentFilter}
+          />
         </div>
       </div>
     </div>

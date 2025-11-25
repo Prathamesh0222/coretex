@@ -43,7 +43,7 @@ export const ShareButton = () => {
     <div>
       <Dialog>
         <DialogTrigger>
-          <Share2 />
+          <Share2 className="cursor-pointer" />
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

@@ -80,7 +80,7 @@ export const useDeleteSpace = () => {
   return useMutation({
     mutationFn: async (spaceId: string) => {
       const response = await axios.delete("/api/space", {
-        data: spaceId,
+        data: { spaceId },
       });
       return response.data;
     },

@@ -162,8 +162,12 @@ export const CreateContent = () => {
         }}
       >
         <SheetTrigger asChild>
-          <Button onClick={() => setIsSheetOpen(true)}>
-            <Plus /> <span className="hidden md:block">Add Content</span>
+          <Button
+            onClick={() => setIsSheetOpen(true)}
+            className="cursor-pointer"
+          >
+            <Plus />{" "}
+            <span className="hidden md:block cursor-pointer">Add Content</span>
           </Button>
         </SheetTrigger>
         <SheetContent className="overflow-y-auto">

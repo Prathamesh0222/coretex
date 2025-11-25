@@ -28,6 +28,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -38,17 +39,22 @@ import { VectorSearchChatbox } from "./VectorSearchChatbox";
 import { AddToSpaceDropdown } from "./AddToSpaceDropdown";
 import { Folder } from "lucide-react";
 import { removeContent, useContent } from "@/hooks/useContent";
-import { useSpaces } from "@/hooks/useSpace";
+import { useSpaces, useDeleteSpace } from "@/hooks/useSpace";
 import { Content, Notes } from "@/types/content-type";
 
 interface ContentAreaProps {
   currentFilter: string;
+  onFilterChange?: (filter: string) => void;
 }
 
-export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
+export const ContentArea = ({
+  currentFilter,
+  onFilterChange,
+}: ContentAreaProps) => {
   const { data: fetchContents, error } = useContent();
   const { searchQuery } = useContentState();
   const { data: spaces } = useSpaces();
+  const deleteSpaceMutation = useDeleteSpace();
 
   if (error) return <div>Error: {error.message}</div>;
 
@@ -106,11 +112,18 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   const formatTitle = (filter: string) => {
     if (isSpaceFilter && currentSpace) {
       return (
-        <div className="flex gap-2 items-center">
-          <div className="p-1.5 border rounded-full bg-purple-500/20">
-            <Folder size={20} className="text-purple-500" />
+        <div className="flex flex-col">
+          <div className="flex gap-2 items-center">
+            <div className="p-1.5 border rounded-full bg-purple-500/20">
+              <Folder size={20} className="text-purple-500" />
+            </div>
+            <h2 className="text-lg font-semibold">{currentSpace.name}</h2>
           </div>
-          <h2 className="text-lg font-semibold">{currentSpace.name}</h2>
+          {currentSpace.description && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 ml-11 mt-1">
+              {currentSpace.description}
+            </p>
+          )}
         </div>
       );
     }
@@ -172,6 +185,47 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
           </h1>
         </span>
         <div className="flex gap-5 items-center">
+          {isSpaceFilter && spaceId && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Trash size={16} />
+                  Delete Space
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Delete Space</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to delete this space? This action
+                    cannot be undone and will remove all content associations
+                    with this space.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      deleteSpaceMutation.mutate(spaceId, {
+                        onSuccess: () => {
+                          if (onFilterChange) {
+                            onFilterChange("dashboard");
+                          }
+                        },
+                      });
+                    }}
+                    disabled={deleteSpaceMutation.isPending}
+                  >
+                    {deleteSpaceMutation.isPending ? "Deleting..." : "Delete"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
           <ShareButton />
           <CreateContent />
         </div>

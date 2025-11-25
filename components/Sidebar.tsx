@@ -9,7 +9,7 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,8 +24,7 @@ import {
   SidebarMobileComponents,
 } from "@/lib/constants/SidebarComponents";
 import { CreateSpaceDialog } from "./CreateSpaceDialog";
-import axios from "axios";
-import { Space } from "@/types/space-type";
+import { useSpaces } from "@/hooks/useSpace";
 
 interface SidebarProps {
   onFilterChange: (filter: string) => void;
@@ -34,24 +33,10 @@ interface SidebarProps {
 export const Sidebar = ({ onFilterChange }: SidebarProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [activeFilter, setActiveFilter] = useState<string>("dashboard");
-  const [spaces, setSpaces] = useState<Space[]>([]);
+  const { data: spacesData } = useSpaces();
+  const spaces = spacesData || [];
   const { theme, setTheme } = useTheme();
   const session = useSession();
-
-  const fetchSpaces = async () => {
-    try {
-      const response = await axios.get("/api/space");
-      setSpaces(response.data);
-    } catch (error) {
-      console.error("Failed to fetch spaces", error);
-    }
-  };
-
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      fetchSpaces();
-    }
-  }, [session.status]);
 
   const handleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -194,7 +179,7 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                   Spaces
                 </h3>
               )}
-              <CreateSpaceDialog onSpaceCreated={fetchSpaces} />
+              <CreateSpaceDialog onSpaceCreated={() => {}} />
             </div>
             <div className="space-y-4 mt-5 overflow-y-auto max-h-[200px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {spaces.map((space) => (
