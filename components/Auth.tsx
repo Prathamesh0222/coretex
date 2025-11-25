@@ -22,7 +22,7 @@ import { Github } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ThemeToggle } from "./ThemeToggle";
@@ -31,6 +31,14 @@ import { CoretexLogo } from "./CortexLogo";
 export const Auth = ({ isSignup }: { isSignup: boolean }) => {
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+  const session = useSession();
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      router.push("/dashboard");
+    }
+  }, [session.status, router]);
+
   const form = useForm<SignInInput | SignUpInput>({
     resolver: zodResolver(isSignup ? SignupSchema : SigninSchema),
     defaultValues: {

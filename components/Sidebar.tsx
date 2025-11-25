@@ -196,7 +196,7 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
               )}
               <CreateSpaceDialog onSpaceCreated={fetchSpaces} />
             </div>
-            <div className="space-y-4 overflow-y-auto max-h-[200px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="space-y-4 mt-5 overflow-y-auto max-h-[200px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {spaces.map((space) => (
                 <div
                   key={space.id}
@@ -280,7 +280,9 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                   </DropdownMenuItem>
                   <DropdownMenuItem className="p-2 focus:bg-gray-100 dark:focus:bg-gray-800 rounded-lg cursor-pointer">
                     <div
-                      onClick={() => signOut()}
+                      onClick={() =>
+                        signOut({ redirect: true, callbackUrl: "/signin" })
+                      }
                       className="flex items-center gap-2"
                     >
                       <LogOut className="w-4 h-4" />
