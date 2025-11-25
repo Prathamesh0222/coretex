@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { searchRateLimit } from "@/lib/redis";
 import { getCached, setCache, hashKey } from "@/lib/cache";
+import { prisma } from "@/lib/prisma";
 
 export const POST = async (req: NextRequest) => {
   const session = await getServerSession(authOptions);

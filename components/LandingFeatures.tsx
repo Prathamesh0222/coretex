@@ -49,9 +49,9 @@ export const LandingFeatures = () => {
                 </h3>
               </div>
               <p className="text-muted-foreground text-xs md:text-sm leading-relaxed">
-                Don't remember the exact title? Search by meaning. Ask
-                "motivational songs" and find your saved Spotify tracks
-                instantly with semantic search.
+                Don&apos;t remember the exact title? Search by meaning. Ask
+                &quot;motivational songs&quot; and find your saved Spotify
+                tracks instantly with semantic search.
               </p>
             </div>
             <div className="absolute -bottom-12 w-full left-0 right-0 px-6 md:px-8 lg:px-12">

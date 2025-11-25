@@ -47,7 +47,7 @@ interface ContentAreaProps {
 
 export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   const { data: fetchContents, error } = useContent();
-  const { searchQuery, setSearchQuery } = useContentState();
+  const { searchQuery } = useContentState();
   const queryClient = useQueryClient();
 
   if (error) return <div>Error: {error.message}</div>;
