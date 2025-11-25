@@ -1,4 +1,4 @@
-import { Content, Notes } from "@/app/hooks/useContent";
+import { Content, Notes } from "./content-type";
 
 export interface Space {
   id: string;

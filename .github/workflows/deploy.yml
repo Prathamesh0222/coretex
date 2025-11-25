@@ -24,9 +24,8 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
             [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
             cd coretex
-            npm install bun
             git pull origin main
-            bun install --legacy-peer-deps
+            bun install
             bun run build
             pm2 restart coretex
           EOF
