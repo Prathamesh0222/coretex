@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 export default function Dashboard() {
   const session = useSession();
   const router = useRouter();
-  const [currentFilter, setCurrentFilter] = useState<string>("all");
+  const [currentFilter, setCurrentFilter] = useState<string>("dashboard");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {

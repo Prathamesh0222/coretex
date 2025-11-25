@@ -119,7 +119,7 @@ export default function ShareBrain() {
 
   return (
     <div className="lg:border lg:m-4 lg:rounded-xl lg:h-[97vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] dark:bg-[#141212] bg-[#f6f7f7]">
-      <div className="w-full p-12">
+      <div className="w-full p-4 md:p-12">
         <div className="flex flex-col items-center justify-center space-y-6 py-8">
           <div className="relative">
             <div className="w-32 h-32 rounded-full border-4 border-primary/20 shadow-xl flex items-center justify-center dark:text-white text-black font-bold text-4xl transform hover:scale-105 transition-all duration-300">
@@ -132,7 +132,8 @@ export default function ShareBrain() {
 
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-extrabold">
-              {data.user?.username}&apos;s Second Brain
+              {data.user?.username}&apos;s <br />
+              Coretex Space
             </h1>
             <p className="text-muted-foreground text-sm">
               A collection of thoughts, ideas and inspirations
@@ -146,8 +147,8 @@ export default function ShareBrain() {
             defaultValue="all"
             onValueChange={setActiveTab}
           >
-            <div className="flex justify-center items-center">
-              <TabsList className="w-[500px]">
+            <div className="flex justify-center items-center w-full overflow-x-auto pb-4 md:pb-0">
+              <TabsList className="w-full h-auto flex-wrap md:w-auto md:flex-nowrap gap-2 bg-muted/50 p-1">
                 <TabsTrigger value="all">All ({allItems.length})</TabsTrigger>
                 <TabsTrigger value="youtube">
                   Youtube (
@@ -338,7 +339,7 @@ export default function ShareBrain() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
+                <div className="text-center py-12 h-screen">
                   <h3 className="text-xl text-gray-600 mb-2">
                     This Second Brain is Empty
                   </h3>
@@ -408,7 +409,7 @@ export default function ShareBrain() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
+                <div className="text-center py-12 h-screen">
                   <h3 className="text-xl text-gray-600 mb-2">
                     No YouTube content found
                   </h3>
@@ -478,7 +479,7 @@ export default function ShareBrain() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
+                <div className="text-center py-12 h-screen">
                   <h3 className="text-xl text-gray-600 mb-2">
                     No Twitter content found
                   </h3>
@@ -548,7 +549,7 @@ export default function ShareBrain() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
+                <div className="text-center py-12 h-screen">
                   <h3 className="text-xl text-gray-600 mb-2">
                     No Spotify content found
                   </h3>
@@ -612,7 +613,7 @@ export default function ShareBrain() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
+                <div className="text-center py-12 h-screen">
                   <h3 className="text-xl text-gray-600 mb-2">No notes found</h3>
                   <p className="text-gray-500">
                     {data.user?.username} hasn&apos;t added any notes yet.

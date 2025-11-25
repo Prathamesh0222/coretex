@@ -39,8 +39,19 @@ export const CreateContent = () => {
     setType,
     setLink,
     setDescription,
+    setIsPreview,
   } = useContentState();
   const queryClient = useQueryClient();
+
+  const resetForm = () => {
+    setTitle("");
+    setType(ContentType.YOUTUBE);
+    setLink("");
+    setTags([]);
+    setDescription("");
+    setIsPreview("");
+    setTagsInput("");
+  };
 
   const handleSubmit = async () => {
     try {
@@ -53,6 +64,7 @@ export const CreateContent = () => {
         });
         if (response.status === 201) {
           toast.success("Content created successfully");
+          resetForm();
           setIsSheetOpen(false);
           queryClient.invalidateQueries({ queryKey: ["content"] });
         } else {
@@ -68,6 +80,7 @@ export const CreateContent = () => {
         });
         if (response.status === 201) {
           toast.success("Content created successfully");
+          resetForm();
           setIsSheetOpen(false);
           queryClient.invalidateQueries({ queryKey: ["content"] });
         } else {
@@ -103,15 +116,6 @@ export const CreateContent = () => {
     } else {
       setType(ContentType.YOUTUBE);
     }
-  };
-
-  const resetForm = () => {
-    setTitle("");
-    setType(ContentType.YOUTUBE);
-    setLink("");
-    setTags([]);
-    setDescription("");
-    setTagsInput("");
   };
 
   const handleAIAnalysis = async () => {
@@ -150,7 +154,9 @@ export const CreateContent = () => {
         open={isSheetOpen}
         onOpenChange={(open) => {
           setIsSheetOpen(open);
-          if (open) {
+          if (!open) {
+            resetForm();
+          } else {
             resetForm();
           }
         }}

@@ -1,42 +1,8 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { ContentType } from "../store/contentState";
-
-interface ContentTag {
-  contentId: string;
-  tagsId: string;
-  tags: {
-    id: string;
-    title: string;
-  };
-}
-
-interface NotesTag {
-  notesId: string;
-  tagsId: string;
-  tags: {
-    id: string;
-    title: string;
-  };
-}
-
-export interface Content {
-  id: string;
-  title: string;
-  type: ContentType;
-  summary: string;
-  link: string;
-  createdAt: string;
-  ContentTags: ContentTag[];
-}
-
-export interface Notes {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: string;
-  NotesTags: NotesTag[];
-}
+import { queryClient } from "@/app/providers/CustomProvider";
+import { toast } from "sonner";
+import { Content, Notes } from "@/types/content-type";
 
 export const useContent = () => {
   return useQuery<Array<Content | Notes>>({
@@ -46,4 +12,22 @@ export const useContent = () => {
       return response.data;
     },
   });
+};
+
+export const removeContent = async (contentId: string) => {
+  try {
+    const response = await axios.delete("/api/content", {
+      data: { id: contentId },
+    });
+
+    if (response.status === 200) {
+      queryClient.invalidateQueries({ queryKey: ["content"] });
+      toast.success("Content deleted successfully");
+    } else {
+      toast.error("Failed to delete content");
+    }
+  } catch (error) {
+    console.error("Error while deleting content", error);
+    toast.error("Error while deleting content");
+  }
 };
