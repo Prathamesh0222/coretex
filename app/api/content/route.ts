@@ -1,16 +1,15 @@
 import { authOptions } from "@/app/config/auth.config";
-import { validate } from "@/app/middlewares/validate.middleware";
-import { ContentType } from "@/app/store/contentState";
-import { prisma } from "@/app/utils/prisma";
 import {
   ContentInput,
   ContentSchema,
 } from "@/app/validators/content.validator";
 import { generateEmbedding } from "@/lib/embedding";
+import { prisma } from "@/lib/prisma";
+import { validate } from "@/middlewares/validate.middleware";
+import { ContentType } from "@/store/contentState";
 import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 
 const upsertTags = async (tx: Prisma.TransactionClient, tags: string[]) => {
   return Promise.all(
