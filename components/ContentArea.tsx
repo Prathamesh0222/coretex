@@ -117,7 +117,7 @@ export const ContentArea = ({
             <div className="p-1.5 border rounded-full bg-purple-500/20">
               <Folder size={20} className="text-purple-500" />
             </div>
-            <h2 className="text-lg font-semibold">{currentSpace.name}</h2>
+            <h2 className="text-sm font-bold">{currentSpace.name}</h2>
           </div>
           {currentSpace.description && (
             <p className="text-sm text-gray-500 dark:text-gray-400 ml-11 mt-1">
