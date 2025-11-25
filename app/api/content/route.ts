@@ -1,15 +1,16 @@
 import { authOptions } from "@/app/config/auth.config";
-import { validate } from "@/middlewares/validate.middleware";
-import { ai } from "@/app/services/ai/Analysis";
-import { ContentType } from "@/store/contentState";
 import {
   ContentInput,
   ContentSchema,
 } from "@/app/validators/content.validator";
+import { generateEmbedding } from "@/lib/embedding";
+import { prisma } from "@/lib/prisma";
+import { validate } from "@/middlewares/validate.middleware";
+import { ContentType } from "@/store/contentState";
 import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { contentCreationRateLimit } from "@/lib/redis";
 
 const upsertTags = async (tx: Prisma.TransactionClient, tags: string[]) => {
   return Promise.all(
@@ -42,6 +43,28 @@ const contentPostHandler = async (
     );
   }
 
+  const { success, limit, reset, remaining } =
+    await contentCreationRateLimit.limit(session.user.id);
+
+  if (!success) {
+    return NextResponse.json(
+      {
+        error: "Too many content creations. Please wait a moment.",
+        limit,
+        reset,
+        remaining,
+      },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      }
+    );
+  }
+
   if (type === ContentType.NOTES && !description) {
     return NextResponse.json(
       {
@@ -55,9 +78,35 @@ const contentPostHandler = async (
 
   const userId = session.user.id;
 
+  if (type !== ContentType.NOTES && link) {
+    try {
+      const existingContent = await prisma.content.findFirst({
+        where: {
+          userId,
+          link,
+        },
+      });
+
+      if (existingContent) {
+        return NextResponse.json(
+          {
+            error: "You've already saved this content",
+            existingId: existingContent.id,
+          },
+          {
+            status: 409,
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Error checking for duplicates:", error);
+    }
+  }
+
   try {
     let createdContentId: string;
     let textToEmbed: string;
+
     if (type === ContentType.NOTES) {
       const result = await prisma.$transaction(
         async (prisma): Promise<{ id: string; text: string }> => {
@@ -126,45 +175,20 @@ const contentPostHandler = async (
     }
 
     try {
-      const embeddingResponse = await ai.models.embedContent({
-        model: "gemini-embedding-001",
-        contents: textToEmbed,
-      });
+      const embedding = await generateEmbedding(textToEmbed);
 
-      const embedding = embeddingResponse.embeddings?.[0]?.values;
-
-      const finalEmbedding =
-        embedding && embedding.length === 3072
-          ? embedding.slice(0, 1536)
-          : embedding;
-
-      if (finalEmbedding && finalEmbedding.length === 1536) {
-        if (type === ContentType.NOTES) {
-          await prisma.$executeRaw`
+      if (type === ContentType.NOTES) {
+        await prisma.$executeRaw`
             UPDATE "Notes" 
-            SET embedding = ${finalEmbedding}::vector 
+            SET embedding = ${embedding}::vector 
             WHERE id = ${createdContentId}
           `;
-        } else {
-          await prisma.$executeRaw`
-            UPDATE "Content" 
-            SET embedding = ${finalEmbedding}::vector 
-            WHERE id = ${createdContentId}
-          `;
-        }
-        console.log(
-          `Embedding saved for ${
-            type === ContentType.NOTES ? "Notes" : "Content"
-          } with id: ${createdContentId}`
-        );
       } else {
-        console.warn(`Embedding not saved - invalid dimensions:`, {
-          hasEmbedding: !!finalEmbedding,
-          length: finalEmbedding?.length,
-          expectedLength: 1536,
-          contentId: createdContentId,
-          type: type === ContentType.NOTES ? "Notes" : "Content",
-        });
+        await prisma.$executeRaw`
+            UPDATE "Content" 
+            SET embedding = ${embedding}::vector 
+            WHERE id = ${createdContentId}
+          `;
       }
     } catch (embeddingError) {
       console.error("Error generating embedding:", embeddingError);

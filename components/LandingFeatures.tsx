@@ -50,7 +50,7 @@ export const LandingFeatures = () => {
               </div>
               <p className="text-muted-foreground text-xs md:text-sm leading-relaxed">
                 Don&apos;t remember the exact title? Search by meaning. Ask
-                &apos;motivational songs&apos; and find your saved Spotify
+                &quot;motivational songs&quot; and find your saved Spotify
                 tracks instantly with semantic search.
               </p>
             </div>
