@@ -1,4 +1,4 @@
-import { MoreVertical } from "lucide-react";
+import { Folder, MoreVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,13 +55,13 @@ export const AddToSpaceDropdown = ({
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 cursor-pointer"
           disabled={isPending}
         >
-          <MoreVertical className="h-4 w-4" />
+          <MoreVertical className="h-4 w-4 hover:text-blue-400" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="bg-card">
         {isInCurrentSpace ? (
           <>
             <DropdownMenuLabel>Manage Space</DropdownMenuLabel>
@@ -95,8 +95,18 @@ export const AddToSpaceDropdown = ({
           </>
         ) : (
           <>
-            <DropdownMenuLabel>
-              {isInSpace ? "Move to Space" : "Add to Space"}
+            <DropdownMenuLabel className="flex items-center gap-2">
+              {isInSpace ? (
+                <>
+                  <Folder className="w-4 h-4 text-green-500" />
+                  Move to Space
+                </>
+              ) : (
+                <>
+                  <Folder className="w-4 h-4 text-blue-500" />
+                  Add to Space
+                </>
+              )}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             {isLoading ? (
@@ -109,6 +119,7 @@ export const AddToSpaceDropdown = ({
                     key={space.id}
                     onClick={() => handleAddToSpace(space.id)}
                     disabled={isPending}
+                    className="cursor-pointer"
                   >
                     {space.name}
                   </DropdownMenuItem>

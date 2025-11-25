@@ -27,6 +27,7 @@ import { YoutubeEmbed } from "./YoutubeEmbed";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { SpotifyEmbed } from "./SpotifyEmbed";
 import { useSearch } from "@/hooks/useSearch";
+import { AddToSpaceDropdown } from "./AddToSpaceDropdown";
 
 export const VectorSearchChatbox = () => {
   const [inputValue, setInputValue] = useState("");
@@ -61,13 +62,13 @@ export const VectorSearchChatbox = () => {
   return (
     <div className="flex flex-col h-full w-full">
       <div className="sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="container mx-auto pt-6 px-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20">
-              <BrainCircuit className="h-5 w-5 text-blue-500" />
+              <BrainCircuit className="h-4.5 w-4.5 text-blue-500" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">AI Search</h2>
+              <h2 className="text-sm font-semibold">AI Search</h2>
             </div>
           </div>
           {messages.length > 0 && (
@@ -84,7 +85,7 @@ export const VectorSearchChatbox = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-6">
+      <div className="flex-1 overflow-y-auto px-4 py-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div className="max-w-4xl mx-auto space-y-6">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-center px-4">
@@ -121,7 +122,7 @@ export const VectorSearchChatbox = () => {
                     <div className="space-y-4 max-w-md">
                       <div className="flex items-start gap-3 mb-4">
                         <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/10 to-purple-500/10 shrink-0 mt-1">
-                          <Sparkles className="h-5 w-5 text-blue-500" />
+                          <BrainCircuit className="h-5 w-5 text-blue-500" />
                         </div>
                         <div className="flex-1">
                           <div className="text-sm text-muted-foreground mb-3">
@@ -193,18 +194,34 @@ export const VectorSearchChatbox = () => {
                                           </CardDescription>
                                         </div>
                                       </div>
-                                      <Badge
-                                        variant="secondary"
-                                        className="text-xs shrink-0 ml-2"
-                                      >
-                                        {result.aiScore
-                                          ? `${(result.aiScore * 100).toFixed(
-                                              1
-                                            )}%`
-                                          : `${(
-                                              result.similarity * 100
-                                            ).toFixed(1)}%`}
-                                      </Badge>
+                                      <div className="flex items-center gap-2 shrink-0">
+                                        <Badge
+                                          variant="secondary"
+                                          className="text-xs shrink-0 ml-2"
+                                        >
+                                          {result.aiScore
+                                            ? `${(result.aiScore * 100).toFixed(
+                                                1
+                                              )}%`
+                                            : `${(
+                                                result.similarity * 100
+                                              ).toFixed(1)}%`}
+                                        </Badge>
+                                        <AddToSpaceDropdown
+                                          contentId={
+                                            result.resultType === "content"
+                                              ? result.id
+                                              : undefined
+                                          }
+                                          notesId={
+                                            result.resultType === "notes"
+                                              ? result.id
+                                              : undefined
+                                          }
+                                          currentSpaceId={undefined}
+                                          isViewingSpace={false}
+                                        />
+                                      </div>
                                     </div>
                                   </CardHeader>
                                   <CardContent className="space-y-3">

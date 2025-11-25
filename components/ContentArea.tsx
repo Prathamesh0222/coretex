@@ -17,7 +17,6 @@ import {
   Calendar,
   ClipboardPen,
   Download,
-  Home,
   LayoutDashboard,
   Music,
   Notebook,
@@ -34,14 +33,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { toast } from "sonner";
-import axios from "axios";
-import { useQueryClient } from "@tanstack/react-query";
 import { ShareButton } from "./ShareButton";
 import { VectorSearchChatbox } from "./VectorSearchChatbox";
 import { AddToSpaceDropdown } from "./AddToSpaceDropdown";
 import { Folder } from "lucide-react";
-import { Content, Notes, useContent } from "@/hooks/useContent";
+import { Content, Notes, removeContent, useContent } from "@/hooks/useContent";
 import { useSpaces } from "@/hooks/useSpace";
 
 interface ContentAreaProps {
@@ -51,7 +47,6 @@ interface ContentAreaProps {
 export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
   const { data: fetchContents, error } = useContent();
   const { searchQuery } = useContentState();
-  const queryClient = useQueryClient();
   const { data: spaces } = useSpaces();
 
   if (error) return <div>Error: {error.message}</div>;
@@ -121,36 +116,43 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
 
     const iconMap = {
       youtube: (
-        <div className="p-1.5 border rounded-full bg-red-500/20">
-          <Youtube size={20} className="text-red-500" />
+        <div className="flex gap-2 items-center">
+          <div className="p-1.5 border rounded-full bg-red-500/20">
+            <Youtube size={20} className="text-red-500" />
+          </div>
+          <h2 className="text-sm font-bold">Youtube</h2>
         </div>
       ),
       twitter: (
-        <div className="p-1.5 border rounded-full bg-blue-500/20">
-          <Twitter size={20} className="text-blue-500" />
+        <div className="flex gap-2 items-center">
+          <div className="p-1.5 border rounded-full bg-blue-500/20">
+            <Twitter size={20} className="text-blue-500" />
+          </div>
+          <h2 className="text-sm font-bold">Twitter</h2>
         </div>
       ),
       spotify: (
-        <div className="p-1.5 border rounded-full bg-green-500/20">
-          <Music size={20} className="text-green-500" />
+        <div className="flex gap-2 items-center">
+          <div className="p-1.5 border rounded-full bg-green-500/20">
+            <Music size={20} className="text-green-500" />
+          </div>
+          <h2 className="text-sm font-bold">Spotify</h2>
         </div>
       ),
       notes: (
-        <div className="p-1.5 border rounded-full bg-yellow-500/20">
-          <Notebook size={20} className="text-yellow-500" />
+        <div className="flex gap-2 items-center">
+          <div className="p-1.5 border rounded-full bg-yellow-500/20">
+            <Notebook size={20} className="text-yellow-500" />
+          </div>
+          <h2 className="text-sm font-bold">Notes</h2>
         </div>
       ),
       dashboard: (
-        <div className="p-1.5 border rounded-full bg-blue-500/20">
-          <LayoutDashboard size={20} className="text-blue-500" />
-        </div>
-      ),
-      all: (
         <div className="flex gap-2 items-center">
           <div className="p-1.5 border rounded-full bg-blue-500/20">
-            <Home size={20} className="text-blue-500" />
+            <LayoutDashboard size={20} className="text-blue-500" />
           </div>
-          <h2 className="text-lg font-semibold">Home</h2>
+          <h2 className="text-sm font-bold">Dashboard</h2>
         </div>
       ),
     };
@@ -158,24 +160,6 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
     const icon = iconMap[filter.toLowerCase() as keyof typeof iconMap] || null;
 
     return <>{icon}</>;
-  };
-
-  const removeContent = async (contentId: string) => {
-    try {
-      const response = await axios.delete("/api/content", {
-        data: { id: contentId },
-      });
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({ queryKey: ["content"] });
-        toast.success("Content deleted successfully");
-      } else {
-        toast.error("Failed to delete content");
-      }
-    } catch (error) {
-      console.error("Error while deleting content", error);
-      toast.error("Error while deleting content");
-    }
   };
 
   return (
@@ -346,7 +330,14 @@ export const ContentArea = ({ currentFilter }: ContentAreaProps) => {
                   {new Date(item.createdAt).toLocaleDateString("en-GB")}
                 </div>
                 <div className="flex justify-end gap-2 w-full items-center">
-                  <ArrowUpRight className="size-5" />
+                  {"type" in item && (
+                    <ArrowUpRight
+                      onClick={() => {
+                        window.open(item.link, "_blank");
+                      }}
+                      className="size-5 cursor-pointer hover:text-blue-400"
+                    />
+                  )}
                   <AddToSpaceDropdown
                     contentId={"type" in item ? item.id : undefined}
                     notesId={!("type" in item) ? item.id : undefined}
