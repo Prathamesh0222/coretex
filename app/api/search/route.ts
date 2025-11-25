@@ -1,5 +1,7 @@
 import { authOptions } from "@/app/config/auth.config";
+import { prisma } from "@/app/utils/prisma";
 import { generateEmbedding } from "@/lib/embedding";
+import { rerankResults } from "@/app/services/ai/Reranker";
 import { SearchResult } from "@/types/search-type";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
