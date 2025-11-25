@@ -1,21 +1,8 @@
 import { ContentType } from "@/store/contentState";
 
-export interface ContentTag {
-  contentId: string;
-  tagsId: string;
-  tags: {
-    id: string;
-    title: string;
-  };
-}
-
-export interface NotesTag {
-  notesId: string;
-  tagsId: string;
-  tags: {
-    id: string;
-    title: string;
-  };
+export interface Tag {
+  id: string;
+  title: string;
 }
 
 export interface SearchContent {
@@ -25,8 +12,9 @@ export interface SearchContent {
   summary: string | null;
   link: string;
   createdAt: Date;
-  ContentTags: ContentTag[];
+  tags: Tag[];
   similarity: number;
+  aiScore?: number;
   resultType: "content";
 }
 
@@ -35,8 +23,9 @@ export interface SearchNote {
   title: string;
   description: string;
   createdAt: Date;
-  NotesTags: NotesTag[];
+  tags: Tag[];
   similarity: number;
+  aiScore?: number;
   resultType: "notes";
 }
 
