@@ -284,3 +284,11 @@
   border-top: 1px solid var(--border);
   margin: 1.5rem 0;
 }
+
+.hero-bg {
+  background-image: url("https://res.cloudinary.com/ddsyzx9hf/image/upload/f_auto,q_auto/v1765025590/Second_Brain-Light_h73fmy.jpg");
+}
+
+.dark .hero-bg {
+  background-image: url("https://res.cloudinary.com/ddsyzx9hf/image/upload/f_auto,q_auto/v1765025590/Second_Brain_Dark_vzmpm0.jpg");
+}

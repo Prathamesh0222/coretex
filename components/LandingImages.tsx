@@ -19,11 +19,11 @@ export const LandingImages = () => {
 
   const isDark = theme === "dark";
   const imageSrc = isDark
-    ? "/sample_coretex_dark.png"
-    : "/sample_coretex_light.png";
+    ? "https://res.cloudinary.com/ddsyzx9hf/image/upload/v1765025573/sample_coretex_dark_csbzwo.png"
+    : "https://res.cloudinary.com/ddsyzx9hf/image/upload/v1765025573/sample_coretex_light_gcoab6.png";
   const imageSrc2 = isDark
-    ? "/sample_coretex1_dark.png"
-    : "/sample_coretex1_light.png";
+    ? "https://res.cloudinary.com/ddsyzx9hf/image/upload/v1765025573/sample_coretex1_dark_t3tbkn.png"
+    : "https://res.cloudinary.com/ddsyzx9hf/image/upload/v1765025572/sample_coretex1_light_cxiby0.png";
 
   return (
     <div className="relative">

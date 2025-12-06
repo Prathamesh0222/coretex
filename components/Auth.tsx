@@ -268,7 +268,7 @@ export const Auth = ({ isSignup }: { isSignup: boolean }) => {
           </div>
         </div>
         <div>
-          <div className="bg-[url('/sample/Second_Brain-Light.jpg')] dark:bg-[url('/sample/Second_Brain_Dark.jpg')] h-[600px] w-full bg-cover bg-center rounded-xl lg:block hidden"></div>
+          <div className="hero-bg h-[600px] w-full bg-cover bg-center rounded-xl lg:block hidden" />
         </div>
       </div>
     </div>
