@@ -1,64 +1,136 @@
 # Coretex
 
-Coretex is a personal content management system — a "second brain" — where users can save and organize content from platforms like YouTube, Twitter, and Spotify, or simply take notes. It's designed to help users store valuable content in one place and revisit it easily through search, tags, and rich previews.
+AI-powered second brain and content hub. Save YouTube, Twitter/X, Spotify, or freeform notes, then let Gemini handle titles, summaries, tags, and deep search so you can find anything instantly.
 
-## What is Coretex?
+![](https://res.cloudinary.com/ddsyzx9hf/image/upload/v1765206191/landing_page_xyu0so.png)
 
-Coretex lets users collect internet content they care about — whether it's a YouTube video they want to watch later, a tweet worth saving, a Spotify playlist, or personal notes and thoughts. All of this is displayed with modern, embedded previews so users can interact with their content in a visual and engaging way.
+## Highlights
 
-## Features
+- Capture anything: paste links from YouTube/Twitter/Spotify or write notes in a rich text editor with embeds and previews.
+- One-click AI analysis: hit Analyze and auto-fill title, summary, and tags instead of typing metadata by hand.
+- RAG search: content and notes are embedded with Gemini, stored in PostgreSQL + pgvector, and re-ranked with LLM scoring for precise results.
+- Spaces: group items by theme (e.g., an `AI` space that holds all AI-related videos, tweets, and notes).
+- Built-in auth: NextAuth with Google, GitHub, and email/password; rate limiting on heavy endpoints.
+- Fast & cached: Upstash Redis caches AI analyses, embeddings, and search responses to cut latency and cost.
+- Polished UI: responsive landing + dashboard with sidebar navigation, live embeds, and keyboard-friendly interactions.
+- Shareable brain: generate secure links so others can view curated spaces or specific items.
 
-- **Content Saving**  
-  Users can save different types of content: YouTube videos, tweets, Spotify playlists, or write their own notes. Each saved item includes a title, a link (if applicable), and optional tags.
+## Table of contents
 
-- **Live Embed Previews**  
-  As soon as a user pastes a link, Coretex generates a live embed preview — making the content easier to identify and interact with.
+- How it works
+- Architecture & stack
+- Setup (env, migrate, run)
+- Product features
+- AI/RAG & caching details
+- Auth & security
+- Project map
+- Operations
+- Roadmap
 
-- **Rich Note Editor**  
-  A fully-featured rich text editor is included for note-taking, allowing for headings, bold/italic text, lists, and more.
+## How it works
 
-- **Tagging System**  
-  Users can assign custom tags to any piece of content, making it easier to categorize and retrieve later.
+1. Paste a link or start a note.
+2. Click Analyze to fetch platform metadata + Gemini suggestions (title, summary, tags).
+3. Content/notes get embedded (1536-d) and stored in Postgres with pgvector.
+4. Searches generate a fresh embedding, fetch nearest neighbors, and Gemini re-ranks for intent alignment.
+5. Results and AI calls are cached; rate limits keep abuse in check.
+6. Optionally create a share link to publish a space or selected items from your second brain.
 
-- **Search and Filtering**  
-  Content can be filtered by type (YouTube, Twitter, Spotify, or Notes) and searched by tags, helping users quickly find what they're looking for.
+## Architecture & stack
 
-## How It Works
+- Next.js 15 (App Router), React 19, TypeScript, Tailwind.
+- Prisma + PostgreSQL with the `vector` extension for embeddings.
+- Google Gemini for analysis, embeddings, and reranking.
+- Upstash Redis for caching and rate limiting.
+- NextAuth (Google, GitHub, credentials) for authentication.
+- Platform metadata: YouTube Data API, Twitter API v2, Spotify Web API.
 
-1. **Creating Content**  
-   On the content creation page, users can add a title, paste a link (or write a note), and add tags. If a link is provided, a preview of the content is shown automatically.
+## Setup
 
-2. **Viewing Content**  
-   Saved content is displayed in a clean layout using embeds for supported platforms. This makes the interface feel more dynamic and useful.
+**Prereqs:** Node 18+, Bun, PostgreSQL (with `CREATE EXTENSION IF NOT EXISTS vector;`), and Redis/Upstash credentials.
 
-3. **Organizing and Finding Content**  
-   Users can search by tags or filter by content type to locate specific items from their collection.
+```bash
+git clone https://github.com/prathamesh0222/coretex.git
+cd coretex
+bun install
+```
 
-## What's Next
+Create a `.env` with the required keys:
 
-- Chrome extension to save content directly from the browser
-- Auto-tagging or summarization using AI
-- Mobile-friendly UI and potential offline support
-- Sharable links for content vaults so users can share specific collections with others
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/coretex
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-nextauth-secret
 
-## Manual Installation
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
 
-Follow these steps to set up Coretex manually on your local machine.
+UPSTASH_REDIS_REST_URL=...
+UPSTASH_REDIS_REST_TOKEN=...
 
-### Prerequisites
+GEMINI_API_KEY=...
+YOUTUBE_API_KEY=...
+TWITTER_API_KEY=...
+SPOTIFY_CLIENT_ID=...
+SPOTIFY_CLIENT_SECRET=...
+```
 
-Before you start, make sure you have the following installed:
+Then migrate and start:
 
-- **Node.js** (v16 or higher) — [Install Node.js](https://nodejs.org/en/download/)
-- **PostgreSQL** — [Install PostgreSQL](https://www.postgresql.org/download/)
-- **Bun** (for package management and running the app) — [Install Bun](https://bun.sh/)
+```bash
+bunx prisma migrate dev
+bun run dev   # or: bun dev
+```
 
-### Steps
+## Product features
 
-1. **Clone the repository**:
+- Rich captures: live embeds for YouTube/Twitter/Spotify; rich text editor for notes.
+- AI metadata: Gemini suggests title/summary/tags with one click.
+- Spaces: create themed spaces (e.g., `AI`) and store related videos, tweets, and notes together.
+- Sharing: generate share links for spaces or specific content/notes (with activation control) so others can browse your second brain safely.
+- Tags and filters: tag any item and filter by type.
+- Responsive UX: landing + dashboard with sidebar navigation, keyboard-friendly flows.
 
-   ```bash
-   git clone https://github.com/prathamesh0222/coretex.git
-   cd coretex
-   bun install
-   
+## AI, RAG, and caching
+
+- Analysis (`app/api/ai/analyze`): platform metadata fetch + Gemini summarization; cached in Upstash Redis (30d) to reduce cost.
+- Embeddings (`lib/embedding.ts`): Gemini embeddings cached for 7d; stored as `vector(1536)` in Postgres.
+- Search (`app/api/search`): generate embedding for the query, fetch nearest neighbors via pgvector, rerank with Gemini, cache results for 5 minutes.
+- Rate limits (`lib/redis.ts`): Upstash Ratelimit protects search, analysis, and content creation.
+
+## Auth & security
+
+- NextAuth with Google, GitHub, and credentials (email/password).
+- Session JWTs include user id/email/username.
+- Server-side validation (Zod) and Prisma cascading deletes on user-owned data.
+- Keep `NEXTAUTH_SECRET`, provider keys, Redis tokens, and DB creds private; prefer environment variables and secret managers in production.
+
+## Project map (quick tour)
+
+- `app/api/ai/analyze`: Analyze button + Gemini suggestions with caching.
+- `app/api/search`: Vector search + rerank + caching + rate limits.
+- `lib/embedding.ts`: Embedding generation and caching (Gemini → pgvector).
+- `lib/cache.ts` / `lib/redis.ts`: Upstash Redis caching and rate limiting.
+- `app/services/metadata/*`: Fetch metadata for YouTube, Twitter, Spotify.
+- `components/*`: Landing UI, dashboard, embeds, rich text editor, vector search chatbox.
+- `prisma/schema.prisma`: Core models (User, Content, Notes, Spaces, Tags, embeddings).
+
+## Operations
+
+- Dev: `bun run dev`
+- Lint: `bun run lint`
+- Build: `bun run build`
+- Start (prod): `bun run start` (after `bun run build`)
+- Migrations: `bunx prisma migrate dev`
+
+## Roadmap ideas
+
+- Browser extension/Share targets for one click captures.
+- Better auto-tagging for notes and cross space insights.
+- Collaborative spaces and shareable, time bound links.
+
+---
+
+Built to keep your best links, notes, and ideas organized and instantly searchable.
