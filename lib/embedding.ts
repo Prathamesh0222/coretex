@@ -1,4 +1,4 @@
-import { ai } from "@/app/services/ai/Analysis";
+import { ai } from "@/services/ai/Analysis";
 import { getCached, hashKey, setCache } from "./cache";
 
 export const EMBEDDING_DIMENSIONS = 1536;

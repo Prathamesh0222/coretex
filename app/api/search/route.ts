@@ -1,6 +1,6 @@
-import { authOptions } from "@/app/config/auth.config";
+import { authOptions } from "@/config/auth.config";
 import { generateEmbedding } from "@/lib/embedding";
-import { rerankResults } from "@/app/services/ai/Reranker";
+import { rerankResults } from "@/services/ai/Reranker";
 import { SearchResult } from "@/types/search-type";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { queryClient } from "@/app/providers/CustomProvider";
+import { queryClient } from "@/providers/CustomProvider";
 import { toast } from "sonner";
 import { Content, Notes } from "@/types/content-type";
 

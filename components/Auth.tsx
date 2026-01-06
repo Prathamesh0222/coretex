@@ -5,7 +5,7 @@ import {
   SigninSchema,
   SignUpInput,
   SignupSchema,
-} from "@/app/validators/auth.validator";
+} from "@/validators/auth.validator";
 import { useForm } from "react-hook-form";
 import {
   Form,

@@ -7,7 +7,7 @@ import {
   RemoveFromSpaceData,
   Space,
 } from "@/types/space-type";
-import { queryClient } from "@/app/providers/CustomProvider";
+import { queryClient } from "@/providers/CustomProvider";
 
 export const useSpaces = () => {
   return useQuery<Space[]>({

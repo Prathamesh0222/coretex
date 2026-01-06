@@ -1,8 +1,8 @@
-import { analyzeContent } from "@/app/services/ai/Analysis";
+import { analyzeContent } from "@/services/ai/Analysis";
 import { NextRequest, NextResponse } from "next/server";
 import { analysisRateLimit } from "@/lib/redis";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/config/auth.config";
+import { authOptions } from "@/config/auth.config";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);

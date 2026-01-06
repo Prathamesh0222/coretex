@@ -1,6 +1,6 @@
-import { authOptions } from "@/app/config/auth.config";
+import { authOptions } from "@/config/auth.config";
 import { prisma } from "@/lib/prisma";
-import { AddToSpaceSchema } from "@/app/validators/space.validator";
+import { AddToSpaceSchema } from "@/validators/space.validator";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 

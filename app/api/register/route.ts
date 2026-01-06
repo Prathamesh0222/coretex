@@ -1,5 +1,5 @@
 import { validate } from "@/middlewares/validate.middleware";
-import { SignUpInput, SignupSchema } from "@/app/validators/auth.validator";
+import { SignUpInput, SignupSchema } from "@/validators/auth.validator";
 import { hash } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";

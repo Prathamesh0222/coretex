@@ -1,4 +1,4 @@
-import { Asterisk, Plus, Wand2, X } from "lucide-react";
+import { Asterisk, LoaderCircle, Plus, Wand2, X } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -28,6 +28,7 @@ export const CreateContent = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [notesDescription, setNotesDescription] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     title,
@@ -55,6 +56,7 @@ export const CreateContent = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     try {
       if (type === ContentType.NOTES) {
         const response = await axios.post("/api/content", {
@@ -91,6 +93,8 @@ export const CreateContent = () => {
     } catch (error) {
       console.error("Error while creating content", error);
       toast.error("Error while creating content");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -396,8 +400,16 @@ export const CreateContent = () => {
             <Button
               onClick={handleSubmit}
               className="w-full mt-5 font-semibold mb-12"
+              disabled={isLoading}
             >
-              Submit
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <LoaderCircle className="animate-spin" />
+                  Creating...
+                </div>
+              ) : (
+                "Create"
+              )}
             </Button>
           </div>
         </SheetContent>

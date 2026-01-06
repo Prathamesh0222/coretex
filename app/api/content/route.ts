@@ -1,8 +1,5 @@
-import { authOptions } from "@/app/config/auth.config";
-import {
-  ContentInput,
-  ContentSchema,
-} from "@/app/validators/content.validator";
+import { authOptions } from "@/config/auth.config";
+import { ContentInput, ContentSchema } from "@/validators/content.validator";
 import { generateEmbedding } from "@/lib/embedding";
 import { prisma } from "@/lib/prisma";
 import { validate } from "@/middlewares/validate.middleware";

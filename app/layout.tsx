@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CustomProvider } from "./providers/CustomProvider";
-import { AuthProvider } from "./providers/AuthProvider";
+import { CustomProvider } from "../providers/CustomProvider";
+import { AuthProvider } from "../providers/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { Manrope } from "next/font/google";
 

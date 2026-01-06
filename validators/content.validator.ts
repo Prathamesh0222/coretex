@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ContentType } from "../../store/contentState";
+import { ContentType } from "../store/contentState";
 
 export const ContentSchema = z.object({
   title: z.string(),
