@@ -69,12 +69,12 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                 size={35}
                 className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
               />
-              <h1 className="text-xl font-bold">Coretex</h1>
+              <h1 className="text-lg font-bold">Coretex</h1>
             </div>
           ) : (
             <div className="w-full flex justify-center">
               <Layers
-                size={35}
+                size={30}
                 className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
               />
             </div>
@@ -84,7 +84,7 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
               onClick={handleSidebar}
               className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer"
             >
-              <PanelRightOpen className="w-5 h-5" />
+              <PanelRightOpen className="w-4 h-4" />
             </div>
           )}
           {!isSidebarOpen && (
@@ -97,7 +97,7 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
           )}
         </span>
         <div className="flex flex-col h-[calc(100%-80px)]">
-          <div className="flex-grow space-y-4">
+          <div className="flex-grow space-y-2">
             {SidebarComponents.map((sidebar, index) => (
               <div
                 key={index}
@@ -123,7 +123,7 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                 </div>
                 {isSidebarOpen && (
                   <div
-                    className={`text-sm font-medium ${
+                    className={`text-xs font-semibold ${
                       activeFilter === sidebar.filter
                         ? "text-white"
                         : "text-gray-700 dark:text-gray-300"
@@ -160,7 +160,7 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                 </div>
                 {isSidebarOpen && (
                   <div
-                    className={`text-sm font-medium ${
+                    className={`text-xs font-semibold ${
                       activeFilter === sidebar.filter
                         ? "text-white"
                         : "text-gray-700 dark:text-gray-300"
@@ -175,7 +175,7 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
             <div className="border w-full my-6" />
             <div className="flex items-center justify-between px-2 mb-2">
               {isSidebarOpen && (
-                <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400">
                   Spaces
                 </h3>
               )}
@@ -207,7 +207,7 @@ export const Sidebar = ({ onFilterChange }: SidebarProps) => {
                   </div>
                   {isSidebarOpen && (
                     <div
-                      className={`text-sm font-medium truncate ${
+                      className={`text-xs font-semibold truncate ${
                         activeFilter === `space:${space.id}`
                           ? "text-white"
                           : "text-gray-700 dark:text-gray-300"

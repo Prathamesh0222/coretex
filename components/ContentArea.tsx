@@ -16,7 +16,7 @@ import {
   ArrowUpRight,
   Calendar,
   ClipboardPen,
-  Download,
+  FileQuestion,
   LayoutDashboard,
   Music,
   Notebook,
@@ -41,6 +41,7 @@ import { Folder } from "lucide-react";
 import { removeContent, useContent } from "@/hooks/useContent";
 import { useSpaces, useDeleteSpace } from "@/hooks/useSpace";
 import { Content, Notes } from "@/types/content-type";
+import { Skeleton } from "./ui/skeleton";
 
 interface ContentAreaProps {
   currentFilter: string;
@@ -51,18 +52,10 @@ export const ContentArea = ({
   currentFilter,
   onFilterChange,
 }: ContentAreaProps) => {
-  const { data: fetchContents, error } = useContent();
+  const { data: fetchContents, error, isLoading } = useContent();
   const { searchQuery } = useContentState();
   const { data: spaces } = useSpaces();
   const deleteSpaceMutation = useDeleteSpace();
-
-  if (error) return <div>Error: {error.message}</div>;
-
-  const allContents: Array<Content | Notes> = fetchContents || [];
-
-  const isSpaceFilter = currentFilter.startsWith("space:");
-  const spaceId = isSpaceFilter ? currentFilter.replace("space:", "") : null;
-  const currentSpace = spaces?.find((space) => space.id === spaceId);
 
   if (currentFilter.toLowerCase() === "search") {
     return (
@@ -71,6 +64,52 @@ export const ContentArea = ({
       </div>
     );
   }
+
+  if (error) return <div>Error: {error.message}</div>;
+
+  if (isLoading) {
+    return (
+      <div className="lg:container lg:mx-auto p-4">
+        <div className="flex justify-between items-center gap-3 mb-12">
+          <Skeleton className="h-8 w-48" />
+          <div className="flex gap-5 items-center">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-10 w-10 rounded-full" />
+          </div>
+        </div>
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-4 w-full">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="break-inside-avoid mb-4">
+              <div className="border rounded-xl p-4 space-y-4">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                </div>
+                <Skeleton className="h-48 w-full rounded-lg" />
+                <div className="flex justify-between items-center pt-2">
+                  <Skeleton className="h-3 w-24" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-5 w-5" />
+                    <Skeleton className="h-5 w-5" />
+                    <Skeleton className="h-5 w-5" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const allContents: Array<Content | Notes> = fetchContents || [];
+
+  const isSpaceFilter = currentFilter.startsWith("space:");
+  const spaceId = isSpaceFilter ? currentFilter.replace("space:", "") : null;
+  const currentSpace = spaces?.find((space) => space.id === spaceId);
 
   const filteredContent = allContents.filter((items) => {
     const matchesFilter = (() => {
@@ -230,18 +269,27 @@ export const ContentArea = ({
           <CreateContent />
         </div>
       </div>
-      {filteredContent.length === 0 && (
-        <div className="w-full flex flex-col items-center justify-center h-80 gap-4">
-          <Download size={60} className="text-gray-400" />
-          <h1 className="text-xl font-semibold text-gray-500">
-            No content found
-          </h1>
-          <p className="text-gray-400 text-center max-w-md">
-            Your content library is empty. Click the + button in the top right
-            corner to add your first piece of content.
-          </p>
-        </div>
-      )}
+      {!isLoading &&
+        fetchContents !== undefined &&
+        filteredContent.length === 0 && (
+          <div className="w-full flex flex-col items-center justify-center h-80 gap-4">
+            <FileQuestion size={60} className="text-gray-400" />
+            <h1 className="text-xl font-semibold text-gray-500">
+              {searchQuery
+                ? "No search results found"
+                : currentFilter !== "dashboard"
+                ? `No ${currentFilter.replace("space:", "")} content found`
+                : "No content found"}
+            </h1>
+            <p className="text-gray-400 text-center max-w-md">
+              {searchQuery
+                ? `We couldn't find any content matching "${searchQuery}". Try different keywords.`
+                : allContents.length === 0
+                ? "Your content library is empty. Click the + button in the top right corner to add your first piece of content."
+                : "Try changing your filters or add new content to this category."}
+            </p>
+          </div>
+        )}
       <div className="columns-1 md:columns-2 lg:columns-3 gap-4 mt-12 mb-12 md:mb-12 lg:mb-0 w-full">
         {filteredContent?.map((item) => (
           <div key={item.id} className="break-inside-avoid mb-4">

@@ -21,6 +21,7 @@ import { ContentType, useContentState } from "@/store/contentState";
 import { useQueryClient } from "@tanstack/react-query";
 import { NotesEditor } from "./NotesEditor";
 import { analyzeContentAction } from "@/app/actions/analyzeContent";
+import { Textarea } from "./ui/textarea";
 
 export const CreateContent = () => {
   const [tagsInput, setTagsInput] = useState<string>("");
@@ -266,10 +267,10 @@ export const CreateContent = () => {
                   <div>
                     <label className="text-sm font-semibold">Description</label>
                     <div className="mt-3">
-                      <textarea
+                      <Textarea
                         value={description}
                         placeholder="Write a description"
-                        className="bg-primary/5 rounded-md p-3 w-full border text-sm h-40"
+                        className="bg-primary/5 rounded-md p-3 w-full border text-sm h-40 resize-none"
                         maxLength={255}
                         onChange={(e) => setDescription(e.target.value)}
                         disabled={isAnalyzing}
